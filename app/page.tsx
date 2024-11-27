@@ -10,10 +10,10 @@ export default async function Dashboard() {
   const session = await getServerSession(authOptions);
 
   // Redirect to dashboard if already logged in
-  // if (session?.user) {
-  //   redirect("/dashboard");
-  //   return null;
-  // }
+  if (session?.user) {
+    redirect("/dashboard");
+    return null;
+  }
 
   return (
     <div className="w-full flex h-screen flex-col lg:flex-row">

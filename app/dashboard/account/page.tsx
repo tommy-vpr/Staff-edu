@@ -93,6 +93,7 @@ const page = () => {
         </div>
         <>
           <form onSubmit={handleSubmit} className="space-y-4">
+            <h3 className="font-semibold text-center">Password Update</h3>
             <div>
               <label className="block font-medium text-gray-700 dark:text-gray-300">
                 Current Password

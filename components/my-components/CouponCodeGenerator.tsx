@@ -30,6 +30,11 @@ const CouponCodeGenerator = () => {
     }
   };
 
+  const handleClearCode = () => {
+    setDiscountCode(null); // Clear the discount code
+    setError(null); // Clear any error messages
+  };
+
   return (
     <div className="mt-4 p-8 flex flex-col max-w-[400px] m-auto bg-gray-100 dark:bg-[#101010] border border-gray-200 dark:border-[#222] rounded-lg">
       <Image
@@ -55,6 +60,15 @@ const CouponCodeGenerator = () => {
         <div className="text-green-500 mt-2">
           Your discount code: <strong>{discountCode}</strong>
         </div>
+      )}
+
+      {discountCode && (
+        <button
+          onClick={handleClearCode}
+          className="bg-red-400 text-white px-4 py-2 rounded mt-4"
+        >
+          Clear
+        </button>
       )}
     </div>
   );

@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import { useFormStatus } from "react-dom";
 import { registerStaff } from "@/app/actions/staff";
 import toast from "react-hot-toast";
-import { sendEmail } from "@/app/actions/email";
+// import { sendEmail } from "@/app/actions/email";
 
 export default function StaffSignupForm() {
   //   const [error, setError] = useState<string | null>(null);
@@ -67,15 +67,15 @@ export default function StaffSignupForm() {
       }
 
       // Send the email
-      const emailRes = await sendEmail(validateInput.data);
+      // const emailRes = await sendEmail(validateInput.data);
 
-      if (emailRes?.error) {
-        setError("root", {
-          type: "manual",
-          message: emailRes.error,
-        });
-        return;
-      }
+      // if (emailRes?.error) {
+      //   setError("root", {
+      //     type: "manual",
+      //     message: emailRes.error,
+      //   });
+      //   return;
+      // }
 
       // Sign in the staff
       const result = await signIn("staff-credentials", {

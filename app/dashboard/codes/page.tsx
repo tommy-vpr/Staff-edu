@@ -1,8 +1,8 @@
-// import DataTableContainer from "@/components/my-components/DataTableContainer";
-// import React from "react";
+import DataTableContainer from "@/components/my-components/DataTableContainer";
+import React from "react";
 
-// const page = () => {
-//   return <DataTableContainer />;
-// };
+const page = () => {
+  return <DataTableContainer />;
+};
 
-// export default page;
+export default page;

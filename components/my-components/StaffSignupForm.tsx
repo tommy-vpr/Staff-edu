@@ -1,27 +1,109 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import { signIn, useSession } from "next-auth/react";
 import { useForm, useFormState } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { STATES } from "@/lib/staticData";
 import { StaffFormValues, StaffSchema } from "@/lib/schemas";
 import SubmitButton from "./SubmitButton";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useFormStatus } from "react-dom";
+import { registerStaff } from "@/app/actions/staff";
+import toast from "react-hot-toast";
+import { sendEmail } from "@/app/actions/email";
 
-export default function StaffForm() {
+export default function StaffSignupForm() {
+  //   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
     control,
+    setError,
     formState: { errors },
+    reset,
   } = useForm<StaffFormValues>({
     resolver: zodResolver(StaffSchema),
   });
 
-  // Pass control to useFormState to access isSubmitting
-  const { isSubmitting } = useFormState({ control });
+  // Access specific form state
+  const { isSubmitting } = useFormState({
+    control, // Required to link to the current form's state
+  });
 
-  const onSubmit = async (data: StaffFormValues) => {};
+  const onSubmit = async (data: StaffFormValues) => {
+    try {
+      // Clear previous errors
+      setError("root", { type: "manual", message: "" });
+
+      // Zod schema validation
+      const validateInput = StaffSchema.safeParse(data);
+
+      if (!validateInput.success) {
+        const zodErrors = validateInput.error.flatten();
+        for (const field of Object.keys(zodErrors.fieldErrors) as Array<
+          keyof StaffFormValues
+        >) {
+          setError(field, {
+            type: "manual",
+            message: zodErrors.fieldErrors[field]?.[0] || "Invalid input",
+          });
+        }
+        return;
+      }
+
+      // Call the registerStaff action
+      const response = await registerStaff(validateInput.data);
+
+      if (response?.error) {
+        setError("root", {
+          type: "manual",
+          message: response.error,
+        });
+        return;
+      }
+
+      // Send the email
+      const emailRes = await sendEmail(validateInput.data);
+
+      if (emailRes?.error) {
+        setError("root", {
+          type: "manual",
+          message: emailRes.error,
+        });
+        return;
+      }
+
+      // Sign in the staff
+      const result = await signIn("staff-credentials", {
+        redirect: false,
+        email: data.email,
+        code: data.inviteCode,
+      });
+
+      if (result?.error) {
+        setError("root", {
+          type: "manual",
+          message: result.error,
+        });
+        return; // Stops execution if there's an error.
+      } else {
+        toast.success("Welcome!");
+        reset();
+        router.push("/dashboard");
+      }
+    } catch (err: unknown) {
+      console.error("Unexpected error:", err);
+      setError("root", {
+        type: "manual",
+        message:
+          "An unexpected error occurred. Please check your connection and try again.",
+      });
+    }
+  };
 
   return (
     <div className="w-full max-w-[500px] p-4 sm:p-8 space-y-6 rounded-lg mx-auto">
@@ -41,7 +123,7 @@ export default function StaffForm() {
             className="w-full px-4 py-2 mt-1 border rounded-md"
           />
           {errors.email && (
-            <p className="text-red-500 text-sm">{errors.email.message}</p>
+            <p className="text-red-400 text-sm">{errors.email.message}</p>
           )}
         </div>
 
@@ -56,7 +138,7 @@ export default function StaffForm() {
             className="w-full px-4 py-2 mt-1 border rounded-md"
           />
           {errors.firstName && (
-            <p className="text-red-500 text-sm">{errors.firstName.message}</p>
+            <p className="text-red-400 text-sm">{errors.firstName.message}</p>
           )}
         </div>
 
@@ -71,7 +153,7 @@ export default function StaffForm() {
             className="w-full px-4 py-2 mt-1 border rounded-md"
           />
           {errors.lastName && (
-            <p className="text-red-500 text-sm">{errors.lastName.message}</p>
+            <p className="text-red-400 text-sm">{errors.lastName.message}</p>
           )}
         </div>
 
@@ -94,7 +176,7 @@ export default function StaffForm() {
             ))}
           </select>
           {errors.state && (
-            <p className="text-red-500 text-sm">{errors.state.message}</p>
+            <p className="text-red-400 text-sm">{errors.state.message}</p>
           )}
         </div>
 
@@ -109,9 +191,15 @@ export default function StaffForm() {
             className="w-full px-4 py-2 mt-1 border rounded-md"
           />
           {errors.inviteCode && (
-            <p className="text-red-500 text-sm">{errors.inviteCode.message}</p>
+            <p className="text-red-400 text-sm">{errors.inviteCode.message}</p>
           )}
         </div>
+
+        {errors.root && (
+          <p className="text-red-400 text-sm text-center">
+            {errors.root.message}
+          </p>
+        )}
 
         <SubmitButton isSubmitting={isSubmitting} />
       </form>

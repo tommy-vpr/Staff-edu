@@ -146,8 +146,14 @@ export function DataTable({ data }: DataTableProps) {
     pageSize: 10,
   });
 
+  // Filter the data to only include active items
+  const activeData = React.useMemo(
+    () => data.filter((item) => item.isActive),
+    [data]
+  );
+
   const table = useReactTable({
-    data,
+    data: activeData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

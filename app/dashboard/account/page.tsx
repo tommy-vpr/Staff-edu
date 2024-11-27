@@ -1,5 +1,6 @@
 "use client";
 
+import CouponCodeGenerator from "@/components/my-components/CouponCodeGenerator";
 import SubmitButton from "@/components/my-components/SubmitButton";
 import { User, User2 } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -132,20 +133,10 @@ const page = () => {
             )}
 
             <SubmitButton isSubmitting={isSubmitting} />
-            {/* <button
-              type="submit"
-              disabled={isSubmitting}
-              className={`w-full py-2 rounded-md ${
-                isSubmitting
-                  ? "bg-gray-400 text-gray-700"
-                  : "bg-blue-600 text-white"
-              }`}
-            >
-              {isSubmitting ? "Updating..." : "Update Password"}
-            </button> */}
           </form>
         </>
       </div>
+      <CouponCodeGenerator />
     </div>
   );
 };

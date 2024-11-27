@@ -5,6 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
@@ -33,7 +34,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
-        <p>{description}</p>
+        <DialogDescription>{description}</DialogDescription>
         <DialogFooter>
           <Button variant="outline" onClick={onCancel}>
             {cancelLabel}

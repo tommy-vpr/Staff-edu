@@ -49,8 +49,8 @@ export const authOptions: NextAuthOptions = {
     }),
     // Influencer Credentials
     CredentialsProvider({
-      id: "influencer-credentials",
-      name: "Influencer Credentials",
+      id: "staff-credentials",
+      name: "Staff Credentials",
       credentials: {
         email: { label: "Email", type: "text" },
         code: { label: "Invitation Code", type: "text" },
@@ -61,32 +61,32 @@ export const authOptions: NextAuthOptions = {
         }
 
         // Find influencer by email in a separate `influencer` table or with a `role` check
-        const influencer = await prisma.influencer.findFirst({
+        const staff = await prisma.staff.findFirst({
           where: { email: credentials.email },
           include: {
-            code: true,
+            inviteCode: true,
           },
         });
 
-        if (!influencer) {
-          throw new Error("No influencer found with this email");
+        if (!staff) {
+          throw new Error("No staff found with this email");
         }
 
-        const influencerCode = influencer.code; // Get the first code, if it exists
+        const staffCode = staff.inviteCode; // Get the first code, if it exists
 
         // Verify invitation code
-        if (!influencerCode || influencerCode.code !== credentials.code) {
+        if (!staffCode || staffCode.code !== credentials.code) {
           throw new Error("Invalid invitation code or Email");
         }
 
-        // Return the influencer data in the expected User format
-        const authInfluencer: User = {
-          id: influencer.id,
-          name: `${influencer.firstName} ${influencer.lastName}`,
-          email: influencer.email,
+        // Return the staff data in the expected User format
+        const authstaff: User = {
+          id: staff.id,
+          name: `${staff.firstName} ${staff.lastName}`,
+          email: staff.email,
         };
 
-        return authInfluencer;
+        return authstaff;
       },
     }),
   ],

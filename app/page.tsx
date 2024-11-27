@@ -4,7 +4,7 @@ import { authOptions } from "@/lib/authOptions";
 import Image from "next/image";
 import heroImage from "@/assets/images/hero.webp";
 import { redirect } from "next/navigation";
-import StaffForm from "@/components/my-components/StaffSignupForm";
+import StaffSignupForm from "@/components/my-components/StaffSignupForm";
 
 export default async function Dashboard() {
   const session = await getServerSession(authOptions);
@@ -28,7 +28,7 @@ export default async function Dashboard() {
         />
       </div>
       <div className="flex items-center justify-center lg:w-1/3 relative">
-        <StaffForm />
+        <StaffSignupForm />
       </div>
     </div>
   );

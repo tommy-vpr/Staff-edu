@@ -17,7 +17,7 @@ const StaffLoginForm: React.FC = () => {
 
   // Check if the user is authenticated and redirect if necessary
   useEffect(() => {
-    if (session?.user.role !== "influencer") {
+    if (session?.user) {
       router.push("/login");
     }
   }, [session, router]);
@@ -32,12 +32,10 @@ const StaffLoginForm: React.FC = () => {
   });
 
   const onSubmit = async (data: StaffLoginValues) => {
-    setError(null);
-
-    const result = await signIn("influencer-credentials", {
+    const result = await signIn("staff-credentials", {
       redirect: false,
-      //   email: data.email,
-      //   code: data.code,
+      email: data.email,
+      code: data.inviteCode,
     });
 
     if (result?.error) {
@@ -56,7 +54,7 @@ const StaffLoginForm: React.FC = () => {
         Staff Login
       </h3>
       <p className="mb-8 text-center text-sm">
-        * Must signup with invitation code first
+        * Must register with invitation code first
       </p>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>

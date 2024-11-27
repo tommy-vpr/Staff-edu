@@ -3,32 +3,27 @@
 import { StaffSchema, StaffFormValues } from "@/lib/schemas";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import { getErrorMessage } from "@/lib/utils";
 
-export const registerInfluencer = async (newStaff: StaffFormValues) => {
-  const validateInput = StaffSchema.safeParse(newStaff);
-
-  // console.log(validateInput.data?.codes?.at(0)?.code);
-
-  if (!validateInput.success) {
-    const errorMessage = validateInput.error.issues
-      .map((issue) => `${issue.path[0]}: ${issue.message}`)
-      .join(". ");
-    return { error: errorMessage };
-  }
-
+export const registerStaff = async (newStaff: StaffFormValues) => {
   try {
-    // Check if email exists
-    const existingInfluencer = await prisma.influencer.findUnique({
+    const validateInput = StaffSchema.safeParse(newStaff);
+    if (!validateInput.success) {
+      const errorMessage = validateInput.error.issues
+        .map((issue) => `${issue.path[0]}: ${issue.message}`)
+        .join(". ");
+      return { error: errorMessage };
+    }
+
+    const existingStaff = await prisma.staff.findUnique({
       where: { email: validateInput.data.email },
     });
 
-    if (existingInfluencer) {
-      return {
-        error: "An influencer with this email already exists",
-      };
+    if (existingStaff) {
+      return { error: "A staff member with this email already exists." };
     }
-    // Validate and update DB code
-    const validateCode = await prisma.generatedCodes.findUnique({
+
+    const validateCode = await prisma.generatedCodes.findFirst({
       where: {
         code: validateInput.data.inviteCode,
         status: false,
@@ -36,38 +31,38 @@ export const registerInfluencer = async (newStaff: StaffFormValues) => {
     });
 
     if (!validateCode) {
+      console.error("Invalid or used invite code");
       return {
-        error: "Invalid code or code has been used",
+        error: "Invalid invite code or the code has already been used.",
       };
     }
 
+    const hashedPassword = await bcrypt.hash(validateInput.data.inviteCode, 10);
+
+    await prisma.staff.create({
+      data: {
+        ...validateInput.data,
+        password: hashedPassword,
+        inviteCode: {
+          create: {
+            code: validateInput.data.inviteCode,
+          },
+        },
+        coupon: {
+          create: {
+            code: validateInput.data.inviteCode,
+          },
+        },
+      },
+    });
+
     await prisma.generatedCodes.update({
-      where: { code: validateCode.code },
+      where: { id: validateCode.id },
       data: {
         status: true,
         email: validateInput.data.email,
       },
     });
-
-    if (validateInput.data.inviteCode) {
-      const hashedPassword = await bcrypt.hash(
-        validateInput.data.inviteCode,
-        10
-      );
-
-      await prisma.influencer.create({
-        data: {
-          ...validateInput.data,
-          password: hashedPassword,
-          inviteCode: {
-            create: {
-              inviteCode: validateInput.data.inviteCode, // Access code from `validateInput.data`
-              email: validateInput.data.email,
-            },
-          },
-        },
-      });
-    }
 
     // Step 2: Subscribe the user to Klaviyo
     const klaviyoApiKey = process.env.KLAVIYO_API_KEY;
@@ -132,14 +127,14 @@ export const registerInfluencer = async (newStaff: StaffFormValues) => {
       console.error("Klaviyo subscription response error:", errorText);
       return {
         success: true,
-        message:
-          "Influencer added, but Klaviyo subscription encountered an error.",
+        message: "Staff added, but Klaviyo subscription encountered an error.",
       };
     }
 
     return { success: true };
-  } catch (error) {
-    console.error("Error details:", error);
-    return { error: "An error occurred while adding the influencer." };
+  } catch (error: unknown) {
+    const errorMessage = getErrorMessage(error);
+    console.error("Unexpected error:", errorMessage); // Log unexpected errors
+    return { error: errorMessage };
   }
 };

@@ -37,7 +37,6 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 import Orders from "@/components/ui/Orders";
 import { ModeToggle } from "@/components/ui/ModeToggle";
-import { DataTable } from "@/components/my-components/Data";
 
 import React from "react";
 import { signOut, useSession } from "next-auth/react";

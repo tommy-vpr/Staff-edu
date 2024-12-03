@@ -32,7 +32,7 @@ export default async function Dashboard() {
           fill
           priority
           quality={100}
-          className="object-cover object-bottom"
+          className="object-cover object-top h-full"
         />
       </div>
       <div className="flex items-center justify-center lg:w-1/3 relative">

@@ -32,7 +32,11 @@ export default async function Dashboard() {
           fill
           priority
           quality={100}
-          className="object-cover object-top h-full"
+          className="object-cover object-center"
+          style={{
+            height: "100%", // Ensures full height in mobile view
+            width: "100%", // Ensures full width
+          }}
         />
       </div>
       <div className="flex items-center justify-center lg:w-1/3 relative">

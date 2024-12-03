@@ -18,21 +18,22 @@ export default async function Dashboard() {
 
   return (
     <div className="w-full flex h-screen flex-col lg:flex-row">
-      <div className="bg-[#101010] w-full lg:w-2/3 h-screen overflow-hidden relative">
+      <div className="bg-[#101010] w-full lg:w-2/3 relative h-full">
         <Image
           src={stripes}
-          width={60}
-          height={200}
+          width={180}
+          quality={100}
           alt="stripes"
-          className="absolute top-4 left-4 lg:top-8 lg:left-8 z-10 lg:w-[140px]"
+          className="absolute top-4 left-4 lg:top-8 lg:left-8 z-10 w-[80px] sm:w-[100px] md:w-[140px] lg:w-[180px]"
         />
+
         <Image
           src={heroImage}
           alt="Hero Image"
           fill
           priority
           quality={100}
-          className="object-cover object-center"
+          className="object-cover object-center h-full"
           style={{
             height: "100%", // Ensures full height in mobile view
             width: "100%", // Ensures full width

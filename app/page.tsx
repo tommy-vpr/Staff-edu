@@ -2,7 +2,8 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import Image from "next/image";
-import heroImage from "@/assets/images/hero.webp";
+import heroImage from "@/assets/images/hero-banner-roof-top.webp";
+import stripes from "@/assets/images/litto-logo-sec.png";
 import { redirect } from "next/navigation";
 import StaffSignupForm from "@/components/my-components/StaffSignupForm";
 
@@ -18,6 +19,13 @@ export default async function Dashboard() {
   return (
     <div className="w-full flex h-screen flex-col lg:flex-row">
       <div className="bg-[#101010] w-full lg:w-2/3 h-screen overflow-hidden relative">
+        <Image
+          src={stripes}
+          width={100}
+          height={200}
+          alt="stripes"
+          className="absolute top-8 left-8 z-10 lg:w-[140px]"
+        />
         <Image
           src={heroImage}
           alt="Hero Image"

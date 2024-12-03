@@ -21,10 +21,10 @@ export default async function Dashboard() {
       <div className="bg-[#101010] w-full lg:w-2/3 h-screen overflow-hidden relative">
         <Image
           src={stripes}
-          width={100}
+          width={60}
           height={200}
           alt="stripes"
-          className="absolute top-8 left-8 z-10 lg:w-[140px]"
+          className="absolute top-4 left-4 lg:top-8 lg:left-8 z-10 lg:w-[140px]"
         />
         <Image
           src={heroImage}

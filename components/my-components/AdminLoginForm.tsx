@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import SubmitButton from "@/components/my-components/SubmitButton";
 import { Lock } from "lucide-react";
 import { AdminLoginSchema, AdminLoginValues } from "@/lib/schemas";
+import toast from "react-hot-toast";
 
 const SignInPage: React.FC = () => {
   const router = useRouter();
@@ -35,6 +36,7 @@ const SignInPage: React.FC = () => {
     if (result?.error) {
       setError(result.error);
     } else {
+      toast.success("Welcome!");
       router.push("/dashboard"); // Redirect on successful sign-in
     }
   };

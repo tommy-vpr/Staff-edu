@@ -2,46 +2,35 @@
 
 import Link from "next/link";
 import {
-  Bell,
   CircleUser,
   Code,
   GraduationCap,
   Home,
-  LineChart,
   Menu,
   NotebookPen,
-  Package,
-  Package2,
-  ShoppingCart,
   Users,
 } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
-import Orders from "@/components/ui/Orders";
 import { ModeToggle } from "@/components/ui/ModeToggle";
 
 import React from "react";
 import { signOut, useSession } from "next-auth/react";
 
+import { usePathname } from "next/navigation";
+import clsx from "clsx";
+
 const DashboardHeader = () => {
+  const pathName = usePathname();
   const { data: session, status } = useSession();
 
   return (
@@ -56,49 +45,78 @@ const DashboardHeader = () => {
         <SheetContent side="left" className="flex flex-col">
           <nav className="grid gap-2 text-lg font-medium">
             <Link
-              href="/"
-              className="flex items-center gap-2 text-lg font-semibold"
+              href="/dashboard"
+              className={clsx(
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                {
+                  "flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary":
+                    pathName === "/dashboard",
+                }
+              )}
             >
-              <Package2 className="h-6 w-6" />
-              <span className="sr-only">Acme Inc</span>
-            </Link>
-            <Link
-              href="/dashboard/codes"
-              className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-            >
-              <Home className="h-5 w-5" />
+              <Home className="h-4 w-4" />
               Dashboard
             </Link>
             <Link
               href="/dashboard/education"
-              className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
+              className={clsx(
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                {
+                  "flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary":
+                    pathName === "/dashboard/education",
+                }
+              )}
             >
-              <GraduationCap className="h-5 w-5" />
+              <GraduationCap className="h-4 w-4" />
               Education
             </Link>
             <Link
-              href="/dashboard/codes"
-              className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+              href="/dashboard/influencer-test"
+              className={clsx(
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                {
+                  "flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary":
+                    pathName === "/dashboard/influencer-test",
+                }
+              )}
             >
-              <Code className="h-5 w-5" />
-              Influencer Test
+              <NotebookPen className="h-4 w-4" />
+              Test
             </Link>
-            <Link
-              href="/dashboard/codes"
-              className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-            >
-              <Code className="h-5 w-5" />
-              Influencer Test
-            </Link>
+            {session?.user.role === "admin" && (
+              <Link
+                href="/dashboard/codes"
+                className={clsx(
+                  "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                  {
+                    "flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary":
+                      pathName === "/dashboard/codes",
+                  }
+                )}
+              >
+                <Code className="h-4 w-4" />
+                Codes
+              </Link>
+            )}
+            {session?.user.role === "admin" && (
+              <Link
+                href="/dashboard/account"
+                className={clsx(
+                  "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                  {
+                    "flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary":
+                      pathName === "/dashboard/account",
+                  }
+                )}
+              >
+                <Users className="h-4 w-4" />
+                Account
+              </Link>
+            )}
             <Button onClick={() => signOut({ callbackUrl: "/login" })}>
               Signout
             </Button>
           </nav>
-          <div className="mt-auto">
-            <Button size="sm" className="w-full">
-              Upgrade
-            </Button>
-          </div>
         </SheetContent>
       </Sheet>
       <div className="w-full flex-1"></div>

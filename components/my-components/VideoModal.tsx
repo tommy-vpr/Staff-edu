@@ -30,7 +30,7 @@ const VideoModal: React.FC = () => {
         </span>
       </DialogTrigger>
 
-      <DialogContent className="p-8 w-2/3 max-w-none">
+      <DialogContent className="p-8 w-full lg:w-2/3 max-w-none">
         {/* Visually hidden title and description for accessibility */}
         <DialogTitle>
           <VisuallyHidden>Watch Video</VisuallyHidden>

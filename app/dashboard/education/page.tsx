@@ -36,7 +36,7 @@ type Props = {
 
 const ContentBlock = ({ title, desc, index }: Props) => (
   <div className="rounded-lg shadow-md bg-gray-50 dark:bg-[#141414] flex overflow-hidden">
-    <div className="p-8 flex items-center justify-center text-4xl bg-gray-100 dark:bg-[#222] aspect-square">
+    <div className="p-8 flex items-center justify-center text-4xl bg-gray-100 dark:bg-[#222]">
       {index + 1}
     </div>
     <div className="p-8">
@@ -49,7 +49,7 @@ const ContentBlock = ({ title, desc, index }: Props) => (
 
 const Page = () => {
   return (
-    <div className="flex flex-col gap-8 w-2/3 mx-auto">
+    <div className="flex flex-col gap-8 w-full lg:w-2/3 mx-auto">
       {courses.map((course, i) => (
         <ContentBlock
           key={course.title}

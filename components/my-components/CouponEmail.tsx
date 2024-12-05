@@ -84,7 +84,7 @@ export const CouponEmailTemplate = ({ firstName }: { firstName: string }) => {
           <Section style={footer}>
             <Text style={footerText}>
               <Link
-                href="https://facebook.com"
+                href="https://www.tiktok.com/@itslitto.cali"
                 target="_blank"
                 style={{
                   backgroundColor: "#101010",
@@ -95,7 +95,7 @@ export const CouponEmailTemplate = ({ firstName }: { firstName: string }) => {
                 }}
               >
                 <Img
-                  src="https://cdn.shopify.com/s/files/1/0586/7749/3954/files/instagram-icon.png?v=1729290626"
+                  src="https://cdn.shopify.com/s/files/1/0586/7749/3954/files/tiktok-icon.png?v=1729289263"
                   alt="instagram"
                   width={24}
                   height={24}
@@ -103,7 +103,7 @@ export const CouponEmailTemplate = ({ firstName }: { firstName: string }) => {
               </Link>
 
               <Link
-                href="https://twitter.com"
+                href="https://x.com/itslittocrew"
                 target="_blank"
                 style={{
                   backgroundColor: "#101010",
@@ -122,7 +122,7 @@ export const CouponEmailTemplate = ({ firstName }: { firstName: string }) => {
               </Link>
 
               <Link
-                href="https://instagram.com"
+                href="https://www.instagram.com/itslitto/"
                 target="_blank"
                 style={{
                   backgroundColor: "#101010",

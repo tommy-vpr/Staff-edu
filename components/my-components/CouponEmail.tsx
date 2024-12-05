@@ -38,8 +38,7 @@ export const CouponEmailTemplate = ({ firstName }: { firstName: string }) => {
             </Text>
             <Text style={paragraph}>
               We’re thrilled to have you as part of the Litto family! You’ve
-              just joined a community that’s all about elevating experiences and
-              discovering the extraordinary.
+              just joined a community that’s all about hitting new highs.
             </Text>
 
             {/* Benefits Section */}
@@ -67,16 +66,9 @@ export const CouponEmailTemplate = ({ firstName }: { firstName: string }) => {
               .
             </Text>
 
-            <Text style={paragraph}>
-              Thank you for choosing Litto. We can’t wait to be part of your
-              journey!
-            </Text>
-
             {/* Closing Section */}
             <Text style={paragraph}>
-              Warm regards,
-              <br />
-              <strong>The Litto Team</strong>
+              <strong>Team LITTO</strong>
             </Text>
           </Section>
 

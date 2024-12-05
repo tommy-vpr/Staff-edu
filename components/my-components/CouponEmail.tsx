@@ -88,7 +88,7 @@ export const CouponEmailTemplate = ({ firstName }: { firstName: string }) => {
               >
                 <Img
                   src="https://cdn.shopify.com/s/files/1/0586/7749/3954/files/tiktok-icon.png?v=1729289263"
-                  alt="instagram"
+                  alt="tiktok"
                   width={24}
                   height={24}
                 />
@@ -125,8 +125,8 @@ export const CouponEmailTemplate = ({ firstName }: { firstName: string }) => {
                 }}
               >
                 <Img
-                  src="https://cdn.shopify.com/s/files/1/0586/7749/3954/files/tiktok-icon.png?v=1729289263"
-                  alt="tik tok"
+                  src="https://cdn.shopify.com/s/files/1/0586/7749/3954/files/instagram-icon.png?v=1729290626"
+                  alt="instagram"
                   width={24}
                   height={24}
                 />

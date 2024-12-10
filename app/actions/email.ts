@@ -30,7 +30,7 @@ export const sendEmail = async (staff: StaffFormValues) => {
       from: "LITTO <noreply@cedu.itslitto.com>",
       to: email,
       subject: `Welcome to the LITTO family, ${staff.firstName}!`,
-      replyTo: "support@litto.com",
+      replyTo: "support@cedu.itslitto.com",
       react: CouponEmailTemplate({
         firstName,
       }),

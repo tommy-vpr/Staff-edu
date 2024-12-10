@@ -27,11 +27,10 @@ export const sendEmail = async (staff: StaffFormValues) => {
     const message = `Thanks for signing up to the LITTO Staff EDU`;
 
     const data = await resend.emails.send({
-      from: "Acme <onboarding@resend.dev>", // Replace with your verified domain
-      //   to: [email as string],
+      from: "LITTO <noreply@cedu.itslitto.com>",
       to: email,
       subject: `Welcome to the LITTO family, ${staff.firstName}!`,
-      replyTo: "tommylitto@gmail.com",
+      replyTo: "support@litto.com",
       react: CouponEmailTemplate({
         firstName,
       }),

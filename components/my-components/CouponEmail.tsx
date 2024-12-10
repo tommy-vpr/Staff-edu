@@ -41,31 +41,6 @@ export const CouponEmailTemplate = ({ firstName }: { firstName: string }) => {
               just joined a community that’s all about hitting new highs.
             </Text>
 
-            {/* Benefits Section */}
-            <Text style={listHeader}>Here’s what you can look forward to:</Text>
-            <ul style={list}>
-              <li>Exclusive updates on our newest products and promotions.</li>
-              <li>Personalized recommendations tailored to your tastes.</li>
-              <li>First access to limited-edition drops and special offers.</li>
-            </ul>
-
-            {/* Call-to-Action */}
-            <Section style={cta}>
-              <Link href="https://itslitto.com" style={button}>
-                Shop Now
-              </Link>
-            </Section>
-
-            {/* Support Section */}
-            <Text style={paragraph}>
-              If you have any questions or need assistance, our team is here to
-              help. Feel free to reply to this email or visit our{" "}
-              <Link href="https://itslitto.com/pages/contact-us" style={link}>
-                Support Center
-              </Link>
-              .
-            </Text>
-
             {/* Closing Section */}
             <Text style={paragraph}>
               <strong>Team LITTO</strong>

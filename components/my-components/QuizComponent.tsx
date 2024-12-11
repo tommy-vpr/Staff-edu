@@ -1,5 +1,5 @@
 "use client";
-import { Check, Cross, X } from "lucide-react";
+import { Check, Cross, Loader, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { generatedCoupon } from "@/lib/generateCoupon";
@@ -68,8 +68,6 @@ const QuizComponent: React.FC = () => {
 
   const { data: session } = useSession();
 
-  console.log(session?.user);
-
   useEffect(() => {
     const fetchCoupon = async () => {
       if (!session?.user?.id) {
@@ -103,7 +101,7 @@ const QuizComponent: React.FC = () => {
     };
 
     fetchCoupon();
-  }, [session?.user?.id]);
+  }, [session?.user?.id, session?.user?.takenTest]);
 
   if (session?.user?.takenTest) {
     return (
@@ -122,15 +120,17 @@ const QuizComponent: React.FC = () => {
 
   const handleAnswerClick = (isCorrect: boolean, answerText: string) => {
     setSelectedAnswer(answerText);
+
+    // Increment correct answers only if the answer is correct
     if (isCorrect) {
+      // Increment the score for every answered question
+      setScore((prev) => prev + 1);
       setCorrectAnswers((prev) => prev + 1);
     }
   };
 
   const handleNextQuestion = () => {
-    console.log("answer", correctAnswers);
-    console.log(correctAnswers + 1 === questions.length);
-
+    console.log(correctAnswers, questions.length);
     setSelectedAnswer(null);
     const nextQuestion = currentQuestionIndex + 1;
 
@@ -139,10 +139,7 @@ const QuizComponent: React.FC = () => {
     } else {
       setShowScore(true);
 
-      console.log("answer", correctAnswers);
-      console.log(correctAnswers + 1 === questions.length);
-
-      // Generate coupon code if all answers are correct
+      // Check if all answers are correct dynamically
       if (correctAnswers === questions.length) {
         handleGenerateCode();
       }
@@ -198,6 +195,7 @@ const QuizComponent: React.FC = () => {
               </>
             ) : score === questions.length ? (
               <p className="text-lg text-gray-600">
+                <Loader className="animate-spin text-2xl" />
                 Generating your coupon code...
               </p>
             ) : (

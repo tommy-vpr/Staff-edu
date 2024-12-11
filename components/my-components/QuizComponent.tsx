@@ -1,6 +1,9 @@
 "use client";
 import { Check, Cross, X } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { generatedCoupon } from "@/lib/generateCoupon";
+import { getUserCoupon } from "@/lib/getShopifyCoupon";
 
 interface Answer {
   text: string;
@@ -54,26 +57,95 @@ const questions: Question[] = [
 
 const QuizComponent: React.FC = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [correctAnswers, setCorrectAnswers] = useState(0);
   const [score, setScore] = useState(0);
   const [showScore, setShowScore] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [generatedCode, setGeneratedCode] = useState<string | null>(null);
+  const [couponCode, setCouponCode] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const { data: session } = useSession();
+
+  console.log(session?.user);
+
+  useEffect(() => {
+    const fetchCoupon = async () => {
+      if (!session?.user?.id) {
+        setError("User ID is not available.");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch("/api/getCoupon", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ staffId: session.user.id }),
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          setCouponCode(result.code);
+        } else {
+          setError(result.error);
+        }
+      } catch (err) {
+        console.error("Error fetching coupon:", err);
+        setError("Failed to fetch coupon");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCoupon();
+  }, [session?.user?.id]);
+
+  if (session?.user?.takenTest) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="flex flex-col items-center justify-center p-6 border border-gray-200 rounded-lg">
+          <p>Thank you for taking the test.</p>
+          <p>
+            Coupon <b>{couponCode}</b> was issued to you.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const currentQuestion = questions[currentQuestionIndex];
 
   const handleAnswerClick = (isCorrect: boolean, answerText: string) => {
     setSelectedAnswer(answerText);
     if (isCorrect) {
-      setScore((prev) => prev + 1);
+      setCorrectAnswers((prev) => prev + 1);
     }
   };
 
   const handleNextQuestion = () => {
+    console.log("answer", correctAnswers);
+    console.log(correctAnswers + 1 === questions.length);
+
     setSelectedAnswer(null);
     const nextQuestion = currentQuestionIndex + 1;
+
     if (nextQuestion < questions.length) {
       setCurrentQuestionIndex(nextQuestion);
     } else {
       setShowScore(true);
+
+      console.log("answer", correctAnswers);
+      console.log(correctAnswers + 1 === questions.length);
+
+      // Generate coupon code if all answers are correct
+      if (correctAnswers === questions.length) {
+        handleGenerateCode();
+      }
     }
   };
 
@@ -82,6 +154,29 @@ const QuizComponent: React.FC = () => {
     setScore(0);
     setShowScore(false);
     setSelectedAnswer(null);
+    setGeneratedCode(null);
+  };
+
+  const handleGenerateCode = async () => {
+    try {
+      const response = await fetch("/api/updateCoupon", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ staffId: session?.user?.id }), // Pass the session user ID
+      });
+
+      const result = await response.json();
+
+      if (result.success && result.code) {
+        setGeneratedCode(result.code); // Set the generated code in state
+      } else {
+        console.error(result.error || "Failed to generate coupon code.");
+      }
+    } catch (err) {
+      console.error("Error in handleGenerateCode:", err);
+    }
   };
 
   return (
@@ -94,12 +189,31 @@ const QuizComponent: React.FC = () => {
             <p className="text-xl mb-4">
               You scored {score} out of {questions.length}!
             </p>
-            <button
-              onClick={resetQuiz}
-              className="bg-red-400 border-red-500 text-white px-4 py-2 rounded-md"
-            >
-              Retake Quiz
-            </button>
+            {score === questions.length && generatedCode ? (
+              <>
+                <p className="text-lg text-green-400">
+                  Congratulations! Here's your coupon
+                </p>
+                <p className="text-lg text-green-400">{generatedCode}</p>
+              </>
+            ) : score === questions.length ? (
+              <p className="text-lg text-gray-600">
+                Generating your coupon code...
+              </p>
+            ) : (
+              <p className="text-lg text-red-400">
+                Great effort! All answers need to be correct to pass the test.
+                Give it another try—you’ve got this!
+              </p>
+            )}
+            {correctAnswers !== questions.length && (
+              <button
+                onClick={resetQuiz}
+                className="mt-4 bg-red-400 border-red-500 text-white px-4 py-2 rounded-md"
+              >
+                Retake Quiz
+              </button>
+            )}
           </div>
         ) : (
           <>

@@ -157,9 +157,9 @@ export const generateDiscountCode =
     try {
       const priceRuleId = await getPriceRule();
 
-      const randomCode = `DISCOUNT-${Math.random()
+      const randomCode = `EDU-${Math.random()
         .toString(36)
-        .substr(2, 8)
+        .slice(2, 8)
         .toUpperCase()}`;
 
       const response = await fetch(

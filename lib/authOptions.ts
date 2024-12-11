@@ -84,6 +84,7 @@ export const authOptions: NextAuthOptions = {
           id: staff.id,
           name: `${staff.firstName} ${staff.lastName}`,
           email: staff.email,
+          takenTest: staff.takenTest,
         };
 
         return authstaff;
@@ -96,13 +97,17 @@ export const authOptions: NextAuthOptions = {
       session.user = {
         ...session.user,
         role: token.role as string, // Add role directly from token
+        takenTest: token.takenTest as boolean,
+        id: token.id,
       };
       return session;
     },
     async jwt({ token, user }: { token: JWT; user?: User }) {
       // If user is defined, it's the first sign-in, so add role to the token
       if (user) {
+        token.id = user.id;
         token.role = user.role; // Store role directly in token
+        token.takenTest = user.takenTest; // Add takenTest to token
       }
       return token;
     },

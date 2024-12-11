@@ -8,12 +8,14 @@ declare module "next-auth" {
       email?: string | null;
       name?: string | null;
       role?: string;
+      takenTest?: boolean;
     } & DefaultSession["user"]; // Include other default properties like email and name
   }
 
   interface User {
     id: string; // Add id to the User type
     role?: string; // Add optional role property
+    takenTest?: boolean;
   }
 }
 

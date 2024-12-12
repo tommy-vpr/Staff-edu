@@ -1,9 +1,12 @@
 "use client";
 import { Check, Cross, Loader, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import { generatedCoupon } from "@/lib/generateCoupon";
 import { getUserCoupon } from "@/lib/getShopifyCoupon";
+import { useRouter } from "next/navigation";
+
+import { useCustomSession } from "@/lib/SessionContext";
 
 interface Answer {
   text: string;
@@ -62,59 +65,68 @@ const QuizComponent: React.FC = () => {
   const [showScore, setShowScore] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [generatedCode, setGeneratedCode] = useState<string | null>(null);
-  const [couponCode, setCouponCode] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  // const [couponCode, setCouponCode] = useState<string | null>(null);
+  // const [error, setError] = useState<string | null>(null);
+  // const [loading, setLoading] = useState<boolean>(true);
 
-  const { data: session } = useSession();
+  const { session, updateSession } = useCustomSession();
+  const router = useRouter();
 
-  useEffect(() => {
-    const fetchCoupon = async () => {
-      if (!session?.user?.id) {
-        setError("User ID is not available.");
-        setLoading(false);
-        return;
-      }
+  // useEffect(() => {
+  //   const fetchCoupon = async () => {
+  //     if (!session?.user?.id) {
+  //       setError("User ID is not available.");
+  //       setLoading(false);
+  //       return;
+  //     }
 
-      try {
-        const response = await fetch("/api/getCoupon", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ staffId: session.user.id }),
-        });
+  //     try {
+  //       const response = await fetch("/api/getCoupon", {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({ staffId: session.user.id }),
+  //       });
 
-        const result = await response.json();
+  //       const result = await response.json();
 
-        if (result.success) {
-          setCouponCode(result.code);
-        } else {
-          setError(result.error);
-        }
-      } catch (err) {
-        console.error("Error fetching coupon:", err);
-        setError("Failed to fetch coupon");
-      } finally {
-        setLoading(false);
-      }
-    };
+  //       if (result.success) {
+  //         setCouponCode(result.code);
+  //       } else {
+  //         setError(result.error);
+  //       }
+  //     } catch (err) {
+  //       console.error("Error fetching coupon:", err);
+  //       setError("Failed to fetch coupon");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchCoupon();
-  }, [session?.user?.id, session?.user?.takenTest]);
+  //   if (session) fetchCoupon();
+  // }, [session]);
 
-  if (session?.user?.takenTest) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="flex flex-col items-center justify-center p-6 border border-gray-200 rounded-lg">
-          <p>Thank you for taking the test.</p>
-          <p>
-            Coupon <b>{couponCode}</b> was issued to you.
-          </p>
-        </div>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
+
+  // if (!session) {
+  //   return <div>Please log in to access the quiz.</div>;
+  // }
+
+  // if (session.user.takenTest) {
+  //   return (
+  //     <div className="flex items-center justify-center h-full">
+  //       <div className="flex flex-col items-center justify-center p-6 border border-gray-200 rounded-lg">
+  //         <p>Thank you for taking the test.</p>
+  //         <p>
+  //           Coupon <b>{couponCode}</b> was issued to you.
+  //         </p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   const currentQuestion = questions[currentQuestionIndex];
 
@@ -168,6 +180,9 @@ const QuizComponent: React.FC = () => {
 
       if (result.success && result.code) {
         setGeneratedCode(result.code); // Set the generated code in state
+
+        updateSession(result.session); // Update the session in the context
+        router.refresh(); // Revalidate all data
       } else {
         console.error(result.error || "Failed to generate coupon code.");
       }

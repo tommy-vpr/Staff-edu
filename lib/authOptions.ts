@@ -93,22 +93,35 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async session({ session, token }: { session: Session; token: JWT }) {
-      // Ensure that the role is added to the session user object
-      session.user = {
-        ...session.user,
-        role: token.role as string, // Add role directly from token
-        takenTest: token.takenTest as boolean,
-        id: token.id,
-      };
-      return session;
+      // Dynamically fetch the latest user data from the database
+      const user = await prisma.staff.findUnique({
+        where: { id: token.id },
+        select: {
+          id: true,
+          takenTest: true, // Ensure takenTest is included
+        },
+      });
+
+      if (user) {
+        session.user = {
+          ...session.user,
+          id: user.id,
+          takenTest: user.takenTest, // Add takenTest directly from the database
+        };
+      }
+
+      return session; // Return the updated session
     },
+
     async jwt({ token, user }: { token: JWT; user?: User }) {
-      // If user is defined, it's the first sign-in, so add role to the token
+      // If user is defined, it's the first sign-in, so add fields to the token
       if (user) {
         token.id = user.id;
-        token.role = user.role; // Store role directly in token
-        token.takenTest = user.takenTest; // Add takenTest to token
+        token.role = user.role;
+        token.takenTest = user.takenTest;
       }
+
+      // If the token already exists, return it as is
       return token;
     },
   },

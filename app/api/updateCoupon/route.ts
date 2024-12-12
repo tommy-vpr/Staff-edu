@@ -2,10 +2,21 @@ import { generateDiscountCode } from "@/app/actions/admin";
 import { getErrorMessage } from "@/lib/getErrorMessage";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { authOptions } from "@/lib/authOptions";
+import { getServerSession } from "next-auth/next";
 
 export async function POST(req: Request) {
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user.id) {
+    return NextResponse.json(
+      { success: false, error: "Not authenticated" },
+      { status: 401 }
+    );
+  }
+
   try {
-    const body = await req.json();
+    const body: { staffId: string } = await req.json();
     const { staffId } = body;
 
     if (!staffId) {
@@ -64,7 +75,7 @@ export async function POST(req: Request) {
     }
 
     // Update the staff's takenTest field
-    const updatedStaff = await prisma.staff.update({
+    await prisma.staff.update({
       where: { id: staffId },
       data: {
         takenTest: true,
@@ -72,10 +83,13 @@ export async function POST(req: Request) {
       },
     });
 
+    // Fetch the updated session
+    const updatedSession = await getServerSession(authOptions);
+
     return NextResponse.json({
       success: true,
       code: newCode,
-      staff: updatedStaff,
+      session: updatedSession, // Return the updated session
     });
   } catch (err) {
     console.error("Error updating ShopifyCoupon and Staff:", err);

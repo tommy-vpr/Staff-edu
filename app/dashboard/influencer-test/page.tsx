@@ -58,12 +58,12 @@ const Page = () => {
 
   if (session.user.takenTest) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <div className="flex flex-col items-center justify-center p-6 border border-gray-200 rounded-lg">
-          <p>Thank you for taking the test.</p>
-          <p>Here's your coupon</p>
+      <div className="flex items-center justify-center h-full w-full">
+        <div className="flex flex-col items-center justify-center w-3/4 lg:w-1/3 p-6 border border-gray-400">
+          <p className="text-4xl font-bold">Thank you!</p>
+          <p>Here's a 30% off coupon code</p>
           {couponCode ? (
-            <p>
+            <p className="p-4 bg-green-400 w-full text-center mt-2 text-black">
               <b>{couponCode}</b>
             </p>
           ) : error ? (

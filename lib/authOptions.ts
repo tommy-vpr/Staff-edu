@@ -92,37 +92,70 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async session({ session, token }: { session: Session; token: JWT }) {
-      // Dynamically fetch the latest user data from the database
-      const user = await prisma.staff.findUnique({
-        where: { id: token.id },
-        select: {
-          id: true,
-          takenTest: true, // Ensure takenTest is included
-        },
-      });
-
+    async jwt({
+      token,
+      user,
+    }: {
+      token: JWT;
+      user?: User | null;
+    }): Promise<JWT> {
+      // Populate the token during the first sign-in
       if (user) {
-        session.user = {
-          ...session.user,
-          id: user.id,
-          takenTest: user.takenTest, // Add takenTest directly from the database
-        };
+        token.id = user.id;
+        token.role = user.role || undefined; // Include role if available
+        token.takenTest = (user as any).takenTest || undefined; // Include takenTest if applicable
+      }
+
+      return token; // Return the updated token
+    },
+
+    async session({
+      session,
+      token,
+    }: {
+      session: Session;
+      token: JWT;
+    }): Promise<Session> {
+      // Fetch additional user data based on role
+      if (token.role === "admin") {
+        // Fetch from `User` model
+        const user = await prisma.user.findUnique({
+          where: { id: token.id as string },
+          select: {
+            id: true,
+            role: true,
+          },
+        });
+
+        if (user) {
+          session.user = {
+            ...session.user,
+            id: user.id,
+            role: user.role,
+            takenTest: undefined, // Not applicable for `User`
+          };
+        }
+      } else {
+        // Fetch from `Staff` model
+        const staff = await prisma.staff.findUnique({
+          where: { id: token.id as string },
+          select: {
+            id: true,
+            takenTest: true,
+          },
+        });
+
+        if (staff) {
+          session.user = {
+            ...session.user,
+            id: staff.id,
+            role: "staff", // Default role for staff
+            takenTest: staff.takenTest,
+          };
+        }
       }
 
       return session; // Return the updated session
-    },
-
-    async jwt({ token, user }: { token: JWT; user?: User }) {
-      // If user is defined, it's the first sign-in, so add fields to the token
-      if (user) {
-        token.id = user.id;
-        token.role = user.role;
-        token.takenTest = user.takenTest;
-      }
-
-      // If the token already exists, return it as is
-      return token;
     },
   },
 

@@ -61,9 +61,10 @@ const Page = () => {
       <div className="flex items-center justify-center h-full">
         <div className="flex flex-col items-center justify-center p-6 border border-gray-200 rounded-lg">
           <p>Thank you for taking the test.</p>
+          <p>Here's your coupon</p>
           {couponCode ? (
             <p>
-              Coupon <b>{couponCode}</b> was issued to you.
+              <b>{couponCode}</b>
             </p>
           ) : error ? (
             <p className="text-red-500">{error}</p>

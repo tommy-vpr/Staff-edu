@@ -1,5 +1,10 @@
-import DashboardHeader from './(components)/DashboardHeader';
-import DashboardSideBar from './(components)/DashboardSideBar';
+import DashboardHeader from "./(components)/DashboardHeader";
+import DashboardSideBar from "./(components)/DashboardSideBar";
+
+export const metadata = {
+  title: "Staff EDU",
+  description: "Hitting new highs",
+};
 
 export default function DashboardLayout({
   children,

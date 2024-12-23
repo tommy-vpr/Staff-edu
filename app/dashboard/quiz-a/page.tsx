@@ -17,7 +17,6 @@ const Page = () => {
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
-    console.log(session);
     if (session?.user?.testsTaken) {
       setHasTakenQuizA(session.user.testsTaken.includes("quiz-a"));
       setLoading(false);

@@ -39,7 +39,6 @@ async function generateAndInsertCoupons(
     await prisma.generatedCodes.createMany({
       data: coupons,
     });
-    console.log(`${numberOfCoupons} coupons inserted successfully!`);
   } catch (error) {
     console.error("Error inserting coupons:", error);
   } finally {

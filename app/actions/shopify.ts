@@ -42,11 +42,6 @@ const createPriceRule = async (): Promise<string> => {
     );
 
     const responseBody = await createResponse.text();
-    console.log(
-      "Create price rule response:",
-      createResponse.status,
-      responseBody
-    );
 
     if (!createResponse.ok) {
       throw new Error("Failed to create price rule");
@@ -76,8 +71,6 @@ export const getPriceRule = async (): Promise<string> => {
     });
 
     const responseBody = await response.text();
-    console.log("Fetch price rules response:", response.status, responseBody);
-
     if (!response.ok) {
       throw new Error("Failed to fetch price rules");
     }

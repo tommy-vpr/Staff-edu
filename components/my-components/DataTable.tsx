@@ -100,7 +100,6 @@ export const columns: ColumnDef<GeneratedCodes>[] = [
       const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
       const handleDelete = () => {
-        console.log(`Deleted item with ID: ${payment.id}`);
         setIsDialogOpen(false);
       };
 

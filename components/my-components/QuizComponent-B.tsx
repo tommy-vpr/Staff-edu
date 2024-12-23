@@ -47,7 +47,6 @@ const QuizComponentB: React.FC = () => {
   };
 
   const handleNextQuestion = () => {
-    console.log(correctAnswers, questions.length);
     setSelectedAnswer(null);
     const nextQuestion = currentQuestionIndex + 1;
 

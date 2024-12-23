@@ -85,6 +85,7 @@ export const authOptions: NextAuthOptions = {
           name: `${staff.firstName} ${staff.lastName}`,
           email: staff.email,
           takenTest: staff.takenTest,
+          testsTaken: staff.testsTaken || [],
         };
 
         return authstaff;
@@ -104,6 +105,7 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.role = user.role || undefined; // Include role if available
         token.takenTest = (user as any).takenTest || undefined; // Include takenTest if applicable
+        token.testsTaken = user.testsTaken || [];
       }
 
       return token; // Return the updated token
@@ -142,6 +144,7 @@ export const authOptions: NextAuthOptions = {
           select: {
             id: true,
             takenTest: true,
+            testsTaken: true,
           },
         });
 
@@ -151,6 +154,7 @@ export const authOptions: NextAuthOptions = {
             id: staff.id,
             role: "staff", // Default role for staff
             takenTest: staff.takenTest,
+            testsTaken: staff.testsTaken || [],
           };
         }
       }

@@ -14,11 +14,16 @@ import {
 import * as React from "react";
 import littoLogo from "@/assets/images/litto-logo-blk.webp";
 
-export const CouponEmailTemplate = ({ firstName }: { firstName: string }) => {
+type Props = {
+  firstName: string;
+  couponCode: string;
+};
+
+export const CouponEmailTemplate = ({ firstName, couponCode }: Props) => {
   return (
     <Html>
       <Head />
-      <Preview>Welcome to the Litto Family! 🌟</Preview>
+      <Preview>LITO Staff EDU 🌟</Preview>
       <Body style={main}>
         <Container style={container}>
           {/* Header Section */}
@@ -32,18 +37,20 @@ export const CouponEmailTemplate = ({ firstName }: { firstName: string }) => {
 
           {/* Greeting Section */}
           <Section style={content}>
-            <Text style={title}>
-              Hi {firstName.charAt(0).toUpperCase() + firstName.slice(1)},
-              Welcome!
-            </Text>
+            <Text style={title}>Thank you for taking the quiz! 🎉</Text>
             <Text style={paragraph}>
-              We’re thrilled to have you as part of the Litto family! You’ve
-              just joined a community that’s all about hitting new highs.
+              As a token of our appreciation, here’s your exclusive coupon code:
             </Text>
-
-            {/* Closing Section */}
+            <Text style={couponStyle}>{couponCode}</Text>
             <Text style={paragraph}>
-              <strong>Team LITTO</strong>
+              <strong>How to use it:</strong>
+              <br />
+              1. Add your favorite items to your cart.
+              <br />
+              2. At checkout, enter the coupon code{" "}
+              <strong>{couponCode}</strong> in the "Discount Code" box.
+              <br />
+              3. Enjoy your savings!
             </Text>
           </Section>
 
@@ -155,7 +162,7 @@ const title: React.CSSProperties = {
 const paragraph: React.CSSProperties = {
   fontSize: "16px",
   lineHeight: "1.5",
-  color: "#555555",
+  color: "#333333",
   marginBottom: "15px",
 };
 
@@ -168,7 +175,7 @@ const listHeader: React.CSSProperties = {
 
 const list: React.CSSProperties = {
   fontSize: "16px",
-  color: "#555555",
+  color: "#333333",
   margin: "10px 0",
   paddingLeft: "20px",
 };
@@ -213,4 +220,12 @@ const socialIcons: React.CSSProperties = {
   alignItems: "center",
   marginTop: "10px",
   background: "#101010",
+};
+
+const couponStyle: React.CSSProperties = {
+  fontSize: "28px",
+  fontWeight: "bold",
+  color: "#18ab4f",
+  textAlign: "center",
+  margin: "10px 0",
 };

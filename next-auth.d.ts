@@ -1,27 +1,30 @@
-// next-auth.d.ts
-import NextAuth, { DefaultSession } from "next-auth";
+import NextAuth, { DefaultSession, DefaultUser } from "next-auth";
+import { JWT as DefaultJWT } from "next-auth/jwt";
 
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
-      id: string; // Ensure id is added to the user object in the session
+      id: string; // Unique user ID
       email?: string | null;
       name?: string | null;
-      role?: string;
-      takenTest?: boolean;
-    } & DefaultSession["user"]; // Include other default properties like email and name
+      role?: string; // Admin or Staff roles
+      takenTest?: boolean; // For Staff only
+      testsTaken?: string[];
+    } & DefaultSession["user"]; // Include default user properties
   }
 
-  interface User {
-    id: string; // Add id to the User type
-    role?: string; // Add optional role property
-    takenTest?: boolean;
+  interface User extends DefaultUser {
+    id: string; // Add user ID
+    role?: string; // Optional role property
+    takenTest?: boolean; // Add testsTaken flag for staff users
+    testsTaken?: string[];
   }
 }
 
 declare module "next-auth/jwt" {
-  interface JWT {
-    id: string; // Add id to JWT for use in token
-    role?: string; // Add role to JWT if needed in token handling
+  interface JWT extends DefaultJWT {
+    id: string; // Add user ID for JWT token
+    role?: string; // Optional role
+    takenTest?: boolean; // For staff users
   }
 }

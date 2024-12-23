@@ -12,8 +12,6 @@ const Page = () => {
 
   const { session } = useCustomSession();
 
-  console.log(session?.user);
-
   useEffect(() => {
     const fetchCouponCode = async () => {
       if (!session?.user?.takenTest) {

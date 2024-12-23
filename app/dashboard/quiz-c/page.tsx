@@ -28,7 +28,7 @@ const Page = () => {
     <div className="w-full h-2/3 flex justify-center items-center relative">
       {hasTakenQuizC ? (
         <div className="flex flex-col items-center">
-          <div className="rounded-full bg-green-400 p-4 mb-4">
+          <div className="rounded-full bg-blue-400 p-4 mb-4">
             <PartyPopper size={36} className="text-gray-800" />
           </div>
           <p>You have successfully completed this quiz.</p>

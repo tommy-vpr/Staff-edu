@@ -6,18 +6,19 @@ declare module "next-auth" {
     user: {
       id: string; // Unique user ID
       email?: string | null;
-      name?: string | null;
+      firstName?: string;
       role?: string; // Admin or Staff roles
       takenTest?: boolean; // For Staff only
-      testsTaken?: string[];
+      testsTaken?: string[]; // Array of completed tests
     } & DefaultSession["user"]; // Include default user properties
   }
 
   interface User extends DefaultUser {
     id: string; // Add user ID
     role?: string; // Optional role property
-    takenTest?: boolean; // Add testsTaken flag for staff users
-    testsTaken?: string[];
+    firstName?: string;
+    takenTest?: boolean; // Add takenTest flag for staff users
+    testsTaken?: string[]; // Add completed tests for staff users
   }
 }
 
@@ -26,5 +27,6 @@ declare module "next-auth/jwt" {
     id: string; // Add user ID for JWT token
     role?: string; // Optional role
     takenTest?: boolean; // For staff users
+    testsTaken?: string[]; // Add completed tests to JWT payload
   }
 }

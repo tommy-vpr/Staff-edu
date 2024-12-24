@@ -49,6 +49,10 @@ const GenerateCodeSendEmail = ({ quiz }: Props) => {
       if (res.success) {
         setMessage("✅ Coupon sent successfully! Please check your inbox.");
 
+        if (!sessionEmail) {
+          throw new Error("Session email is missing.");
+        }
+
         // Update `testsTaken` field in the `Staff` model
         await updateStaffTestsTaken(sessionEmail, quiz);
 

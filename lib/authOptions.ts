@@ -103,8 +103,8 @@ export const authOptions: NextAuthOptions = {
       // Populate the token during the first sign-in
       if (user) {
         token.id = user.id;
-        token.role = user.role || undefined; // Include role if available
-        token.takenTest = (user as any).takenTest || undefined; // Include takenTest if applicable
+        token.role = user.role; // Include role if available
+        token.takenTest = user.takenTest; // Include takenTest if applicable
         token.testsTaken = user.testsTaken || [];
       }
 
@@ -134,7 +134,6 @@ export const authOptions: NextAuthOptions = {
             ...session.user,
             id: user.id,
             role: user.role,
-            takenTest: undefined, // Not applicable for `User`
           };
         }
       } else {

@@ -8,7 +8,7 @@ import { SessionProvider as NextAuthProvider } from "next-auth/react";
 import { Toaster } from "react-hot-toast";
 import { SessionProvider } from "@/lib/SessionContext";
 import Head from "next/head";
-import { useEffect } from "react";
+import { DynamicHead } from "@/components/my-components/DynamicHead";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -21,23 +21,14 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-export default function RootLayout({
+export default function RootComponent({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  useEffect(() => {
-    document.title = "Staff Edu";
-  }, []);
-
   return (
     <html lang="en" suppressHydrationWarning>
-      <Head>
-        {/* Render global metadata */}
-        <title>Staff EDU</title>
-        <meta name="description" content="hitting new highs" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <DynamicHead />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

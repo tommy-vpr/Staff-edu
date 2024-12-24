@@ -39,7 +39,7 @@ export const CouponEmailTemplate = ({ firstName, couponCode }: Props) => {
           <Section style={content}>
             <Text style={title}>Thank you for taking the quiz! 🎉</Text>
             <Text style={paragraph}>
-              As a token of our appreciation, here’s your exclusive coupon code:
+              Here’s your exclusive 30% off coupon code to celebrate:
             </Text>
             <Text style={couponStyle}>{couponCode}</Text>
             <Text style={paragraph}>

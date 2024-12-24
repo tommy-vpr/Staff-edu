@@ -8,24 +8,25 @@ import React, {
   ReactNode,
 } from "react";
 import { useSession, getSession } from "next-auth/react";
+import type { Session } from "next-auth"; // Import the extended Session type
 
 interface SessionContextType {
-  session: any; // Use your NextAuth session type here
-  updateSession: (newSession?: any) => Promise<void>;
+  session: Session | null; // Use the extended NextAuth session type
+  updateSession: (newSession?: Session | null) => Promise<void>;
 }
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined);
 
 export const SessionProvider = ({ children }: { children: ReactNode }) => {
-  const { data: initialSession } = useSession();
-  const [session, setSession] = useState(initialSession);
+  const { data: initialSession } = useSession(); // Use the NextAuth hook
+  const [session, setSession] = useState<Session | null>(initialSession);
 
   // Update the session whenever the initial session changes
   useEffect(() => {
     setSession(initialSession);
   }, [initialSession]);
 
-  const updateSession = async (newSession?: any) => {
+  const updateSession = async (newSession?: Session | null) => {
     if (newSession) {
       // Update the session with provided data
       setSession(newSession);

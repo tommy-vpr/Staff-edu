@@ -47,8 +47,7 @@ export const CouponEmailTemplate = ({ firstName, couponCode }: Props) => {
               <br />
               1. Add your favorite items to your cart.
               <br />
-              2. At checkout, enter the coupon code{" "}
-              <strong>{couponCode}</strong> in the "Discount Code" box.
+              2. At checkout, enter the coupon code in the "Discount Code" box.
               <br />
               3. Enjoy your savings!
             </Text>

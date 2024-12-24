@@ -28,11 +28,7 @@ export const CouponEmailTemplate = ({ firstName, couponCode }: Props) => {
         <Container style={container}>
           {/* Header Section */}
           <Section style={header}>
-            <Img
-              width={120}
-              src="https://cdn.shopify.com/s/files/1/0586/7749/3954/files/litto-logo-transparent-background-bk_691d2fda-d9c7-4a19-b008-81c6fd80210c.png?v=1707683116"
-              alt="Litto Logo"
-            />
+            <Img width={120} src="/litto-logo.png" alt="Litto Logo" />
           </Section>
 
           {/* Greeting Section */}
@@ -68,7 +64,7 @@ export const CouponEmailTemplate = ({ firstName, couponCode }: Props) => {
                 }}
               >
                 <Img
-                  src="https://cdn.shopify.com/s/files/1/0586/7749/3954/files/tiktok-icon.png?v=1729289263"
+                  src="/tiktok-icon.png"
                   alt="tiktok"
                   width={24}
                   height={24}
@@ -86,12 +82,7 @@ export const CouponEmailTemplate = ({ firstName, couponCode }: Props) => {
                   margin: "0 5px",
                 }}
               >
-                <Img
-                  src="https://cdn.shopify.com/s/files/1/0586/7749/3954/files/x-logo.png?v=1728949605"
-                  alt="Twitter"
-                  width={24}
-                  height={24}
-                />
+                <Img src="/x-logo.webp" alt="Twitter" width={24} height={24} />
               </Link>
 
               <Link
@@ -106,7 +97,7 @@ export const CouponEmailTemplate = ({ firstName, couponCode }: Props) => {
                 }}
               >
                 <Img
-                  src="https://cdn.shopify.com/s/files/1/0586/7749/3954/files/instagram-icon.png?v=1729290626"
+                  src="/instagram-icon.webp"
                   alt="instagram"
                   width={24}
                   height={24}

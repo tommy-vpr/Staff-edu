@@ -30,7 +30,7 @@ export const CouponEmailTemplate = ({ firstName, couponCode }: Props) => {
           <Section style={header}>
             <Img
               width={120}
-              src="https://cedu.itslitto.com/litto-logo.png"
+              src="https://cdn.shopify.com/s/files/1/0586/7749/3954/files/litto-logo-transparent-background-bk_691d2fda-d9c7-4a19-b008-81c6fd80210c.png?v=1707683116"
               alt="Litto Logo"
             />
           </Section>
@@ -68,7 +68,7 @@ export const CouponEmailTemplate = ({ firstName, couponCode }: Props) => {
                 }}
               >
                 <Img
-                  src="https://cedu.itslitto.com/tiktok-icon.png"
+                  src="https://cdn.shopify.com/s/files/1/0586/7749/3954/files/tiktok-icon.png?v=1729289263"
                   alt="tiktok"
                   width={24}
                   height={24}
@@ -87,7 +87,7 @@ export const CouponEmailTemplate = ({ firstName, couponCode }: Props) => {
                 }}
               >
                 <Img
-                  src="https://cedu.itslitto.com/x-logo.webp"
+                  src="https://cdn.shopify.com/s/files/1/0586/7749/3954/files/x-logo.png?v=1728949605"
                   alt="Twitter"
                   width={24}
                   height={24}
@@ -106,7 +106,7 @@ export const CouponEmailTemplate = ({ firstName, couponCode }: Props) => {
                 }}
               >
                 <Img
-                  src="https://cedu.itslitto.com/instagram-icon.webp"
+                  src="https://cdn.shopify.com/s/files/1/0586/7749/3954/files/instagram-icon.png?v=1729290626"
                   alt="instagram"
                   width={24}
                   height={24}

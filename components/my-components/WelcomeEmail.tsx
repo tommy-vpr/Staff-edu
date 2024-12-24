@@ -27,6 +27,7 @@ export const WelcomeEmailTemplate = ({ firstName }: { firstName: string }) => {
               width={120}
               src="https://cedu.itslitto.com/litto-logo.png"
               alt="Litto Logo"
+              style={{ display: "block", margin: "0 auto" }}
             />
           </Section>
 
@@ -66,6 +67,7 @@ export const WelcomeEmailTemplate = ({ firstName }: { firstName: string }) => {
                   alt="tiktok"
                   width={24}
                   height={24}
+                  style={{ display: "block", margin: "0 auto" }}
                 />
               </Link>
 
@@ -85,6 +87,7 @@ export const WelcomeEmailTemplate = ({ firstName }: { firstName: string }) => {
                   alt="Twitter"
                   width={24}
                   height={24}
+                  style={{ display: "block", margin: "0 auto" }}
                 />
               </Link>
 
@@ -104,6 +107,7 @@ export const WelcomeEmailTemplate = ({ firstName }: { firstName: string }) => {
                   alt="instagram"
                   width={24}
                   height={24}
+                  style={{ display: "block", margin: "0 auto" }}
                 />
               </Link>
             </Text>

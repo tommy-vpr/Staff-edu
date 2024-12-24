@@ -21,7 +21,7 @@ const GenerateCodeSendEmail = ({ quiz }: Props) => {
   const { pending } = useFormStatus();
 
   const { session, updateSession } = useCustomSession();
-  const { firstName = "there" } = session?.user || {};
+  const { firstName = "there", email: sessionEmail } = session?.user || {};
 
   const isValidEmail = (email: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -50,7 +50,7 @@ const GenerateCodeSendEmail = ({ quiz }: Props) => {
         setMessage("✅ Coupon sent successfully! Please check your inbox.");
 
         // Update `testsTaken` field in the `Staff` model
-        await updateStaffTestsTaken(email, quiz);
+        await updateStaffTestsTaken(sessionEmail, quiz);
 
         // Trigger a session refresh using `updateSession`
         await updateSession();

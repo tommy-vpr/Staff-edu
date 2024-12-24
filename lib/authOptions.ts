@@ -47,7 +47,7 @@ export const authOptions: NextAuthOptions = {
         return authUser;
       },
     }),
-    // Influencer Credentials
+    // Staff Credentials
     CredentialsProvider({
       id: "staff-credentials",
       name: "Staff Credentials",
@@ -60,23 +60,22 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Email and invitation code are required");
         }
 
-        // Find influencer by email in a separate `influencer` table or with a `role` check
-        const staff = await prisma.staff.findFirst({
+        // Find staff by email
+        const staff = await prisma.staff.findUnique({
           where: { email: credentials.email },
-          include: {
-            inviteCode: true,
-          },
         });
 
         if (!staff) {
           throw new Error("No staff found with this email");
         }
 
-        const staffCode = staff.inviteCode; // Get the first code, if it exists
-
-        // Verify invitation code
-        if (!staffCode || staffCode.code !== credentials.code) {
-          throw new Error("Invalid invitation code or Email");
+        // Verify password
+        const isPasswordCorrect = await bcrypt.compare(
+          credentials.code,
+          staff.password ?? "" // Default to an empty string if password is null
+        );
+        if (!isPasswordCorrect) {
+          throw new Error("Invalid email or password");
         }
 
         // Return the staff data in the expected User format

@@ -41,23 +41,18 @@ export const registerStaff = async (newStaff: StaffFormValues) => {
 
     await prisma.staff.create({
       data: {
-        ...validateInput.data,
+        email: validateInput.data.email,
+        firstName: validateInput.data.firstName,
+        lastName: validateInput.data.lastName,
+        state: validateInput.data.state,
         password: hashedPassword,
-        inviteCode: {
-          create: {
-            code: validateInput.data.inviteCode,
-          },
-        },
-        coupon: {
-          create: {
-            code: validateInput.data.inviteCode,
-          },
-        },
+        createdAt: new Date(),
+        updatedAt: null,
       },
     });
 
     await prisma.generatedCodes.update({
-      where: { id: validateCode.id },
+      where: { code: validateCode.code },
       data: {
         status: true,
         email: validateInput.data.email,

@@ -39,30 +39,5 @@ model Staff {
   createdAt      DateTime        @default(now())
   updatedAt      DateTime?
   password       String?
-
-  coupon         ShopifyCoupon?  @relation(fields: [couponId], references: [id], onDelete: Cascade)
-  couponId       String?         @unique @db.ObjectId
-
-  inviteCode     InviteCode?     @relation(fields: [inviteCodeId], references: [id], onDelete: Cascade)
-  inviteCodeId   String?         @unique @db.ObjectId
-}
-
-model ShopifyCoupon {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  code      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  staff     Staff?   @relation
-}
-
-model InviteCode {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  code         String   @unique
-  status       Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  staff        Staff?   @relation
 }
 

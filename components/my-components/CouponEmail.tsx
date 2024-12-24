@@ -28,7 +28,11 @@ export const CouponEmailTemplate = ({ firstName, couponCode }: Props) => {
         <Container style={container}>
           {/* Header Section */}
           <Section style={header}>
-            <Img width={120} src="/litto-logo.png" alt="Litto Logo" />
+            <Img
+              width={120}
+              src="https://cedu.itslitto.com/litto-logo.png"
+              alt="Litto Logo"
+            />
           </Section>
 
           {/* Greeting Section */}
@@ -64,7 +68,7 @@ export const CouponEmailTemplate = ({ firstName, couponCode }: Props) => {
                 }}
               >
                 <Img
-                  src="/tiktok-icon.png"
+                  src="https://cedu.itslitto.com/tiktok-icon.png"
                   alt="tiktok"
                   width={24}
                   height={24}
@@ -82,7 +86,12 @@ export const CouponEmailTemplate = ({ firstName, couponCode }: Props) => {
                   margin: "0 5px",
                 }}
               >
-                <Img src="/x-logo.webp" alt="Twitter" width={24} height={24} />
+                <Img
+                  src="https://cedu.itslitto.com/x-logo.webp"
+                  alt="Twitter"
+                  width={24}
+                  height={24}
+                />
               </Link>
 
               <Link
@@ -97,7 +106,7 @@ export const CouponEmailTemplate = ({ firstName, couponCode }: Props) => {
                 }}
               >
                 <Img
-                  src="/instagram-icon.webp"
+                  src="https://cedu.itslitto.com/instagram-icon.webp"
                   alt="instagram"
                   width={24}
                   height={24}

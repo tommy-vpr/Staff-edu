@@ -1,9 +1,6 @@
 "use client";
 import { Check, Cross, Loader, X } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { getSession, useSession } from "next-auth/react";
-import { generatedCoupon } from "@/lib/generateCoupon";
-import { getUserCoupon } from "@/lib/getShopifyCoupon";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { useCustomSession } from "@/lib/SessionContext";
@@ -28,7 +25,6 @@ const QuizComponentC: React.FC = () => {
   const [score, setScore] = useState(0);
   const [showScore, setShowScore] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-  const [generatedCode, setGeneratedCode] = useState<string | null>(null);
 
   console.log(questions.length, correctAnswers);
 
@@ -65,33 +61,7 @@ const QuizComponentC: React.FC = () => {
     setScore(0);
     setShowScore(false);
     setSelectedAnswer(null);
-    setGeneratedCode(null);
     console.log("Taken test", questions.length, correctAnswers);
-  };
-
-  const handleGenerateCode = async () => {
-    try {
-      const response = await fetch("/api/updateCoupon", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ staffId: session?.user?.id }), // Pass the session user ID
-      });
-
-      const result = await response.json();
-
-      if (result.success && result.code) {
-        setGeneratedCode(result.code); // Set the generated code in state
-
-        updateSession(result.session); // Update the session in the context
-        router.refresh(); // Revalidate all data
-      } else {
-        console.error(result.error || "Failed to generate coupon code.");
-      }
-    } catch (err) {
-      console.error("Error in handleGenerateCode:", err);
-    }
   };
 
   return (

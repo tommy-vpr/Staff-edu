@@ -30,6 +30,8 @@ const QuizComponentC: React.FC = () => {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [generatedCode, setGeneratedCode] = useState<string | null>(null);
 
+  console.log(questions.length, correctAnswers);
+
   const { session, updateSession } = useCustomSession();
   const router = useRouter();
 
@@ -59,10 +61,12 @@ const QuizComponentC: React.FC = () => {
 
   const resetQuiz = () => {
     setCurrentQuestionIndex(0);
+    setCorrectAnswers(0);
     setScore(0);
     setShowScore(false);
     setSelectedAnswer(null);
     setGeneratedCode(null);
+    console.log("Taken test", questions.length, correctAnswers);
   };
 
   const handleGenerateCode = async () => {

@@ -4,8 +4,6 @@ import { authOptions } from "@/lib/authOptions";
 const Dashboard = async () => {
   const session = await getServerSession(authOptions);
 
-  console.log(session?.user);
-
   const firstName = session?.user.name?.split(" ")[0]; // Get the first name
 
   return (

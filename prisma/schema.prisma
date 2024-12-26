@@ -34,6 +34,7 @@ model Staff {
   firstName      String
   lastName       String
   state          String
+  subscribed     Boolean         @default(true)
   takenTest      Boolean         @default(false)
   testsTaken     String[]        @default([])          // Array of strings with default empty array
   createdAt      DateTime        @default(now())

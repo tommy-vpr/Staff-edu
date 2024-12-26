@@ -26,8 +26,6 @@ const QuizComponentC: React.FC = () => {
   const [showScore, setShowScore] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
 
-  console.log(questions.length, correctAnswers);
-
   const { session, updateSession } = useCustomSession();
   const router = useRouter();
 
@@ -61,7 +59,6 @@ const QuizComponentC: React.FC = () => {
     setScore(0);
     setShowScore(false);
     setSelectedAnswer(null);
-    console.log("Taken test", questions.length, correctAnswers);
   };
 
   return (

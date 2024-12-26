@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import littoLogo from "@/assets/images/litto-logo-blk.webp";
 
 export const UnsubscribeForm = ({
   unsubscribe,
@@ -37,7 +38,7 @@ export const UnsubscribeForm = ({
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
       <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6">
         <Image
-          src="/litto-logo.png"
+          src={littoLogo}
           height={50}
           width={100}
           alt="litto"

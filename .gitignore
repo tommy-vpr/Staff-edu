@@ -23,6 +23,7 @@
 # misc
 .DS_Store
 *.pem
+coupon.pdf
 
 # debug
 npm-debug.log*

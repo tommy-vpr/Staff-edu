@@ -181,7 +181,7 @@ export default function StaffSignupForm() {
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-sm font-medium">
+          <label htmlFor="inviteCode" className="block text-sm font-medium">
             Invitation Code
           </label>
           <input

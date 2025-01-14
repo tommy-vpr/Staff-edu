@@ -12,6 +12,8 @@ import VideoModal from "@/components/my-components/EducationalVideo"; // Adjust 
 
 import Image from "next/image";
 import { useState } from "react";
+import QuizCard from "@/components/my-components/QuizItem";
+import QuizList from "@/components/my-components/QuizList";
 
 type Video = {
   title: string;
@@ -25,6 +27,8 @@ const Dashboard = () => {
   const { data: session, status } = useSession();
 
   const firstName = session?.user.name?.split(" ")[0];
+
+  console.log(firstName);
 
   // State to handle video modal
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -59,12 +63,12 @@ const Dashboard = () => {
   ];
 
   return (
-    <div>
-      <h3 className="text-3xl font-semibold uppercase mb-8">
+    <div className="max-w-[1200px] m-auto">
+      <h3 className="text-2xl lg:text-3xl font-semibold uppercase mb-4">
         {firstName || session?.user.name}'s Dashboard
       </h3>
-      <div className="flex gap-8">
-        <div className="w-1/2 rounded-lg overflow-hidden">
+      <div className="flex lg:flex-row flex-col gap-8">
+        <div className="w-full lg:w-1/2 rounded-lg overflow-hidden">
           <video autoPlay muted loop className="w-full h-auto">
             <source
               src="https://cdn.shopify.com/videos/c/o/v/d8a05164335a4c9d8ec5a5ac6bd5fe0b.mp4"
@@ -73,7 +77,7 @@ const Dashboard = () => {
           </video>
         </div>
         <div>
-          <h3 className="font-semibold uppercase text-3xl mb-2 text-green-400">
+          <h3 className="font-semibold uppercase text-3xl mb-2 text-green-500">
             Budtender Perks
           </h3>
           <ul className="space-y-2 text-sm mb-4">
@@ -96,7 +100,8 @@ const Dashboard = () => {
           </ul>
           <Link
             href="https://itslitto.com/"
-            className="bg-green-400 text-[#333] font-semibold text-sm py-2 px-4 rounded-sm hover:bg-green-500"
+            className="bg-green-500 text-[#333] font-semibold text-sm py-2 px-4 rounded-sm
+            transition-all duration-150 hover:bg-green-600"
           >
             Check out our website
           </Link>
@@ -107,11 +112,11 @@ const Dashboard = () => {
         <h3 className="font-semibold uppercase text-lg mb-2">
           Educational Videos
         </h3>
-        <div className="flex gap-4">
+        <div className="flex flex-col lg:flex-row gap-4">
           {videos.map((video, index) => (
             <div key={index} className="w-full">
               <div
-                className="w-full h-52 rounded-md overflow-hidden relative group cursor-pointer"
+                className="w-full h-60 rounded-md overflow-hidden relative group cursor-pointer"
                 onClick={() => openVideoModal(video.src)}
               >
                 <div
@@ -144,21 +149,10 @@ const Dashboard = () => {
         onClose={closeVideoModal}
       />
 
-      <div className="mt-12">
+      <div className="my-12">
         <h3 className="font-semibold uppercase text-lg mb-2">Take a quiz</h3>
         <div className="flex gap-4">
-          <div className="bg-[#333] p-4 rounded-sm flex items-center gap-2 cursor-pointer hover:text-green-500 transition-all duration-150">
-            <SquarePen size={14} />
-            Hemp Quiz
-          </div>
-          <div className="bg-[#333] p-4 rounded-sm flex items-center gap-2 cursor-pointer hover:text-green-500 transition-all duration-150">
-            <SquarePen size={14} />
-            Cannabis Quiz
-          </div>
-          <div className="bg-[#333] p-4 rounded-sm flex items-center gap-2 cursor-pointer hover:text-green-500 transition-all duration-150">
-            <SquarePen size={14} />
-            Strain Quiz
-          </div>
+          <QuizList />
         </div>
       </div>
     </div>

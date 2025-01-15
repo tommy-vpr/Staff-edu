@@ -2,10 +2,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
-
+import Image from "next/image";
+import { useSession } from "next-auth/react";
 import { Code, GraduationCap, Home, NotebookPen, Users } from "lucide-react";
 
-import { useSession } from "next-auth/react";
+import littoLogo from "@/assets/images/litto-logo-blk.webp";
 
 const DashboardSideBar = () => {
   const pathName = usePathname();
@@ -16,7 +17,14 @@ const DashboardSideBar = () => {
       <div className="flex h-full max-h-screen flex-col gap-2">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <Link href="/" className="flex items-center gap-2 font-semibold">
-            <span className="">LITTO EDU</span>
+            {/* <span className="">LITTO EDU</span> */}
+            <Image
+              src={littoLogo}
+              alt="litto logo"
+              width={120}
+              height={40}
+              className="inverted"
+            />
           </Link>
         </div>
         <div className="flex-1">

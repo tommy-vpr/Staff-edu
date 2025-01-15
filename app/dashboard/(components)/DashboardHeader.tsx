@@ -120,6 +120,8 @@ const DashboardHeader = () => {
         </SheetContent>
       </Sheet>
       <div className="w-full flex-1"></div>
+      {/* User name */}
+      <span className="capitalize">{session?.user.name}</span>
       <ModeToggle />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

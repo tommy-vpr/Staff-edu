@@ -23,7 +23,7 @@ const DashboardSideBar = () => {
               alt="litto logo"
               width={120}
               height={40}
-              className="inverted"
+              className="invert-0 dark:invert"
             />
           </Link>
         </div>

@@ -65,7 +65,8 @@ const Dashboard = () => {
   return (
     <div className="max-w-[1200px] m-auto">
       <h3 className="text-2xl lg:text-3xl font-semibold uppercase mb-4">
-        {firstName || session?.user.name}'s Dashboard
+        {/* {firstName || session?.user.name}'s Dashboard */}
+        STAFF EDU
       </h3>
       <div className="flex lg:flex-row flex-col gap-8">
         <div className="w-full lg:w-1/2 rounded-lg overflow-hidden">

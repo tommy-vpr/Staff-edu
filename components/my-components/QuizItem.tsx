@@ -21,7 +21,7 @@ const QuizItem: React.FC<QuizItemProps> = ({
     <Link
       href={link}
       onClick={onClick}
-      className="bg-[#fff] p-2 rounded-sm flex flex-col items-center cursor-pointer hover:text-green-500 
+      className="dark:bg-white bg-[#f5f5f5] p-2 rounded-sm flex flex-col items-center cursor-pointer hover:text-green-500 
       transition-all duration-150 w-full group"
     >
       {iconLink && (

@@ -124,7 +124,7 @@ const Dashboard = () => {
                     -translate-x-1/2 -translate-y-1/2 z-10 flex items-center justify-center group-hover:scale-110
                     transition duration-150"
                 >
-                  <Play />
+                  <Play color="#ddd" />
                 </div>
                 <Image
                   src={videoThumb}

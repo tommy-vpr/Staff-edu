@@ -32,7 +32,7 @@ const Page = () => {
             <PartyPopper size={36} className="text-gray-800" />
           </div>
           <p>You have successfully completed this quiz.</p>
-          <p>A coupon has been sent to you email.</p>
+          <p>A coupon has been sent to your email.</p>
           <Confetti
             width={300}
             height={300}

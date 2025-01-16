@@ -22,7 +22,7 @@ const QuizItem: React.FC<QuizItemProps> = ({
       href={link}
       onClick={onClick}
       className="dark:bg-white bg-[#f5f5f5] p-2 rounded-sm flex flex-col items-center cursor-pointer hover:text-green-500 
-      transition-all duration-150 w-full group"
+      transition-transform duration-150 w-full group"
     >
       {iconLink && (
         <div className="w-full h-44 relative bg-[#ddd]">
@@ -31,7 +31,7 @@ const QuizItem: React.FC<QuizItemProps> = ({
             alt={`${label} Icon`}
             fill
             objectFit="contain"
-            className="p-4 transition-all duration-150 group-hover:scale-105"
+            className="p-4 transition-transform duration-150 group-hover:scale-105"
           />
         </div>
       )}

@@ -14,8 +14,10 @@ import { registerStaff } from "@/app/actions/staff";
 import toast from "react-hot-toast";
 import { sendEmail } from "@/app/actions/email";
 
+import littoLogo from "@/assets/images/litto-logo-blk.webp";
+import Image from "next/image";
+
 export default function StaffSignupForm() {
-  //   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const {
@@ -208,6 +210,13 @@ export default function StaffSignupForm() {
         <Link href="/login" className="underline underline-offset-2">
           Login
         </Link>
+        <Image
+          src={littoLogo}
+          alt="LITTO logo"
+          width={100}
+          height={40}
+          className="dark:invert block m-auto mt-4"
+        />
       </div>
     </div>
   );

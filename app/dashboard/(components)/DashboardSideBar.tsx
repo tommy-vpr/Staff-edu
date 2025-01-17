@@ -4,7 +4,14 @@ import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-import { Code, GraduationCap, Home, NotebookPen, Users } from "lucide-react";
+import {
+  Code,
+  GraduationCap,
+  Home,
+  Mail,
+  NotebookPen,
+  Users,
+} from "lucide-react";
 
 import littoLogo from "@/assets/images/litto-logo-blk.webp";
 
@@ -93,6 +100,19 @@ const DashboardSideBar = () => {
             >
               <NotebookPen className="h-4 w-4" />
               Quiz C
+            </Link>
+            <Link
+              href="/dashboard/contact"
+              className={clsx(
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                {
+                  "flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary":
+                    pathName === "/dashboard/contact",
+                }
+              )}
+            >
+              <Mail className="h-4 w-4" />
+              Contact
             </Link>
             {session?.user.role === "admin" && (
               <Link

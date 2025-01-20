@@ -16,7 +16,9 @@ export default function DashboardLayout({
       {/* Main Content */}
       <div className="w-full md:ml-[240px] lg:ml-[300px] flex flex-col min-h-screen">
         <DashboardHeader />
-        <main className="flex-1 flex flex-col gap-4 lg:gap-6">{children}</main>
+        <main className="flex-1 flex flex-col gap-4 lg:gap-6 py-4 px-3 md:p-6 lg:p-8">
+          {children}
+        </main>
       </div>
     </div>
   );

@@ -150,13 +150,15 @@ const DashboardHeader = () => {
         </SheetContent>
       </Sheet>
       <div className="ml-[56px] w-full flex-1 flex justify-center items-center">
-        <Image
-          src={littoLogo}
-          alt="litto logo"
-          width={100}
-          height={30}
-          className="dark:invert block md:hidden"
-        />
+        <Link href="/dashboard">
+          <Image
+            src={littoLogo}
+            alt="litto logo"
+            width={100}
+            height={30}
+            className="dark:invert block md:hidden"
+          />
+        </Link>
       </div>
       {/* User name */}
       <ModeToggle />

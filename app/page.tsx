@@ -17,8 +17,8 @@ export default async function Dashboard() {
   }
 
   return (
-    <div className="w-full flex h-screen flex-col lg:flex-row">
-      <div className="bg-[#101010] w-full lg:w-2/3 relative h-full">
+    <div className="w-full flex md:h-screen flex-col lg:flex-row">
+      <div className="bg-[#101010] w-full lg:w-2/3 relative h-[40vh] md:h-full">
         <Image
           src={stripes}
           width={180}

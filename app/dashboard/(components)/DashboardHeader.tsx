@@ -29,6 +29,9 @@ import { signOut, useSession } from "next-auth/react";
 
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import Image from "next/image";
+
+import littoLogo from "@/assets/images/litto-logo-blk.webp";
 
 const DashboardHeader = () => {
   const pathName = usePathname();
@@ -141,14 +144,21 @@ const DashboardHeader = () => {
               </Link>
             )}
             <Button onClick={() => signOut({ callbackUrl: "/login" })}>
-              Signout
+              Logout
             </Button>
           </nav>
         </SheetContent>
       </Sheet>
-      <div className="w-full flex-1"></div>
+      <div className="ml-[56px] w-full flex-1 flex justify-center items-center">
+        <Image
+          src={littoLogo}
+          alt="litto logo"
+          width={100}
+          height={30}
+          className="dark:invert block md:hidden"
+        />
+      </div>
       {/* User name */}
-      <span className="capitalize">{session?.user.name}</span>
       <ModeToggle />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -163,6 +173,9 @@ const DashboardHeader = () => {
               <Link href="/dashboard/account">Setting</Link>
             </DropdownMenuItem>
           )}
+          <span className="capitalize p-[5px] border-b w-full border-b-gray-800 block text-green-400">
+            {session?.user.name}
+          </span>
           <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/login" })}>
             Logout
           </DropdownMenuItem>

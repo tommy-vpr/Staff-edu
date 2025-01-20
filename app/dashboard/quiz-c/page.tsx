@@ -24,6 +24,8 @@ const Page = () => {
     if (session?.user?.testsTaken) {
       setHasTakenQuizC(session.user.testsTaken.includes("quiz-c"));
       setLoading(false);
+    } else if (session?.user?.role === "admin") {
+      setLoading(false);
     } else {
       setLoading(true);
     }
@@ -48,7 +50,7 @@ const Page = () => {
   }
 
   return (
-    <div className="w-full h-2/3 flex justify-center items-center relative">
+    <div className="min-h-[calc(100vh-60px)] h-auto flex justify-center items-center relative overflow-hidden">
       {hasTakenQuizC ? (
         <div className="flex flex-col items-center">
           <div className="rounded-full bg-blue-400 p-4 mb-4">
@@ -61,11 +63,11 @@ const Page = () => {
             height={dimensions.height}
             gravity={0.1} // Adjust the gravity for slower speed (default is 0.3)
             recycle={false}
-            className="m-auto"
+            className="absolute inset-0"
           />
         </div>
       ) : (
-        <div className="w-full mt-4">
+        <div className="w-full mt-4 -translate-y-1/2">
           <QuizComponentC />
         </div>
       )}

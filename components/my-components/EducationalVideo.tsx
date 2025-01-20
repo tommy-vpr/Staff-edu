@@ -11,12 +11,14 @@ import { VisuallyHidden } from "@reach/visually-hidden"; // Install if needed
 
 type VideoModalProps = {
   videoSrc: string | null;
+  videoTitle: string | null;
   isOpen: boolean;
   onClose: () => void;
 };
 
 const VideoModal: React.FC<VideoModalProps> = ({
   videoSrc,
+  videoTitle,
   isOpen,
   onClose,
 }) => {
@@ -24,7 +26,8 @@ const VideoModal: React.FC<VideoModalProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="p-8 w-full lg:w-2/3 max-w-none">
         {/* Accessibility */}
-        <DialogTitle>
+        <DialogTitle className="font-lemonsun text-xl lg:text-2xl font-normal">
+          {videoTitle}
           <VisuallyHidden>Watch Video</VisuallyHidden>
         </DialogTitle>
         <DialogDescription>

@@ -33,15 +33,20 @@ const Dashboard = () => {
   // State to handle video modal
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentVideo, setCurrentVideo] = useState<string | null>(null);
+  const [currentVideoTitle, setCurrentVideoTitle] = useState<string | null>(
+    null
+  );
 
-  const openVideoModal = (videoSrc: string) => {
+  const openVideoModal = (videoSrc: string, videoTitle: string) => {
     setCurrentVideo(videoSrc);
+    setCurrentVideoTitle(videoTitle);
     setIsModalOpen(true);
   };
 
   const closeVideoModal = () => {
     setIsModalOpen(false);
     setCurrentVideo("");
+    setCurrentVideoTitle("");
   };
 
   const videos: Video[] = [
@@ -119,7 +124,7 @@ const Dashboard = () => {
             <div key={index} className="w-full">
               <div
                 className="w-full h-60 rounded-md overflow-hidden relative group cursor-pointer"
-                onClick={() => openVideoModal(video.src)}
+                onClick={() => openVideoModal(video.src, video.title)}
               >
                 <div
                   className="bg-[#101010]/70 h-12 w-12 rounded-full absolute top-1/2 left-1/2 
@@ -147,6 +152,7 @@ const Dashboard = () => {
       {/* Video Modal */}
       <VideoModal
         videoSrc={currentVideo || null} // Pass null if currentVideo is empty
+        videoTitle={currentVideoTitle || null}
         isOpen={isModalOpen}
         onClose={closeVideoModal}
       />

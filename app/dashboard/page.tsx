@@ -11,7 +11,7 @@ import videoThumb from "@/assets/images/video-thumbnail.webp";
 import VideoModal from "@/components/my-components/EducationalVideo"; // Adjust path if necessary
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import QuizCard from "@/components/my-components/QuizItem";
 import QuizList from "@/components/my-components/QuizList";
 
@@ -36,6 +36,16 @@ const Dashboard = () => {
   const [currentVideoTitle, setCurrentVideoTitle] = useState<string | null>(
     null
   );
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Detect if the user is on a mobile device
+    const mobileCheck =
+      /android|avantgo|blackberry|bada|bb|meego|mobile|opera mini|phone|palm|symbian|tablet|windows ce|windows phone|ipod|ipad|iphone/i.test(
+        navigator.userAgent
+      );
+    setIsMobile(mobileCheck);
+  }, []);
 
   const openVideoModal = (videoSrc: string, videoTitle: string) => {
     setCurrentVideo(videoSrc);
@@ -68,7 +78,7 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="max-w-[1200px] m-auto">
+    <div className="max-w-[1200px] m-auto p-4 md:p-6 lg:p-8">
       <h3 className="text-2xl lg:text-3xl font-semibold uppercase mb-4">
         {/* {firstName || session?.user.name}'s Dashboard */}
         STAFF EDU
@@ -76,7 +86,7 @@ const Dashboard = () => {
       <div className="flex lg:flex-row flex-col gap-8">
         <div className="w-full lg:w-1/2 rounded-lg overflow-hidden">
           {/*autoPlay muted loop*/}
-          <video autoPlay muted loop className="w-full h-auto">
+          <video autoPlay={!isMobile} muted loop className="w-full h-auto">
             <source
               src="https://cdn.shopify.com/videos/c/o/v/d8a05164335a4c9d8ec5a5ac6bd5fe0b.mp4"
               type="video/mp4"

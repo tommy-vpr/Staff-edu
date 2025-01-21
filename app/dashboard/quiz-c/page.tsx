@@ -50,14 +50,16 @@ const Page = () => {
   }
 
   return (
-    <div className="min-h-[calc(100vh-60px)] h-auto flex justify-center items-center relative overflow-hidden">
+    <div className="min-h-screen flex justify-center items-center relative overflow-hidden">
       {hasTakenQuizC ? (
-        <div className="flex flex-col items-center">
-          <div className="rounded-full bg-blue-400 p-4 mb-4">
-            <PartyPopper size={36} className="text-gray-800" />
+        <>
+          <div className="flex flex-col items-center -translate-y-1/2">
+            <div className="rounded-full bg-blue-400 p-4 mb-4">
+              <PartyPopper size={36} className="text-gray-800" />
+            </div>
+            <p>You have successfully completed this quiz.</p>
+            <p>A coupon has been sent to your email.</p>
           </div>
-          <p>You have successfully completed this quiz.</p>
-          <p>A coupon has been sent to your email.</p>
           <Confetti
             width={dimensions.width}
             height={dimensions.height}
@@ -65,7 +67,7 @@ const Page = () => {
             recycle={false}
             className="absolute inset-0"
           />
-        </div>
+        </>
       ) : (
         <div className="w-full mt-4 -translate-y-1/2">
           <QuizComponentC />

@@ -113,6 +113,19 @@ const DashboardHeader = () => {
               <NotebookPen className="h-4 w-4" />
               Quiz C
             </Link>
+            <Link
+              href="/dashboard/contact"
+              className={clsx(
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                {
+                  "flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary":
+                    pathName === "/dashboard/contact",
+                }
+              )}
+            >
+              <NotebookPen className="h-4 w-4" />
+              Contact
+            </Link>
             {session?.user.role === "admin" && (
               <Link
                 href="/dashboard/codes"

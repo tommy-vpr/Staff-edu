@@ -86,7 +86,13 @@ const Dashboard = () => {
       <div className="flex lg:flex-row flex-col gap-8">
         <div className="w-full lg:w-1/2 rounded-lg overflow-hidden">
           {/*autoPlay muted loop*/}
-          <video autoPlay={!isMobile} muted loop className="w-full h-auto">
+          <video
+            autoPlay={!isMobile}
+            controls={isMobile}
+            muted
+            loop
+            className="w-full h-auto"
+          >
             <source
               src="https://cdn.shopify.com/videos/c/o/v/d8a05164335a4c9d8ec5a5ac6bd5fe0b.mp4"
               type="video/mp4"

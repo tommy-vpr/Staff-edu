@@ -100,10 +100,10 @@ const Dashboard = () => {
           </video>
         </div>
         <div>
-          <h3 className="font-semibold uppercase text-3xl mb-2 text-green-500">
+          <h3 className="font-semibold uppercase text-xl lg:text-2xl mb-2 text-green-500">
             Budtender Perks
           </h3>
-          <ul className="space-y-2 text-sm mb-4">
+          <ul className="space-y-2 text-sm mb-8">
             <li className="flex gap-1">
               <Check size={14} />
               Exclusive Discounts or Promotions
@@ -123,7 +123,7 @@ const Dashboard = () => {
           </ul>
           <Link
             href="https://itslitto.com/"
-            className="bg-green-500 text-[#333] font-semibold text-sm py-2 px-4 rounded-sm
+            className="bg-green-500 text-[#333] font-semibold text-sm py-3 px-4 rounded-sm
             transition-all duration-150 hover:bg-green-600"
           >
             Check out our website

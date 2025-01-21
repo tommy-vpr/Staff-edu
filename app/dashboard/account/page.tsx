@@ -78,7 +78,7 @@ const page = () => {
   };
 
   return (
-    <div>
+    <div className="p-4 lg:p-6">
       <div className="p-8 flex flex-col max-w-[400px] m-auto bg-gray-100 dark:bg-[#101010] border border-gray-200 dark:border-[#222] rounded-lg">
         <div className="flex flex-col gap-4 p-8 items-center justify-center mb-8">
           <div className="rounded-full w-32 h-32 bg-gray-300 dark:bg-gray-800 uppercase text-4xl flex justify-center items-center font-bold">

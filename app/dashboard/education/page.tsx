@@ -49,7 +49,7 @@ const ContentBlock = ({ title, desc, index }: Props) => (
 
 const Page = () => {
   return (
-    <div className="flex flex-col gap-8 w-full lg:w-2/3 mx-auto">
+    <div className="flex flex-col gap-8 w-full lg:w-2/3 mx-auto p-4 lg:p-6">
       {courses.map((course, i) => (
         <ContentBlock
           key={course.title}

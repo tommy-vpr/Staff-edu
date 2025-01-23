@@ -72,7 +72,9 @@ export default function ContactForm() {
 
   return (
     <div className="w-full max-w-[500px] p-6 sm:p-8 space-y-6 rounded-lg mx-auto mt-8">
-      <h1 className="text-3xl font-bold text-center uppercase">Contact Us</h1>
+      <h1 className="text-2xl lg:text-3xl font-bold text-center uppercase">
+        Contact Us
+      </h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>

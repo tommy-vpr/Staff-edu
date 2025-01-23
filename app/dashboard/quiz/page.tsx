@@ -43,7 +43,7 @@ const Page = () => {
   }
 
   return (
-    <div className="flex justify-center items-center relative overflow-hidden min-h-screen">
+    <div className="flex justify-center items-center relative h-full">
       {hasTakenQuizA ? (
         <>
           <div className="flex flex-col items-center -translate-y-1/2">
@@ -62,7 +62,7 @@ const Page = () => {
           />
         </>
       ) : (
-        <div className="w-full mt-4 -translate-y-1/2">
+        <div className="w-full h-full flex justify-center items-center">
           <QuizComponentA />
         </div>
       )}

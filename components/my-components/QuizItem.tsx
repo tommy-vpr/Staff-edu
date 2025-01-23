@@ -21,16 +21,16 @@ const QuizItem: React.FC<QuizItemProps> = ({
     <Link
       href={link}
       onClick={onClick}
-      className="dark:bg-white bg-[#f5f5f5] p-2 rounded-sm flex flex-col items-center cursor-pointer hover:text-green-500 
+      className="dark:bg-white bg-[#f5f5f5] aspect-video p-2 rounded-sm flex flex-col items-center cursor-pointer hover:text-green-500 
       transition-transform duration-150 w-full group"
     >
       {iconLink && (
-        <div className="w-full h-52 relative bg-[#ddd]">
+        <div className="w-full aspect-video relative bg-[#ddd] flex justify-center items-center">
           <Image
             src={iconLink}
             alt={`${label} Icon`}
-            fill
-            objectFit="contain"
+            width={220}
+            height={80}
             className="p-4 transition-transform duration-150 group-hover:scale-105"
           />
         </div>

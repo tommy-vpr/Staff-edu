@@ -74,7 +74,7 @@ const Dashboard = () => {
         STAFF EDU
       </h3>
       <div className="flex lg:flex-row flex-col gap-8">
-        <div className="w-full lg:w-1/2 rounded-lg overflow-hidden">
+        <div className="w-full lg:w-1/2 aspect-video rounded-lg overflow-hidden">
           {/*autoPlay muted loop*/}
           <video
             autoPlay={!isMobile}
@@ -129,7 +129,7 @@ const Dashboard = () => {
           {videos.map((video, index) => (
             <div key={index} className="w-full">
               <div
-                className="h-60 rounded-md overflow-hidden relative group cursor-pointer"
+                className="aspect-video rounded-md overflow-hidden relative group cursor-pointer"
                 onClick={() => openVideoModal(video.src, video.title)}
               >
                 <div

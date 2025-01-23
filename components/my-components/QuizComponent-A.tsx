@@ -100,7 +100,7 @@ const QuizComponentA: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center mt-36">
+    <div className="flex flex-col items-center justify-center w-full -translate-y-1/3 lg:w-1/2">
       <div className="w-full max-w-md rounded-lg shadow-md p-8">
         <h1 className="text-3xl font-bold mb-6">Quiz</h1>
 

@@ -17,25 +17,25 @@ const QuizList: React.FC = () => {
   console.log(pathName);
 
   return (
-    <div className="flex gap-4 w-full flex-col md:flex-row">
-      <QuizItem
-        label="Hemp Quiz"
-        link={`${pathName}/quiz-a`}
-        iconLink={hempIcon}
-        onClick={() => handleQuizClick("Hemp Quiz")}
-      />
+    <div className="flex gap-4 w-full lg:w-1/2 flex-col md:flex-row">
       <QuizItem
         label="Cannabis Quiz"
         link={`${pathName}/quiz-b`}
         iconLink={cannabisIcon}
         onClick={() => handleQuizClick("Cannabis Quiz")}
       />
-      <QuizItem
+      {/* <QuizItem
+        label="Hemp Quiz"
+        link={`${pathName}/quiz-a`}
+        iconLink={hempIcon}
+        onClick={() => handleQuizClick("Hemp Quiz")}
+      /> */}
+      {/* <QuizItem
         label="What Strain Are You?"
         link={`${pathName}/quiz-c`}
         iconLink={strainIcon}
         onClick={() => handleQuizClick("Strain Quiz")}
-      />
+      /> */}
     </div>
   );
 };

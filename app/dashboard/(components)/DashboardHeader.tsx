@@ -75,43 +75,17 @@ const DashboardHeader = () => {
               Education
             </Link>
             <Link
-              href="/dashboard/quiz-a"
+              href="/dashboard/quiz"
               className={clsx(
                 "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
                 {
                   "flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary":
-                    pathName === "/dashboard/quiz-a",
+                    pathName === "/dashboard/quiz",
                 }
               )}
             >
               <NotebookPen className="h-4 w-4" />
-              Quiz A
-            </Link>
-            <Link
-              href="/dashboard/quiz-b"
-              className={clsx(
-                "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
-                {
-                  "flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary":
-                    pathName === "/dashboard/quiz-b",
-                }
-              )}
-            >
-              <NotebookPen className="h-4 w-4" />
-              Quiz B
-            </Link>
-            <Link
-              href="/dashboard/quiz-c"
-              className={clsx(
-                "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
-                {
-                  "flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary":
-                    pathName === "/dashboard/quiz-c",
-                }
-              )}
-            >
-              <NotebookPen className="h-4 w-4" />
-              Quiz C
+              Quiz
             </Link>
             <Link
               href="/dashboard/contact"

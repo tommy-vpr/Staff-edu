@@ -61,18 +61,8 @@ const Dashboard = () => {
 
   const videos: Video[] = [
     {
-      title: "Hemp",
-      duration: "3:58",
-      src: "https://res.cloudinary.com/drhy6wylu/video/upload/v1722468062/5365340-hd_1366_720_25fps_1_elwbck.mp4",
-    },
-    {
-      title: "Cannabis",
-      duration: "5:19",
-      src: "https://res.cloudinary.com/drhy6wylu/video/upload/v1722468062/5365340-hd_1366_720_25fps_1_elwbck.mp4",
-    },
-    {
-      title: "What Strain Are You?",
-      duration: "3:34",
+      title: "LITTO Cannibis",
+      duration: "1:51",
       src: "https://res.cloudinary.com/drhy6wylu/video/upload/v1722468062/5365340-hd_1366_720_25fps_1_elwbck.mp4",
     },
   ];
@@ -135,11 +125,11 @@ const Dashboard = () => {
         <h3 className="font-semibold uppercase text-lg mb-2">
           Educational Videos
         </h3>
-        <div className="flex flex-col lg:flex-row gap-4">
+        <div className="w-full lg:w-1/2 flex flex-col lg:flex-row gap-4">
           {videos.map((video, index) => (
             <div key={index} className="w-full">
               <div
-                className="w-full h-60 rounded-md overflow-hidden relative group cursor-pointer"
+                className="h-60 rounded-md overflow-hidden relative group cursor-pointer"
                 onClick={() => openVideoModal(video.src, video.title)}
               >
                 <div

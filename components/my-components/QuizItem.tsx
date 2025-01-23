@@ -25,7 +25,7 @@ const QuizItem: React.FC<QuizItemProps> = ({
       transition-transform duration-150 w-full group"
     >
       {iconLink && (
-        <div className="w-full h-44 relative bg-[#ddd]">
+        <div className="w-full h-52 relative bg-[#ddd]">
           <Image
             src={iconLink}
             alt={`${label} Icon`}

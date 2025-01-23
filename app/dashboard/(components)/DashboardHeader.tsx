@@ -47,7 +47,7 @@ const DashboardHeader = () => {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="flex flex-col">
-          <nav className="grid gap-2 text-lg font-medium">
+          <nav className="grid gap-2 text-lg font-medium mt-8">
             <Link
               href="/dashboard"
               className={clsx(
@@ -60,19 +60,6 @@ const DashboardHeader = () => {
             >
               <Home className="h-4 w-4" />
               Dashboard
-            </Link>
-            <Link
-              href="/dashboard/education"
-              className={clsx(
-                "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
-                {
-                  "flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary":
-                    pathName === "/dashboard/education",
-                }
-              )}
-            >
-              <GraduationCap className="h-4 w-4" />
-              Education
             </Link>
             <Link
               href="/dashboard/quiz"

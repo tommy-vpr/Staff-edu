@@ -24,10 +24,10 @@ const VideoModal: React.FC<VideoModalProps> = ({
 }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="p-8">
+      <DialogContent className="p-2">
         {/* Accessibility */}
         <DialogTitle className="text-xl lg:text-2xl font-normal">
-          {videoTitle}
+          {/* {videoTitle} */}
           <VisuallyHidden>Watch Video</VisuallyHidden>
         </DialogTitle>
         <DialogDescription>

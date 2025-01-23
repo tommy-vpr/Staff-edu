@@ -63,7 +63,7 @@ const Dashboard = () => {
     {
       title: "LITTO Cannibis",
       duration: "1:51",
-      src: "https://res.cloudinary.com/drhy6wylu/video/upload/v1722468062/5365340-hd_1366_720_25fps_1_elwbck.mp4",
+      src: "https://cdn.shopify.com/videos/c/o/v/eeb10cb216c14ed9b24e65a2bc340083.mp4",
     },
   ];
 

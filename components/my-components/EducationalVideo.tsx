@@ -24,9 +24,9 @@ const VideoModal: React.FC<VideoModalProps> = ({
 }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="p-8 w-full lg:w-2/3 max-w-none">
+      <DialogContent className="p-8">
         {/* Accessibility */}
-        <DialogTitle className="font-lemonsun text-xl lg:text-2xl font-normal">
+        <DialogTitle className="text-xl lg:text-2xl font-normal">
           {videoTitle}
           <VisuallyHidden>Watch Video</VisuallyHidden>
         </DialogTitle>
@@ -35,7 +35,16 @@ const VideoModal: React.FC<VideoModalProps> = ({
         </DialogDescription>
 
         {/* Video Player */}
-        <video controls autoPlay className="rounded-lg w-full h-auto">
+        <video
+          controls
+          autoPlay
+          className="rounded-lg w-full h-auto"
+          style={{
+            border: "none", // Removes any border
+            outline: "none", // Removes focus outline
+            boxShadow: "none", // Ensures no shadow is applied
+          }}
+        >
           {videoSrc ? (
             <source src={videoSrc} type="video/mp4" />
           ) : (

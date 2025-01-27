@@ -37,19 +37,24 @@ export const CouponEmailTemplate = ({ firstName, couponCode }: Props) => {
 
           {/* Greeting Section */}
           <Section style={content}>
-            <Text style={title}>Thank you for taking the quiz! 🎉</Text>
+            <Text style={title}>
+              Congratulations on completing the quiz! 🎉
+            </Text>
             <Text style={paragraph}>
-              Here’s your exclusive 30% off coupon code to celebrate:
+              To celebrate, here’s your exclusive $80 coupon code:
             </Text>
             <Text style={couponStyle}>{couponCode}</Text>
             <Text style={paragraph}>
-              <strong>How to use it:</strong>
+              <strong>How to redeem:</strong>
               <br />
               1. Add your favorite items to your cart.
               <br />
-              2. At checkout, enter the coupon code in the "Discount Code" box.
+              2. Enter the coupon code in the "Discount Code" field at checkout.
               <br />
-              3. Enjoy your savings!
+              3. Complete your purchase and enjoy!
+              <br />
+              4. This $80 coupon is valid for one-time use only. Any unused
+              balance will not be carried over.
             </Text>
           </Section>
 

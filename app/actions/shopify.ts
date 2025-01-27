@@ -28,14 +28,15 @@ const createPriceRule = async (): Promise<string> => {
         },
         body: JSON.stringify({
           price_rule: {
-            title: "30% Off Discount",
-            target_type: "line_item",
-            target_selection: "all",
-            allocation_method: "across",
-            value_type: "percentage",
-            value: "-30.0",
-            customer_selection: "all",
-            starts_at: new Date().toISOString(),
+            title: "$80 Off One-Time Use",
+            target_type: "line_item", // Applies to individual line items
+            target_selection: "all", // Applies to all products
+            allocation_method: "across", // Splits the discount across all applicable items
+            value_type: "fixed_amount", // Fixed amount discount
+            value: "-80.0", // $80 discount
+            customer_selection: "all", // Available to all customers
+            usage_limit: 1, // One-time use per customer
+            starts_at: new Date().toISOString(), // Start immediately
           },
         }),
       }
@@ -152,5 +153,30 @@ export const updateStaffTestsTaken = async (email: string, test: string) => {
   } catch (error) {
     console.error("Error updating Staff model:", error);
     return { success: false, error: "Failed to update Staff model." };
+  }
+};
+
+export const fetchPriceRules = async (): Promise<any[]> => {
+  const SHOPIFY_ADMIN_API_URL = process.env.NEXT_PUBLIC_SHOPIFY_ADMIN_API_URL!;
+  const SHOPIFY_ACCESS_TOKEN = process.env.NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN!;
+
+  try {
+    const response = await fetch(`${SHOPIFY_ADMIN_API_URL}/price_rules.json`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Shopify-Access-Token": SHOPIFY_ACCESS_TOKEN,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch price rules");
+    }
+
+    const data = await response.json();
+    return data.price_rules || [];
+  } catch (error) {
+    console.error("Error fetching price rules:", error);
+    return [];
   }
 };

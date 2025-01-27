@@ -14,6 +14,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import QuizCard from "@/components/my-components/QuizItem";
 import QuizList from "@/components/my-components/QuizList";
+import PriceRuleFetcher from "@/components/my-components/PriceRuleFetcher";
 
 type Video = {
   title: string;

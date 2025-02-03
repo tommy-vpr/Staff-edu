@@ -118,6 +118,7 @@ export const sendContactEmail = async ({
       replyTo: email,
       react: ContactEmailTemplate({
         name,
+        subject,
         message,
       }),
     });

@@ -16,9 +16,10 @@ import * as React from "react";
 type Props = {
   name: string;
   message: string;
+  subject: string;
 };
 
-export const ContactEmailTemplate = ({ name, message }: Props) => {
+export const ContactEmailTemplate = ({ name, message, subject }: Props) => {
   return (
     <Html>
       <Head />
@@ -38,7 +39,12 @@ export const ContactEmailTemplate = ({ name, message }: Props) => {
           {/* Greeting Section */}
           <Section style={content}>
             <Text style={subheader}>From: {name}</Text>
-            <Text style={paragraph}>{message}</Text>
+            <Text style={paragraph}>
+              <strong>Subject:</strong> {subject}
+            </Text>
+            <Text style={paragraph}>
+              <strong>Message:</strong> {message}
+            </Text>
           </Section>
 
           {/* Footer Section */}

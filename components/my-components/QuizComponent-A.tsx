@@ -1,5 +1,6 @@
 "use client";
-import { Check, Cross, Loader, X } from "lucide-react";
+
+import { Check, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { questions } from "@/data/questions";
@@ -13,6 +14,7 @@ const QuizComponentA: React.FC = () => {
   const [showScore, setShowScore] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [generatedCode, setGeneratedCode] = useState<string | null>(null);
+  const [answeredQuestions, setAnsweredQuestions] = useState(0); // Tracks answered questions
 
   const { session, updateSession } = useCustomSession();
   const router = useRouter();
@@ -22,9 +24,11 @@ const QuizComponentA: React.FC = () => {
   const handleAnswerClick = (isCorrect: boolean, answerText: string) => {
     setSelectedAnswer(answerText);
 
+    // Increment answered questions
+    setAnsweredQuestions((prev) => prev + 1);
+
     // Increment correct answers only if the answer is correct
     if (isCorrect) {
-      // Increment the score for every answered question
       setScore((prev) => prev + 1);
       setCorrectAnswers((prev) => prev + 1);
     }
@@ -47,12 +51,18 @@ const QuizComponentA: React.FC = () => {
     setShowScore(false);
     setSelectedAnswer(null);
     setGeneratedCode(null);
+    setAnsweredQuestions(0);
   };
 
   return (
     <div className="flex flex-col items-center justify-center w-full -translate-y-1/3 lg:w-1/2">
       <div className="w-full max-w-lg rounded-lg shadow-md p-8">
-        <h1 className="text-3xl font-bold mb-6">Quiz</h1>
+        <h1 className="text-3xl font-bold mb-6 flex justify-between">
+          Quiz{" "}
+          <span className="text-sm text-gray-500 font-normal">
+            {currentQuestionIndex + 1} of {questions.length}
+          </span>
+        </h1>
 
         {showScore ? (
           <div>
@@ -83,6 +93,11 @@ const QuizComponentA: React.FC = () => {
           </div>
         ) : (
           <>
+            {/* Question Tracker */}
+            {/* <div className="text-gray-500 text-sm mb-3">
+              Question {currentQuestionIndex + 1} of {questions.length}
+            </div> */}
+
             <h2 className="text-xl mb-4">{currentQuestion.question}</h2>
 
             <div className="space-y-4">
@@ -103,7 +118,7 @@ const QuizComponentA: React.FC = () => {
                   disabled={!!selectedAnswer}
                 >
                   <span>{answer.text}</span>
-                  {/* Only show icon if this button is the selected one */}
+                  {/* Show icon only if this button is selected */}
                   {selectedAnswer === answer.text && (
                     <span className="ml-2">
                       {answer.correct ? (

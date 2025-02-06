@@ -70,12 +70,11 @@ const Dashboard = () => {
 
   return (
     <div className="max-w-[1200px] m-auto p-4 md:p-6 lg:p-8">
-      <h3 className="text-2xl lg:text-3xl font-semibold uppercase mb-4">
-        {/* {firstName || session?.user.name}'s Dashboard */}
-        STAFF EDU
+      <h3 className="text-2xl lg:text-3xl font-semibold uppercase mt-4 lg:mb-8 text-green-500">
+        Welcome to LITTO 101!
       </h3>
-      <div className="flex lg:flex-row flex-col gap-8">
-        <div className="w-full lg:w-1/2 aspect-video rounded-lg overflow-hidden">
+      <div className="flex lg:flex-row flex-col">
+        <div className="w-full lg:w-1/2 aspect-video">
           {/*autoPlay muted loop*/}
           <video
             autoPlay={!isMobile}
@@ -90,35 +89,20 @@ const Dashboard = () => {
             />
           </video>
         </div>
-        <div>
-          <h3 className="font-semibold uppercase text-xl lg:text-2xl mb-2 text-green-500">
-            Budtender Perks
-          </h3>
+        <div className="w-full lg:w-1/2 flex flex-col gap-4 lg:px-8 mt-6 lg:mt-0">
+          <p>
+            You’re about to take your LITTO skills to the next level! Learn what
+            makes our products hit different and why we stay ahead of the game.
+            To make it worth your time, we're hooking you up with an $80 coupon
+            just for learning!
+          </p>
+          <p className="text-green-500 font-semibold">Here’s how it works:</p>
           <ul className="space-y-2 text-sm mb-8">
-            <li className="flex gap-1">
-              <Check size={14} />
-              Exclusive Discounts or Promotions
-            </li>
-            <li className="flex gap-1">
-              <Check size={14} />
-              Access to Exclusive Content
-            </li>
-            <li className="flex gap-1">
-              <Check size={14} />
-              Early Access
-            </li>
-            <li className="flex gap-1">
-              <Check size={14} />
-              Community Perks
-            </li>
+            <li>1. Check out the video - Get the lowdown on LITTO.</li>
+            <li>2. Take the quiz - Test your LITTO knowledge.</li>
+            <li>3. Claim your $80 coupon - Rep LITTO the right way.</li>
           </ul>
-          <Link
-            href="https://itslitto.com/"
-            className="bg-green-500 text-[#333] font-semibold text-sm py-3 px-4 rounded-sm
-            transition-all duration-150 hover:bg-green-600"
-          >
-            Check out our website
-          </Link>
+          <p>Simple, right? Tap in, and let’s get started!</p>
         </div>
       </div>
       {/* Educational Videos Section */}
@@ -170,6 +154,14 @@ const Dashboard = () => {
           <QuizList />
         </div>
       </div>
+
+      <Link
+        href="https://itslitto.com/"
+        className="bg-green-500 text-[#333] font-semibold text-sm py-3 px-4 rounded-sm
+            transition-all duration-150 hover:bg-green-600"
+      >
+        Check out our website
+      </Link>
     </div>
   );
 };

@@ -7,14 +7,14 @@ import type { StaticImageData } from "next/image";
 type QuizItemProps = {
   label: string; // The label for the quiz item
   link: string; // The URL to navigate to
-  iconLink?: StaticImageData | string; // Optional icon image source
+  thumbNail?: StaticImageData | string; // Optional icon image source
   onClick?: () => void; // Optional click handler
 };
 
 const QuizItem: React.FC<QuizItemProps> = ({
   label,
   link,
-  iconLink,
+  thumbNail,
   onClick,
 }) => {
   return (
@@ -24,14 +24,14 @@ const QuizItem: React.FC<QuizItemProps> = ({
       className="dark:bg-white bg-[#f5f5f5] aspect-video p-2 rounded-sm flex flex-col items-center cursor-pointer hover:text-green-500 
       transition-transform duration-150 w-full group"
     >
-      {iconLink && (
-        <div className="w-full aspect-video relative bg-[#ddd] flex justify-center items-center">
+      {thumbNail && (
+        <div className="w-full aspect-video relative bg-[#ddd] flex justify-center items-center overflow-hidden">
           <Image
-            src={iconLink}
-            alt={`${label} Icon`}
-            width={220}
-            height={80}
-            className="p-4 transition-transform duration-150 group-hover:scale-105"
+            src={thumbNail}
+            alt={`${label}`}
+            width={800}
+            height={500}
+            className="transition-transform duration-150 group-hover:scale-105"
           />
         </div>
       )}

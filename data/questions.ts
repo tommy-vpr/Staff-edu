@@ -43,10 +43,10 @@ export const questions: Question[] = [
   {
     question: "What are the different LITTO all-in-one lines?",
     answers: [
-      { text: "All of the above", correct: true },
       { text: "Live Resin", correct: false },
       { text: "Original", correct: false },
       { text: "Exotics", correct: false },
+      { text: "All of the above", correct: true },
     ],
   },
   {

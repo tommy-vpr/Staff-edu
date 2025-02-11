@@ -2,7 +2,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import Image from "next/image";
-import heroImage from "@/assets/images/hero-banner-roof-top.webp";
+import heroImage from "@/assets/images/hero-banner-can.webp";
 import stripes from "@/assets/images/litto-logo-sec.png";
 import { redirect } from "next/navigation";
 import StaffSignupForm from "@/components/my-components/StaffSignupForm";

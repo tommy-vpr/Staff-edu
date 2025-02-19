@@ -24,7 +24,7 @@ export default async function Dashboard() {
           width={180}
           quality={100}
           alt="stripes"
-          className="absolute top-4 left-4 lg:top-8 lg:left-8 z-10 w-[80px] sm:w-[100px] md:w-[140px] lg:w-[180px]"
+          className="opacity-50 absolute top-4 left-4 lg:top-8 lg:left-8 z-10 w-[80px] sm:w-[100px] md:w-[140px] lg:w-[180px] invert"
         />
 
         <Image

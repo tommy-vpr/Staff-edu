@@ -71,7 +71,7 @@ const Dashboard = () => {
   return (
     <div className="max-w-[1200px] m-auto p-4 md:p-6 lg:p-8">
       <h3 className="text-2xl lg:text-3xl font-semibold uppercase mt-4 lg:mb-8 text-green-500">
-        Welcome to LITTO 101!
+        LITTO 101
       </h3>
       <div className="flex lg:flex-row flex-col">
         <div className="w-full lg:w-1/2 aspect-video">
@@ -93,8 +93,9 @@ const Dashboard = () => {
           <p>
             You’re about to take your LITTO skills to the next level! Learn what
             makes our products hit different and why we stay ahead of the game.
-            To make it worth your time, we're hooking you up with an $80 coupon
-            just for learning!
+            To make it worth your time, we're hooking you up with an{" "}
+            <strong className="text-green-500">$80 coupon</strong> just for
+            learning!
           </p>
           <p className="text-green-500 font-semibold">Here’s how it works:</p>
           <ul className="space-y-2 text-sm mb-8">

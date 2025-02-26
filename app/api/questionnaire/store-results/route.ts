@@ -27,7 +27,7 @@ function getCorsHeaders(origin: string) {
   return {
     "Access-Control-Allow-Origin": ALLOWED_ORIGINS.includes(origin)
       ? origin
-      : "https://cedu.itslitto.com",
+      : "https://cedu.itslitto.com", // Fallback to primary origin
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
     "Access-Control-Allow-Credentials": "true",
@@ -47,25 +47,47 @@ export async function OPTIONS(req: Request) {
 export async function POST(req: Request) {
   const origin = req.headers.get("origin") || "";
 
-  // ✅ Await cookies() since it's now a Promise in Next.js 15
-  const jwtCookieStore = await cookies();
-  const jwtCookie = jwtCookieStore.get("quizJWT")?.value;
-
-  if (!jwtCookie) {
-    return new Response(
-      JSON.stringify({ error: "Unauthorized - No token provided" }),
-      {
-        status: 401,
-        headers: getCorsHeaders(origin),
-      }
-    );
-  }
-
   try {
+    // ✅ Ensure request is from an allowed origin
+    if (!ALLOWED_ORIGINS.includes(origin)) {
+      return new Response(JSON.stringify({ error: "Forbidden - CORS" }), {
+        status: 403,
+        headers: getCorsHeaders(origin),
+      });
+    }
+
+    // ✅ Await cookies() since it's now a Promise in Next.js 15
+    const jwtCookieStore = await cookies();
+    const jwtCookie = jwtCookieStore.get("quizJWT")?.value;
+
+    if (!jwtCookie) {
+      console.error("❌ No JWT token found in cookies!");
+      return new Response(
+        JSON.stringify({ error: "Unauthorized - No token provided" }),
+        {
+          status: 401,
+          headers: getCorsHeaders(origin),
+        }
+      );
+    }
+
     // ✅ Verify JWT token
-    const decoded = jwt.verify(jwtCookie, JWT_SECRET) as JwtPayload;
+    let decoded: JwtPayload;
+    try {
+      decoded = jwt.verify(jwtCookie, JWT_SECRET) as JwtPayload;
+    } catch (error) {
+      console.error("❌ Invalid JWT:", error);
+      return new Response(
+        JSON.stringify({ error: "Unauthorized - Invalid token" }),
+        {
+          status: 401,
+          headers: getCorsHeaders(origin),
+        }
+      );
+    }
 
     if (!decoded.shopify || decoded.shopify !== SHOPIFY_DOMAIN) {
+      console.error("❌ Invalid Shopify domain in JWT:", decoded.shopify);
       return new Response(
         JSON.stringify({ error: "Unauthorized - Invalid Shopify domain" }),
         {
@@ -79,9 +101,8 @@ export async function POST(req: Request) {
     const key = `rate_limit:shop:${shopifyStore}`;
 
     // ✅ Rate limit requests per Shopify store
-    let current;
     try {
-      current = await redis.incr(key);
+      const current = await redis.incr(key);
       if (current === 1) {
         await redis.expire(key, WINDOW);
       }
@@ -93,7 +114,7 @@ export async function POST(req: Request) {
         );
       }
     } catch (redisError) {
-      console.error("Redis Error:", redisError);
+      console.error("❌ Redis Error:", redisError);
       return new Response(
         JSON.stringify({ error: "Rate limiting failed - Redis issue" }),
         {
@@ -108,13 +129,21 @@ export async function POST(req: Request) {
     try {
       body = await req.json();
     } catch (error) {
+      console.error("❌ Invalid JSON format:", error);
       return new Response(JSON.stringify({ error: "Invalid JSON format" }), {
         status: 400,
         headers: getCorsHeaders(origin),
       });
     }
 
-    const { email, questions } = body;
+    const { email, state, questions } = body;
+
+    if (!state) {
+      return new Response(JSON.stringify({ error: "State is required" }), {
+        status: 400,
+        headers: getCorsHeaders(origin),
+      });
+    }
 
     if (!Array.isArray(questions) || questions.length === 0) {
       return new Response(
@@ -127,10 +156,11 @@ export async function POST(req: Request) {
 
     // ✅ Ensure each question has required fields
     for (const q of questions) {
-      if (!q.question || !q.answer) {
+      if (!q.question || !q.answer || !q.value) {
         return new Response(
           JSON.stringify({
-            error: "Each question must have a 'question' and 'answer' field",
+            error:
+              "Each question must have 'question', 'answer', and 'value' fields",
           }),
           { status: 400, headers: getCorsHeaders(origin) }
         );
@@ -138,21 +168,37 @@ export async function POST(req: Request) {
     }
 
     // ✅ Store data in MongoDB using Prisma
-    const newResponse = await prisma.questionnaire.create({
-      data: {
-        shopifyStore,
-        email: email || null, // ✅ Allow email to be optional
-        questions, // ✅ Store as an array of objects
-      },
-    });
+    try {
+      const newResponse = await prisma.questionnaire.create({
+        data: {
+          shopifyStore,
+          email: email || null, // ✅ Allow email to be optional
+          state, // ✅ Store state
+          questions, // ✅ Store as an array of objects
+        },
+      });
 
-    return new Response(JSON.stringify({ success: true, data: newResponse }), {
-      status: 200,
-      headers: getCorsHeaders(origin),
-    });
+      return new Response(
+        JSON.stringify({ success: true, data: newResponse }),
+        {
+          status: 200,
+          headers: getCorsHeaders(origin),
+        }
+      );
+    } catch (dbError) {
+      console.error("❌ Database Insert Error:", dbError);
+      return new Response(
+        JSON.stringify({
+          error: "Database Error - Failed to store questionnaire",
+        }),
+        {
+          status: 500,
+          headers: getCorsHeaders(origin),
+        }
+      );
+    }
   } catch (error) {
-    console.error("Error processing request:", error);
-
+    console.error("❌ Unexpected Error:", error);
     return new Response(JSON.stringify({ error: "Internal Server Error" }), {
       status: 500,
       headers: getCorsHeaders(origin),

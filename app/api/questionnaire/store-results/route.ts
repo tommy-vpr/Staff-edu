@@ -29,7 +29,7 @@ function getCorsHeaders(origin: string) {
       ? origin
       : "https://cedu.itslitto.com", // Fallback to primary origin
     "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
     "Access-Control-Allow-Credentials": "true",
   };
 }

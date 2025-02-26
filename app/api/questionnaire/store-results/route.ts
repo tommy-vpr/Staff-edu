@@ -45,7 +45,7 @@ export async function OPTIONS(req: Request) {
 
 // ✅ Handle POST request to store quiz responses
 export async function POST(req: Request) {
-  const origin = req.headers.get("origin") || "ALLOWED_ORIGINS";
+  const origin = req.headers.get("origin") || "";
 
   // ✅ Await cookies() since it's now a Promise in Next.js 15
   const jwtCookieStore = await cookies();

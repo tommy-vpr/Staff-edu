@@ -43,17 +43,12 @@ model Staff {
 }
 
 model Questionnaire {
-  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
   shopifyStore String
   email        String?
   state        String? 
-  questions    Question[] // ✅ Store as an array of objects
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  questions    Json      // ✅ Store as embedded JSON (fix)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }
 
-// ✅ Embedded JSON structure (not a relation)
-type Question {
-  question String
-  answer   String
-}

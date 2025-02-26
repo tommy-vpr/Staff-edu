@@ -37,7 +37,7 @@ function getCorsHeaders(origin: string) {
       ? origin
       : "https://cedu.itslitto.com",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
     "Access-Control-Allow-Credentials": "true",
   };
 }
@@ -140,6 +140,7 @@ export async function POST(req: Request) {
     // ✅ Step 1: Update the quiz result in Prisma Database
     const updateResponse = await updateQuizResult(id, email);
     if (!updateResponse.success) {
+      console.error("❌ Prisma Update Error:", updateResponse.error);
       return new Response(
         JSON.stringify({ error: "Failed to update quiz result" }),
         { status: 500, headers: getCorsHeaders(origin) }
@@ -163,30 +164,12 @@ export async function POST(req: Request) {
       results,
     };
 
-    const emailResponse = await sendQuestionnaireCoupon(emailPayload);
+    await sendQuestionnaireCoupon(emailPayload);
 
-    if (emailResponse.error) {
-      return new Response(JSON.stringify({ error: "Failed to send email" }), {
-        status: 500,
-        headers: getCorsHeaders(origin),
-      });
-    }
-
-    // ✅ Store JWT in HTTP-only cookie (Set for 1 hour)
-    const response = new Response(
-      JSON.stringify({ success: true, couponCode }),
-      {
-        status: 200,
-        headers: getCorsHeaders(origin),
-      }
-    );
-
-    response.headers.append(
-      "Set-Cookie",
-      `quizJWT=${jwtCookie}; HttpOnly; Secure; SameSite=Strict; Max-Age=3600; Path=/`
-    );
-
-    return response;
+    return new Response(JSON.stringify({ success: true, couponCode }), {
+      status: 200,
+      headers: getCorsHeaders(origin),
+    });
   } catch (error) {
     console.error("Error processing request:", error);
     return new Response(JSON.stringify({ error: "Internal Server Error" }), {

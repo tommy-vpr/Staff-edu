@@ -87,6 +87,9 @@ export async function GET(req: Request) {
       expiresIn: "1h",
     });
 
+    // ✅ Store in HTTP-only cookie
+    const response = NextResponse.json({ success: true, token });
+
     // ✅ Await `cookies()` since it's async in Next.js 15
     const jwtCookieStore = await cookies();
     jwtCookieStore.set("quizJWT", token, {
@@ -97,12 +100,13 @@ export async function GET(req: Request) {
       path: "/",
     });
 
-    console.log("✅ JWT Stored in Cookie:", token);
+    // console.log("✅ JWT Stored in Cookie:", token);
 
-    return new NextResponse(JSON.stringify({ success: true }), {
-      status: 200,
-      headers: getCorsHeaders(origin),
-    });
+    // return new NextResponse(JSON.stringify({ success: true }), {
+    //   status: 200,
+    //   headers: getCorsHeaders(origin),
+    // });
+    return response;
   } catch (error) {
     console.error("JWT Generation Error:", error);
     return new Response(JSON.stringify({ error: "Failed to generate token" }), {

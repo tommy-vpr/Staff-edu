@@ -25,7 +25,7 @@ function getCorsHeaders(origin: string) {
   return {
     "Access-Control-Allow-Origin": ALLOWED_ORIGINS.includes(origin)
       ? origin
-      : "https://cedu.itslitto.com",
+      : "",
     "Access-Control-Allow-Methods": "GET, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
     "Access-Control-Allow-Credentials": "true",
@@ -45,9 +45,9 @@ export async function OPTIONS(req: Request) {
 export async function GET(req: Request) {
   const origin = req.headers.get("origin") || "";
 
-  // ✅ Block unauthorized origins
-  if (!origin.includes("itslitto.com")) {
-    return new Response(JSON.stringify({ error: "Forbidden" }), {
+  // ✅ Ensure origin is strictly allowed
+  if (!ALLOWED_ORIGINS.includes(origin)) {
+    return new Response(JSON.stringify({ error: "Forbidden - CORS" }), {
       status: 403,
       headers: getCorsHeaders(origin),
     });
@@ -66,7 +66,10 @@ export async function GET(req: Request) {
     if (current > LIMIT) {
       return new Response(
         JSON.stringify({ error: "Too many requests. Try again later." }),
-        { status: 429, headers: getCorsHeaders(origin) }
+        {
+          status: 429,
+          headers: getCorsHeaders(origin),
+        }
       );
     }
   } catch (error) {
@@ -83,12 +86,15 @@ export async function GET(req: Request) {
       expiresIn: "1h",
     });
 
-    // ✅ Create a response and store JWT as an HTTP-only cookie
-    const response = NextResponse.json({ success: true });
-    response.headers.set(
-      "Set-Cookie",
-      `quizJWT=${token}; HttpOnly; Secure; SameSite=Strict; Max-Age=3600`
-    );
+    // ✅ Use NextResponse with cookie handling
+    const response = new NextResponse(JSON.stringify({ success: true }), {
+      status: 200,
+      headers: {
+        ...getCorsHeaders(origin),
+        "Set-Cookie": `quizJWT=${token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=3600`,
+        "Content-Type": "application/json",
+      },
+    });
 
     return response;
   } catch (error) {

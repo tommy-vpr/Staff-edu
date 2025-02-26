@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { Redis } from "@upstash/redis";
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers"; // ✅ Async cookies handling in Next.js 15
 
 const JWT_SECRET = process.env.SHOPIFY_API_SECRET!;
 const SHOPIFY_DOMAIN = process.env.SHOPIFY_DOMAIN!;
@@ -86,17 +87,22 @@ export async function GET(req: Request) {
       expiresIn: "1h",
     });
 
-    // ✅ Use NextResponse with cookie handling
-    const response = new NextResponse(JSON.stringify({ success: true }), {
-      status: 200,
-      headers: {
-        ...getCorsHeaders(origin),
-        "Set-Cookie": `quizJWT=${token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=3600`,
-        "Content-Type": "application/json",
-      },
+    // ✅ Await `cookies()` since it's async in Next.js 15
+    const jwtCookieStore = await cookies();
+    jwtCookieStore.set("quizJWT", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none", // ✅ Correct lowercase "none" for cross-origin
+      maxAge: 3600, // 1 hour expiration
+      path: "/",
     });
 
-    return response;
+    console.log("✅ JWT Stored in Cookie:", token);
+
+    return new NextResponse(JSON.stringify({ success: true }), {
+      status: 200,
+      headers: getCorsHeaders(origin),
+    });
   } catch (error) {
     console.error("JWT Generation Error:", error);
     return new Response(JSON.stringify({ error: "Failed to generate token" }), {

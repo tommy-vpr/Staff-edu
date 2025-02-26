@@ -8,7 +8,7 @@ import { updateQuizResult } from "@/lib/updateQuizResult";
 
 const JWT_SECRET = process.env.SHOPIFY_API_SECRET!;
 const SHOPIFY_DOMAIN = process.env.SHOPIFY_DOMAIN!;
-const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "https://www.skwezed.com";
+const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "https://www.itslitto.com";
 
 // ✅ Set up Redis for rate limiting
 const redis = new Redis({

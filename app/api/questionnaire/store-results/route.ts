@@ -6,7 +6,12 @@ import { cookies } from "next/headers"; // ✅ Read JWT from HTTP-only cookie
 
 const JWT_SECRET = process.env.SHOPIFY_API_SECRET!;
 const SHOPIFY_DOMAIN = process.env.SHOPIFY_DOMAIN!;
-const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "https://www.itslitto.com";
+const ALLOWED_ORIGINS = [
+  "https://itslitto.com",
+  "https://www.itslitto.com",
+  "https://cedu.itslitto.com",
+  "https://www.cedu.itslitto.com",
+];
 
 // ✅ Set up Redis for rate limiting
 const redis = new Redis({
@@ -20,7 +25,9 @@ const LIMIT = 10; // Allow max 10 requests per minute per Shopify store
 // ✅ Generate dynamic CORS headers
 function getCorsHeaders(origin: string) {
   return {
-    "Access-Control-Allow-Origin": origin,
+    "Access-Control-Allow-Origin": ALLOWED_ORIGINS.includes(origin)
+      ? origin
+      : "https://cedu.itslitto.com",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
     "Access-Control-Allow-Credentials": "true",
@@ -29,7 +36,7 @@ function getCorsHeaders(origin: string) {
 
 // ✅ Handle CORS Preflight Requests
 export async function OPTIONS(req: Request) {
-  const origin = req.headers.get("origin") || ALLOWED_ORIGIN;
+  const origin = req.headers.get("origin") || "";
   return new Response(null, {
     status: 204,
     headers: getCorsHeaders(origin),
@@ -38,7 +45,7 @@ export async function OPTIONS(req: Request) {
 
 // ✅ Handle POST request to store quiz responses
 export async function POST(req: Request) {
-  const origin = req.headers.get("origin") || ALLOWED_ORIGIN;
+  const origin = req.headers.get("origin") || "ALLOWED_ORIGINS";
 
   // ✅ Await cookies() since it's now a Promise in Next.js 15
   const jwtCookieStore = await cookies();

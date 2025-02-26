@@ -4,7 +4,12 @@ import { NextResponse } from "next/server";
 
 const JWT_SECRET = process.env.SHOPIFY_API_SECRET!;
 const SHOPIFY_DOMAIN = process.env.SHOPIFY_DOMAIN!;
-const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "https://www.itslitto.com";
+const ALLOWED_ORIGINS = [
+  "https://itslitto.com",
+  "https://www.itslitto.com",
+  "https://cedu.itslitto.com",
+  "https://www.cedu.itslitto.com",
+];
 
 // ✅ Set up Redis for rate limiting
 const redis = new Redis({
@@ -18,7 +23,9 @@ const LIMIT = 5; // Allow max 5 requests per minute per IP
 // ✅ Function to set CORS headers
 function getCorsHeaders(origin: string) {
   return {
-    "Access-Control-Allow-Origin": origin,
+    "Access-Control-Allow-Origin": ALLOWED_ORIGINS.includes(origin)
+      ? origin
+      : "https://cedu.itslitto.com",
     "Access-Control-Allow-Methods": "GET, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
     "Access-Control-Allow-Credentials": "true",
@@ -27,7 +34,7 @@ function getCorsHeaders(origin: string) {
 
 // ✅ Handle CORS Preflight Requests (OPTIONS)
 export async function OPTIONS(req: Request) {
-  const origin = req.headers.get("origin") || ALLOWED_ORIGIN;
+  const origin = req.headers.get("origin") || "";
   return new Response(null, {
     status: 204,
     headers: getCorsHeaders(origin),
@@ -36,7 +43,7 @@ export async function OPTIONS(req: Request) {
 
 // ✅ Handle JWT Generation and Store in HTTP-Only Cookie
 export async function GET(req: Request) {
-  const origin = req.headers.get("origin") || ALLOWED_ORIGIN;
+  const origin = req.headers.get("origin") || "";
 
   // ✅ Block unauthorized origins
   if (!origin.includes("itslitto.com")) {

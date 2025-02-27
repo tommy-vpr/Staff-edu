@@ -39,7 +39,7 @@ export async function OPTIONS(req: Request) {
 export async function POST(req: Request) {
   const origin = req.headers.get("origin") || ALLOWED_ORIGIN;
 
-  if (!origin.includes("skwezed.com")) {
+  if (!origin.includes("itslitto.com")) {
     return new Response(JSON.stringify({ error: "Forbidden" }), {
       status: 403,
       headers: getCorsHeaders(origin),

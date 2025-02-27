@@ -38,7 +38,7 @@ export async function GET(req: Request) {
   const origin = req.headers.get("origin") || ALLOWED_ORIGIN;
 
   // ✅ Handle CORS for actual GET request
-  if (!origin.includes("skwezed.com")) {
+  if (!origin.includes("itslitto.com")) {
     return new Response(JSON.stringify({ error: "Forbidden" }), {
       status: 403,
       headers: getCorsHeaders(origin),

@@ -115,7 +115,7 @@ export async function POST(req: Request) {
       });
     }
 
-    const { email, questions } = body;
+    const { email, questions, state } = body;
 
     if (!Array.isArray(questions) || questions.length === 0) {
       return new Response(
@@ -149,6 +149,7 @@ export async function POST(req: Request) {
       data: {
         shopifyStore,
         email: email || null, // ✅ Allow email to be optional
+        state,
         questions, // ✅ Store as an array of objects
       },
     });

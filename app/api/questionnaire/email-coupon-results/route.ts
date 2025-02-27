@@ -1,19 +1,12 @@
 import { NextResponse } from "next/server";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { Redis } from "@upstash/redis";
-import { cookies } from "next/headers"; // ✅ Import cookies handler
 import { generateDiscountCode } from "@/app/actions/QuestionnaireShopify";
 import { sendQuestionnaireCoupon } from "@/app/actions/email";
 import { updateQuizResult } from "@/lib/updateQuizResult";
 
 const JWT_SECRET = process.env.SHOPIFY_API_SECRET!;
-const SHOPIFY_DOMAIN = process.env.SHOPIFY_DOMAIN!;
-const ALLOWED_ORIGINS = [
-  "https://itslitto.com",
-  "https://www.itslitto.com",
-  "https://cedu.itslitto.com",
-  "https://www.cedu.itslitto.com",
-];
+const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "https://itslitto.com";
 
 // ✅ Set up Redis for rate limiting
 const redis = new Redis({
@@ -27,16 +20,14 @@ const LIMIT = 5; // Allow max 5 requests per minute per IP
 type QuestionnaireProps = {
   email: string;
   couponCode: string;
-  results: { question: string; answer: string }[];
+  results: { question: string; answer: string }[]; // Array of question-answer objects
 };
 
 // ✅ Function to set CORS headers dynamically
 function getCorsHeaders(origin: string) {
   return {
-    "Access-Control-Allow-Origin": ALLOWED_ORIGINS.includes(origin)
-      ? origin
-      : "https://cedu.itslitto.com",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Origin": origin,
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
     "Access-Control-Allow-Credentials": "true",
   };
@@ -44,7 +35,7 @@ function getCorsHeaders(origin: string) {
 
 // ✅ Handle CORS Preflight Requests
 export async function OPTIONS(req: Request) {
-  const origin = req.headers.get("origin") || "";
+  const origin = req.headers.get("origin") || ALLOWED_ORIGIN;
   return new Response(null, {
     status: 204,
     headers: getCorsHeaders(origin),
@@ -53,94 +44,80 @@ export async function OPTIONS(req: Request) {
 
 // ✅ Handle POST request: Update quiz result and send email
 export async function POST(req: Request) {
-  const origin = req.headers.get("origin") || "";
+  const origin = req.headers.get("origin") || ALLOWED_ORIGIN;
 
-  // ✅ Await cookies() since it's now a Promise in Next.js 15
-  const jwtCookieStore = await cookies();
-  const jwtCookie = jwtCookieStore.get("quizJWT")?.value;
-
-  if (!jwtCookie) {
-    return new Response(
-      JSON.stringify({ error: "Unauthorized - No token provided" }),
-      {
-        status: 401,
-        headers: getCorsHeaders(origin),
-      }
-    );
+  // ✅ Block unauthorized origins
+  if (!origin.includes("skwezed.com")) {
+    return new Response(JSON.stringify({ error: "Forbidden" }), {
+      status: 403,
+      headers: getCorsHeaders(origin),
+    });
   }
 
-  try {
-    // ✅ Verify JWT token
-    const decoded = jwt.verify(jwtCookie, JWT_SECRET) as JwtPayload;
+  const ip = req.headers.get("x-forwarded-for") ?? "unknown";
+  const key = `rate_limit:ip:${ip}`;
 
-    if (!decoded.shopify || decoded.shopify !== SHOPIFY_DOMAIN) {
+  // ✅ Apply rate limiting
+  try {
+    const current = await redis.incr(key);
+    if (current === 1) {
+      await redis.expire(key, WINDOW);
+    }
+
+    if (current > LIMIT) {
       return new Response(
-        JSON.stringify({ error: "Unauthorized - Invalid Shopify domain" }),
+        JSON.stringify({ error: "Too many requests. Try again later." }),
         {
-          status: 403,
+          status: 429,
           headers: getCorsHeaders(origin),
         }
       );
     }
+  } catch (error) {
+    console.error("Rate limiting error:", error);
+    return new Response(JSON.stringify({ error: "Rate limiting failed" }), {
+      status: 500,
+      headers: getCorsHeaders(origin),
+    });
+  }
 
-    const shopifyStore = decoded.shopify;
-    const key = `rate_limit:shop:${shopifyStore}`;
+  // ✅ Verify JWT Token
+  const authHeader = req.headers.get("Authorization");
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return new Response(
+      JSON.stringify({ error: "Unauthorized - No token provided" }),
+      { status: 401, headers: getCorsHeaders(origin) }
+    );
+  }
 
-    // ✅ Rate limit requests per Shopify store
-    try {
-      const current = await redis.incr(key);
-      if (current === 1) await redis.expire(key, WINDOW);
+  const token = authHeader.split(" ")[1];
 
-      if (current > LIMIT) {
-        return new Response(
-          JSON.stringify({ error: "Too many requests. Try again later." }),
-          { status: 429, headers: getCorsHeaders(origin) }
-        );
-      }
-    } catch (redisError) {
-      console.error("Redis Error:", redisError);
+  try {
+    jwt.verify(token, JWT_SECRET);
+
+    // ✅ Parse Request Body
+    const {
+      id,
+      email,
+      results,
+    }: {
+      id: string;
+      email: string;
+      results: { question: string; answer: string }[];
+    } = await req.json();
+
+    if (!id || !email || !Array.isArray(results)) {
       return new Response(
-        JSON.stringify({ error: "Rate limiting failed - Redis issue" }),
-        { status: 500, headers: getCorsHeaders(origin) }
-      );
-    }
-
-    // ✅ Parse request body safely
-    let body;
-    try {
-      body = await req.json();
-    } catch (error) {
-      return new Response(JSON.stringify({ error: "Invalid JSON format" }), {
-        status: 400,
-        headers: getCorsHeaders(origin),
-      });
-    }
-
-    const { id, email, results } = body;
-
-    if (!email || !Array.isArray(results) || results.length === 0) {
-      return new Response(
-        JSON.stringify({ error: "Missing or invalid fields: email, results" }),
+        JSON.stringify({
+          error: "Missing or invalid fields: id, email, results",
+        }),
         { status: 400, headers: getCorsHeaders(origin) }
       );
-    }
-
-    // ✅ Ensure each question has required fields
-    for (const q of results) {
-      if (!q.question || !q.answer) {
-        return new Response(
-          JSON.stringify({
-            error: "Each question must have a 'question' and 'answer' field",
-          }),
-          { status: 400, headers: getCorsHeaders(origin) }
-        );
-      }
     }
 
     // ✅ Step 1: Update the quiz result in Prisma Database
     const updateResponse = await updateQuizResult(id, email);
     if (!updateResponse.success) {
-      console.error("❌ Prisma Update Error:", updateResponse.error);
       return new Response(
         JSON.stringify({ error: "Failed to update quiz result" }),
         { status: 500, headers: getCorsHeaders(origin) }
@@ -161,10 +138,17 @@ export async function POST(req: Request) {
     const emailPayload: QuestionnaireProps = {
       email,
       couponCode,
-      results,
+      results, // ✅ Now passing quiz results correctly
     };
 
-    await sendQuestionnaireCoupon(emailPayload);
+    const emailResponse = await sendQuestionnaireCoupon(emailPayload);
+
+    if (emailResponse.error) {
+      return new Response(JSON.stringify({ error: "Failed to send email" }), {
+        status: 500,
+        headers: getCorsHeaders(origin),
+      });
+    }
 
     return new Response(JSON.stringify({ success: true, couponCode }), {
       status: 200,

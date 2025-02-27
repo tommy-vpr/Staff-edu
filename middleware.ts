@@ -4,45 +4,38 @@ import { getToken } from "next-auth/jwt";
 
 export async function middleware(request: NextRequest) {
   const publicRoutes = ["/", "/login", "/register", "/unsubscribe"];
-  const adminOnlyRoutes = ["/dashboard/codes", "/dashboard/account"];
 
-  // ✅ Allow public routes to be accessed without authentication
+  // Allow access to public routes without authentication
   if (publicRoutes.includes(request.nextUrl.pathname)) {
     return NextResponse.next();
   }
 
-  // ✅ Get authentication token (user session)
+  // Get the token from the request to check user authentication and authorization
   const token = await getToken({
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  // ✅ Prevent infinite redirects
-  const isLoginPage = request.nextUrl.pathname === "/login";
-  if (!token && !isLoginPage) {
-    console.log("🔄 Redirecting to login - No valid session found.");
-    return NextResponse.redirect(new URL("/login", request.url));
+  // Redirect to login if there is no token
+  if (!token) {
+    const signInUrl = new URL("/login", request.url);
+    return NextResponse.redirect(signInUrl);
   }
 
-  // ✅ Prevent redirecting logged-in users back to login page
-  if (token && isLoginPage) {
-    console.log("✅ User is already authenticated, redirecting to dashboard.");
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
-
-  // ✅ Restrict admin-only routes
+  // Check if the user is accessing a restricted admin-only route
+  const adminOnlyRoutes = ["/dashboard/codes", "/dashboard/account"];
   if (adminOnlyRoutes.includes(request.nextUrl.pathname)) {
-    if (!token?.role || token.role !== "admin") {
-      console.log("❌ Unauthorized access attempt to admin route.");
-      return NextResponse.redirect(new URL("/", request.url)); // Redirect unauthorized users
+    // Restrict access to admin users only
+    if (token.role !== "admin") {
+      const unauthorizedUrl = new URL("/", request.url); // Customize redirection page as needed
+      return NextResponse.redirect(unauthorizedUrl);
     }
   }
 
-  // ✅ Allow access if all checks pass
+  // If all checks pass, allow access to the requested route
   return NextResponse.next();
 }
 
-// ✅ Prevent Next.js from applying middleware to static files and API routes
 export const config = {
   matcher: "/((?!api|_next/static|_next/image|favicon.ico).*)",
 };

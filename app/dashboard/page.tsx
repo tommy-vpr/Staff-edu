@@ -101,7 +101,11 @@ const Dashboard = () => {
           <ul className="space-y-2 text-sm mb-8">
             <li>1. Check out the video - Get the lowdown on LITTO.</li>
             <li>2. Take the quiz - Test your LITTO knowledge.</li>
-            <li>3. Claim your $80 coupon - Rep LITTO the right way.</li>
+            <li>
+              3. Claim your{" "}
+              <strong className="text-green-500">$80 coupon</strong> - Rep LITTO
+              the right way.
+            </li>
           </ul>
           <p>Simple, right? Tap in, and let’s get started!</p>
         </div>

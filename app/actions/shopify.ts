@@ -10,59 +10,21 @@ const getEnvVariable = (key: string): string => {
   return value;
 };
 
+// ✅ Response Type for Discount Code Generation
+interface GenerateDiscountCodeResponse {
+  success: boolean;
+  code?: string;
+  error?: string;
+}
+
+// ✅ Fetch Shopify credentials from environment variables
 const SHOPIFY_ADMIN_API_URL = getEnvVariable("SHOPIFY_ADMIN_API_URL");
 const SHOPIFY_ACCESS_TOKEN = getEnvVariable("SHOPIFY_ACCESS_TOKEN");
 
-const createPriceRule = async (): Promise<string> => {
-  const SHOPIFY_ADMIN_API_URL = process.env.SHOPIFY_ADMIN_API_URL!;
-  const SHOPIFY_ACCESS_TOKEN = process.env.SHOPIFY_ACCESS_TOKEN!;
-
+const findExistingPriceRule = async (title: string): Promise<string | null> => {
   try {
-    const createResponse = await fetch(
-      `${SHOPIFY_ADMIN_API_URL}/price_rules.json`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Shopify-Access-Token": SHOPIFY_ACCESS_TOKEN,
-        },
-        body: JSON.stringify({
-          price_rule: {
-            title: "$80 Off One-Time Use",
-            target_type: "line_item", // Applies to individual line items
-            target_selection: "all", // Applies to all products
-            allocation_method: "across", // Splits the discount across all applicable items
-            value_type: "fixed_amount", // Fixed amount discount
-            value: "-80.0", // $80 discount
-            customer_selection: "all", // Available to all customers
-            usage_limit: 1, // One-time use per customer
-            starts_at: new Date().toISOString(), // Start immediately
-          },
-        }),
-      }
-    );
+    console.log("📌 Checking for existing price rule...");
 
-    const responseBody = await createResponse.text();
-
-    if (!createResponse.ok) {
-      throw new Error("Failed to create price rule");
-    }
-
-    const createData = JSON.parse(responseBody);
-    return createData.price_rule.id;
-  } catch (error) {
-    console.error("Error creating price rule:", error);
-    throw new Error("Error creating price rule");
-  }
-};
-
-// Get or Create Price Rule
-export const getPriceRule = async (): Promise<string> => {
-  const SHOPIFY_ADMIN_API_URL = process.env.SHOPIFY_ADMIN_API_URL!;
-  const SHOPIFY_ACCESS_TOKEN = process.env.SHOPIFY_ACCESS_TOKEN!;
-
-  try {
-    // Check if an existing price rule exists
     const response = await fetch(`${SHOPIFY_ADMIN_API_URL}/price_rules.json`, {
       method: "GET",
       headers: {
@@ -73,39 +35,91 @@ export const getPriceRule = async (): Promise<string> => {
 
     const responseBody = await response.text();
     if (!response.ok) {
-      throw new Error("Failed to fetch price rules");
+      console.error("🚨 Failed to fetch price rules:", responseBody);
+      throw new Error("❌ Shopify API Error - Failed to fetch price rules.");
     }
 
     const data = JSON.parse(responseBody);
+    const existingRule = data.price_rules.find(
+      (rule: any) => rule.title === title
+    );
 
-    if (data.price_rules?.length > 0) {
-      return data.price_rules[0].id;
+    if (existingRule) {
+      console.log("✅ Existing Price Rule Found:", existingRule.id);
+      return existingRule.id;
     }
 
-    // If no price rule exists, create one
-    return await createPriceRule();
+    return null;
   } catch (error) {
-    console.error("Error retrieving price rules:", error);
-    throw new Error("Error retrieving or creating price rule");
+    console.error("❌ Error finding price rule:", error);
+    return null;
   }
 };
 
-interface GenerateDiscountCodeResponse {
-  success: boolean; // Indicates whether the operation succeeded
-  code?: string; // The generated discount code (optional)
-  error?: string; // The error message if something went wrong (optional)
-}
+const createPriceRule = async (): Promise<string> => {
+  const priceRuleTitle = "$80 Off One-Time Use"; // Keep consistent title
 
-// Generate Discount Code
+  // ✅ Check if a price rule already exists
+  const existingPriceRule = await findExistingPriceRule(priceRuleTitle);
+  if (existingPriceRule) return existingPriceRule;
+
+  try {
+    console.log("📌 Creating a new price rule...");
+
+    const now = new Date().toISOString();
+    const createResponse = await fetch(
+      `${SHOPIFY_ADMIN_API_URL}/price_rules.json`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Shopify-Access-Token": SHOPIFY_ACCESS_TOKEN,
+        },
+        body: JSON.stringify({
+          price_rule: {
+            title: priceRuleTitle, // Keep consistent title
+            target_type: "line_item",
+            target_selection: "all",
+            allocation_method: "across",
+            value_type: "fixed_amount",
+            value: "-80.0",
+            customer_selection: "all",
+            usage_limit: 1,
+            starts_at: now,
+          },
+        }),
+      }
+    );
+
+    const responseBody = await createResponse.text();
+    if (!createResponse.ok) {
+      console.error("🚨 Failed to create price rule:", responseBody);
+      throw new Error("❌ Shopify API Error - Failed to create price rule.");
+    }
+
+    const createData = JSON.parse(responseBody);
+    console.log("✅ New Price Rule Created:", createData.price_rule.id);
+    return createData.price_rule.id;
+  } catch (error) {
+    console.error("❌ Error creating price rule:", error);
+    throw new Error("❌ Error creating price rule");
+  }
+};
+
 export const generateDiscountCode =
   async (): Promise<GenerateDiscountCodeResponse> => {
     try {
-      const priceRuleId = await getPriceRule();
+      console.log("📌 Fetching or creating price rule...");
+
+      const priceRuleId = await createPriceRule(); // ✅ Get or create the price rule
+      if (!priceRuleId) throw new Error("❌ No valid price rule ID found");
 
       const randomCode = `EDU-${Math.random()
         .toString(36)
         .slice(2, 8)
         .toUpperCase()}`;
+
+      console.log("🔹 Generated Random Code:", randomCode);
 
       const response = await fetch(
         `${SHOPIFY_ADMIN_API_URL}/price_rules/${priceRuleId}/discount_codes.json`,
@@ -116,67 +130,53 @@ export const generateDiscountCode =
             "X-Shopify-Access-Token": SHOPIFY_ACCESS_TOKEN,
           },
           body: JSON.stringify({
-            discount_code: { code: randomCode },
+            discount_code: {
+              code: randomCode,
+              usage_limit: 1,
+              customer_selection: "all",
+            },
           }),
         }
       );
 
+      const responseBody = await response.text();
+      console.log("🔍 Shopify Response:", responseBody);
+
       if (!response.ok) {
-        const errorResponse = await response.json();
-        throw new Error(
-          errorResponse.errors || "Failed to create discount code"
-        );
+        console.error("🚨 Shopify API Error:", responseBody);
+        throw new Error(`Failed to create discount code: ${responseBody}`);
       }
 
-      const result = await response.json();
+      const result = JSON.parse(responseBody);
+      console.log("✅ Discount Code Created:", result.discount_code.code);
+
       return { success: true, code: result.discount_code.code };
     } catch (error) {
-      console.error("Error generating discount code:", error);
+      console.error("❌ Error generating discount code:", error);
       return { success: false, error: (error as Error).message };
     }
   };
 
+// ✅ Update Staff Record After Quiz Completion
 export const updateStaffTestsTaken = async (email: string, test: string) => {
   try {
+    console.log(`📌 Updating Staff Record for: ${email}`);
+
     const updatedStaff = await prisma.staff.update({
       where: { email },
       data: {
         takenTest: true,
         testsTaken: {
-          push: test, // Append the test to the `testsTaken` array
+          push: test, // Append test name to the `testsTaken` array
         },
-        updatedAt: new Date(), // Update the `updatedAt` field
+        updatedAt: new Date(), // Update `updatedAt` field
       },
     });
 
+    console.log("✅ Staff record updated successfully!");
     return { success: true, staff: updatedStaff };
   } catch (error) {
-    console.error("Error updating Staff model:", error);
+    console.error("❌ Error updating Staff model:", error);
     return { success: false, error: "Failed to update Staff model." };
-  }
-};
-
-export const fetchPriceRules = async (): Promise<any[]> => {
-  const SHOPIFY_ADMIN_API_URL = process.env.NEXT_PUBLIC_SHOPIFY_ADMIN_API_URL!;
-  const SHOPIFY_ACCESS_TOKEN = process.env.NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN!;
-
-  try {
-    const response = await fetch(`${SHOPIFY_ADMIN_API_URL}/price_rules.json`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Shopify-Access-Token": SHOPIFY_ACCESS_TOKEN,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch price rules");
-    }
-
-    const data = await response.json();
-    return data.price_rules || [];
-  } catch (error) {
-    console.error("Error fetching price rules:", error);
-    return [];
   }
 };

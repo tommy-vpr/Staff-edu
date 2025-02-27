@@ -124,8 +124,6 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log("✅ Quiz result updated successfully!");
-
     // ✅ Step 2: Generate discount code
     const discountResponse = await generateDiscountCode();
     if (!discountResponse || !discountResponse.code) {

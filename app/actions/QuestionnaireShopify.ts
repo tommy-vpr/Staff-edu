@@ -122,7 +122,7 @@ export const generateDiscountCode = async (
     // ✅ Use a custom code if provided, otherwise generate one
     const discountCode = customCode
       ? customCode.toUpperCase()
-      : `SKW-QTN-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+      : `LT-QTN-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
 
     console.log("🔹 Generated Discount Code:", discountCode);
 

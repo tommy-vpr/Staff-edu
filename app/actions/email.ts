@@ -80,7 +80,7 @@ export const sendCoupon = async ({ email, firstName, couponCode }: Props) => {
     const data = await resend.emails.send({
       from: "LITTO <noreply@cedu.itslitto.com>",
       to: email,
-      subject: `Thank you for taking the quiz, ${firstName}!`,
+      subject: `Thank you for taking the quiz!`,
       replyTo: "support@cedu.itslitto.com",
       react: CouponEmailTemplate({
         firstName,

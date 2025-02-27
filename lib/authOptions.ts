@@ -103,6 +103,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.role = user.role; // Include role if available
+        token.authJWT = `auth-${user.id}-${Date.now()}`;
         token.takenTest = user.takenTest; // Include takenTest if applicable
         token.testsTaken = user.testsTaken || [];
       }
@@ -117,6 +118,13 @@ export const authOptions: NextAuthOptions = {
       session: Session;
       token: JWT;
     }): Promise<Session> {
+      session.user = {
+        ...session.user,
+        id: token.id,
+        role: token.role,
+        authJWT: token.authJWT, // Separate from `quizJWT`
+      };
+
       // Fetch additional user data based on role
       if (token.role === "admin") {
         // Fetch from `User` model

@@ -10,6 +10,7 @@ declare module "next-auth" {
       role?: string; // Admin or Staff roles
       takenTest?: boolean; // For Staff only
       testsTaken?: string[]; // Array of completed tests
+      authJWT?: string; // ✅ Custom token for authentication
     } & DefaultSession["user"]; // Include default user properties
   }
 
@@ -28,5 +29,6 @@ declare module "next-auth/jwt" {
     role?: string; // Optional role
     takenTest?: boolean; // For staff users
     testsTaken?: string[]; // Add completed tests to JWT payload
+    authJWT?: string; // ✅ Custom token for authentication
   }
 }

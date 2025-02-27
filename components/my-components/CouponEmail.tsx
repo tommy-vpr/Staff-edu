@@ -23,7 +23,7 @@ export const CouponEmailTemplate = ({ firstName, couponCode }: Props) => {
   return (
     <Html>
       <Head />
-      <Preview>LITO Staff EDU 🌟</Preview>
+      <Preview>LITTO Staff EDU 🌟</Preview>
       <Body style={main}>
         <Container style={container}>
           {/* Header Section */}
@@ -120,7 +120,7 @@ export const CouponEmailTemplate = ({ firstName, couponCode }: Props) => {
             </Text>
 
             <Text style={footerText}>
-              © {new Date().getFullYear()} Litto, All Rights Reserved
+              © {new Date().getFullYear()} LITTO, All Rights Reserved
               <br />
               Los Angeles CA
             </Text>

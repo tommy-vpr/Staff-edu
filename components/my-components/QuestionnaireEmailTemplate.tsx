@@ -55,6 +55,39 @@ export const QuestionnaireEmailTemplate = ({
                 </li>
               ))}
             </ul>
+
+            <Section style={shopStyle}>
+              <Text style={footerText}>
+                <Link
+                  href="https://itslitto.com/collections/merch-litto"
+                  target="_blank"
+                  style={{
+                    backgroundColor: "#101010",
+                    display: "inline-block",
+                    padding: "10px",
+                    borderRadius: "5px",
+                    margin: "0 5px",
+                    color: "#fff",
+                  }}
+                >
+                  Shop Now
+                </Link>
+                <Link
+                  href="https://itslitto.com/pages/store-locator"
+                  target="_blank"
+                  style={{
+                    backgroundColor: "#101010",
+                    display: "inline-block",
+                    padding: "10px",
+                    borderRadius: "5px",
+                    margin: "0 5px",
+                    color: "#fff",
+                  }}
+                >
+                  Find a Store
+                </Link>
+              </Text>
+            </Section>
           </Section>
 
           {/* Footer Section */}
@@ -228,7 +261,14 @@ const socialIcons: React.CSSProperties = {
 const couponStyle: React.CSSProperties = {
   fontSize: "28px",
   fontWeight: "bold",
-  color: "#18ab4f",
+  color: "#101010",
   textAlign: "center",
   margin: "10px 0",
+  padding: "15px",
+  background: "#f5f5f5",
+};
+
+const shopStyle: React.CSSProperties = {
+  marginTop: "20px",
+  paddingTop: "20px",
 };

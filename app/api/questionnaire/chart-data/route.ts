@@ -91,17 +91,7 @@ export async function GET(req: Request) {
       });
     }
 
-    let quizData = [
-      {
-        "quiz-count": userResponses.length,
-        data: new Map<
-          string,
-          { text: string; value: string; count: number }[]
-        >(),
-      },
-    ];
-
-    let defaultQuestions = [
+    const defaultQuestions = [
       {
         question: "How do you like to spend your free time?",
         answers: [
@@ -149,6 +139,13 @@ export async function GET(req: Request) {
       },
     ];
 
+    let quizData = [
+      {
+        "quiz-count": userResponses.length,
+        data: new Map(defaultQuestions.map((q) => [q.question, q.answers])),
+      },
+    ];
+
     userResponses.forEach((user) => {
       if (!user.questions || !Array.isArray(user.questions)) return;
 
@@ -168,33 +165,6 @@ export async function GET(req: Request) {
           quizData[0].data.set(question, answers);
         }
       );
-    });
-
-    // ✅ Process user responses efficiently
-    userResponses.forEach((user) => {
-      if (!user.questions || !Array.isArray(user.questions)) return;
-
-      user.questions.forEach(({ question, answer }) => {
-        // Ensure the question exists in the map
-        if (!quizData[0].data.has(question)) {
-          quizData[0].data.set(question, []);
-        }
-
-        let answers = quizData[0].data.get(question) as {
-          text: string;
-          value: string;
-          count: number;
-        }[];
-
-        let answerObj = answers.find((a) => a.text === answer);
-
-        if (!answerObj) {
-          answerObj = { text: answer, value: "N/A", count: 0 }; // Added `value: "N/A"` for structure consistency
-          answers.push(answerObj);
-        }
-
-        answerObj.count += 1;
-      });
     });
 
     // ✅ Convert Map back to an array before returning

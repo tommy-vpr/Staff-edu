@@ -149,8 +149,25 @@ export async function GET(req: Request) {
       },
     ];
 
-    defaultQuestions.forEach(({ question, answers }) => {
-      quizData[0].data.set(question, answers);
+    userResponses.forEach((user) => {
+      if (!user.questions || !Array.isArray(user.questions)) return;
+
+      // ✅ Type assertion to explicitly define the structure of `questions`
+      (user.questions as { question: string; answer: string }[]).forEach(
+        ({ question, answer }) => {
+          let answers = quizData[0].data.get(question) ?? [];
+
+          let answerObj = answers.find((a) => a.text === answer);
+
+          if (!answerObj) {
+            answerObj = { text: answer, value: "N/A", count: 0 };
+            answers.push(answerObj);
+          }
+
+          answerObj.count += 1;
+          quizData[0].data.set(question, answers);
+        }
+      );
     });
 
     // ✅ Process user responses efficiently

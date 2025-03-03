@@ -2,8 +2,13 @@ import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import { Redis } from "@upstash/redis";
 import prisma from "@/lib/prisma";
+import crypto from "crypto";
 
-const JWT_SECRET = process.env.SHOPIFY_API_SECRET!;
+// ✅ Ensure JWT Secret Exists
+if (!process.env.SHOPIFY_API_SECRET) {
+  throw new Error("SHOPIFY_API_SECRET is missing in environment variables.");
+}
+const JWT_SECRET = process.env.SHOPIFY_API_SECRET;
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "https://itslitto.com";
 
 const redis = new Redis({
@@ -62,8 +67,10 @@ export async function GET(req: Request) {
   }
 
   // ✅ Rate Limiting AFTER authentication
-  const ip = req.headers.get("x-forwarded-for") ?? "unknown";
-  const key = `rate_limit:ip:${ip}`;
+  const rawIp =
+    req.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "unknown";
+  const ipHash = crypto.createHash("sha256").update(rawIp).digest("hex");
+  const key = `rate_limit:ip:${ipHash}`;
   const requestCount = (await redis.get<number>(key)) || 0;
 
   if (requestCount >= LIMIT) {
@@ -75,97 +82,114 @@ export async function GET(req: Request) {
 
   await redis.set(key, requestCount + 1, { ex: WINDOW });
 
-  // ✅ Fetch quiz responses from Prisma
   try {
-    const userResponses = await prisma.questionnaire.findMany();
+    const userResponses = (await prisma.questionnaire.findMany()) || [];
 
-    // ✅ Check if we have responses before processing
-    if (!userResponses || userResponses.length === 0) {
+    if (userResponses.length === 0) {
       return new Response(JSON.stringify({ error: "No quiz data found" }), {
         status: 404,
-        headers: getCorsHeaders(origin),
       });
     }
 
     let quizData = [
       {
         "quiz-count": userResponses.length,
-        data: [
-          {
-            question: "How do you like to spend your free time?",
-            answers: [
-              { text: "Staying active 🌞", value: "A", count: 0 },
-              { text: "Binge-watching 🎮", value: "B", count: 0 },
-              { text: "Creative work 🎨", value: "C", count: 0 },
-              { text: "Chilling with friends 🍻", value: "D", count: 0 },
-            ],
-          },
-          {
-            question: "What kind of high are you looking for?",
-            answers: [
-              { text: "Energized & Moving 🚀", value: "A", count: 0 },
-              { text: "Full Chill & Relaxed 🛋️", value: "B", count: 0 },
-              { text: "Creative & Focused 💡", value: "C", count: 0 },
-              { text: "Social & Uplifting 🥳", value: "D", count: 0 },
-            ],
-          },
-          {
-            question: "What's your favorite munchies?",
-            answers: [
-              { text: "Fresh Fruit🍎", value: "A", count: 0 },
-              { text: "Sweet Treats 🍪", value: "B", count: 0 },
-              { text: `"Savory Snacks 🍟"`, value: "C", count: 0 },
-              { text: "Anything Available 😅", value: "D", count: 0 },
-            ],
-          },
-          {
-            question: "Where would you rather be?",
-            answers: [
-              { text: "At the Beach 🌴", value: "A", count: 0 },
-              { text: "In a Cozy Cabin 🏡", value: "B", count: 0 },
-              { text: "Exploring the City 🎨", value: "C", count: 0 },
-              { text: "At a BBQ with Friends 🍔", value: "D", count: 0 },
-            ],
-          },
-          {
-            question: "How do you want to feel?",
-            answers: [
-              { text: "Energized & Ready 💪", value: "A", count: 0 },
-              { text: "Relaxed & Laid Back 🌙", value: "B", count: 0 },
-              { text: "Inspired & Creative ✨", value: "C", count: 0 },
-              { text: "Social & Vibing 🥳", value: "D", count: 0 },
-            ],
-          },
+        data: new Map<
+          string,
+          { text: string; value: string; count: number }[]
+        >(),
+      },
+    ];
+
+    let defaultQuestions = [
+      {
+        question: "How do you like to spend your free time?",
+        answers: [
+          { text: "Staying active 🌞", value: "A", count: 0 },
+          { text: "Binge-watching 🎮", value: "B", count: 0 },
+          { text: "Creative work 🎨", value: "C", count: 0 },
+          { text: "Chilling with friends 🍻", value: "D", count: 0 },
+        ],
+      },
+      {
+        question: "What kind of high are you looking for?",
+        answers: [
+          { text: "Energized & Moving 🚀", value: "A", count: 0 },
+          { text: "Full Chill & Relaxed 🛋️", value: "B", count: 0 },
+          { text: "Creative & Focused 💡", value: "C", count: 0 },
+          { text: "Social & Uplifting 🥳", value: "D", count: 0 },
+        ],
+      },
+      {
+        question: "What's your favorite munchies?",
+        answers: [
+          { text: "Fresh Fruit🍎", value: "A", count: 0 },
+          { text: "Sweet Treats 🍪", value: "B", count: 0 },
+          { text: `"Savory Snacks 🍟"`, value: "C", count: 0 },
+          { text: "Anything Available 😅", value: "D", count: 0 },
+        ],
+      },
+      {
+        question: "Where would you rather be?",
+        answers: [
+          { text: "At the Beach 🌴", value: "A", count: 0 },
+          { text: "In a Cozy Cabin 🏡", value: "B", count: 0 },
+          { text: "Exploring the City 🎨", value: "C", count: 0 },
+          { text: "At a BBQ with Friends 🍔", value: "D", count: 0 },
+        ],
+      },
+      {
+        question: "How do you want to feel?",
+        answers: [
+          { text: "Energized & Ready 💪", value: "A", count: 0 },
+          { text: "Relaxed & Laid Back 🌙", value: "B", count: 0 },
+          { text: "Inspired & Creative ✨", value: "C", count: 0 },
+          { text: "Social & Vibing 🥳", value: "D", count: 0 },
         ],
       },
     ];
 
-    // ✅ Process user responses safely
+    defaultQuestions.forEach(({ question, answers }) => {
+      quizData[0].data.set(question, answers);
+    });
+
+    // ✅ Process user responses efficiently
     userResponses.forEach((user) => {
       if (!user.questions || !Array.isArray(user.questions)) return;
 
-      user.questions.forEach((response) => {
-        const { question, answer } = response;
-
-        let quizQuestion = quizData[0].data.find(
-          (q) => q.question === question
-        );
-        if (!quizQuestion) {
-          quizQuestion = { question, answers: [] };
-          quizData[0].data.push(quizQuestion);
+      user.questions.forEach(({ question, answer }) => {
+        // Ensure the question exists in the map
+        if (!quizData[0].data.has(question)) {
+          quizData[0].data.set(question, []);
         }
 
-        let answerObj = quizQuestion.answers.find((a) => a.text === answer);
+        let answers = quizData[0].data.get(question) as {
+          text: string;
+          value: string;
+          count: number;
+        }[];
+
+        let answerObj = answers.find((a) => a.text === answer);
+
         if (!answerObj) {
-          answerObj = { text: answer, count: 0, value: "N/A" };
-          quizQuestion.answers.push(answerObj);
+          answerObj = { text: answer, value: "N/A", count: 0 }; // Added `value: "N/A"` for structure consistency
+          answers.push(answerObj);
         }
 
         answerObj.count += 1;
       });
     });
 
-    return NextResponse.json(quizData, {
+    // ✅ Convert Map back to an array before returning
+    const formattedQuizData = {
+      "quiz-count": userResponses.length,
+      data: Array.from(quizData[0].data, ([question, answers]) => ({
+        question,
+        answers,
+      })),
+    };
+
+    return NextResponse.json(formattedQuizData, {
       headers: getCorsHeaders(origin),
     });
   } catch (error) {

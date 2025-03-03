@@ -83,64 +83,97 @@ export async function GET(req: Request) {
   await redis.set(key, requestCount + 1, { ex: WINDOW });
 
   try {
-    // ✅ MongoDB Aggregation to format data in the database
-    const aggregationPipeline = [
-      { $unwind: "$questions" },
-      {
-        $group: {
-          _id: "$questions.question",
-          answers: {
-            $push: "$questions.answer",
-          },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          question: "$_id",
-          answers: {
-            $map: {
-              input: "$answers",
-              as: "answer",
-              in: {
-                text: "$$answer",
-                count: { $sum: 1 },
-              },
-            },
-          },
-        },
-      },
-      {
-        $group: {
-          _id: null,
-          data: { $push: "$$ROOT" },
-        },
-      },
-    ];
+    const userResponses = (await prisma.questionnaire.findMany()) || [];
 
-    const result = (await prisma.$runCommandRaw({
-      aggregate: "questionnaire",
-      pipeline: aggregationPipeline,
-      cursor: {},
-    })) as { cursor?: { firstBatch?: any[] } } | null; // ✅ Typecast explicitly
-
-    // ✅ Ensure result is an object and firstBatch exists
-    if (
-      !result ||
-      typeof result !== "object" ||
-      !result.cursor ||
-      !Array.isArray(result.cursor.firstBatch)
-    ) {
+    if (userResponses.length === 0) {
       return new Response(JSON.stringify({ error: "No quiz data found" }), {
         status: 404,
-        headers: getCorsHeaders(origin),
       });
     }
 
-    // ✅ Transform MongoDB response
+    const defaultQuestions = [
+      {
+        question: "How do you like to spend your free time?",
+        answers: [
+          { text: "Staying active 🌞", value: "A", count: 0 },
+          { text: "Binge-watching 🎮", value: "B", count: 0 },
+          { text: "Creative work 🎨", value: "C", count: 0 },
+          { text: "Chilling with friends 🍻", value: "D", count: 0 },
+        ],
+      },
+      {
+        question: "What kind of high are you looking for?",
+        answers: [
+          { text: "Energized & Moving 🚀", value: "A", count: 0 },
+          { text: "Full Chill & Relaxed 🛋️", value: "B", count: 0 },
+          { text: "Creative & Focused 💡", value: "C", count: 0 },
+          { text: "Social & Uplifting 🥳", value: "D", count: 0 },
+        ],
+      },
+      {
+        question: "What's your favorite munchies?",
+        answers: [
+          { text: "Fresh Fruit🍎", value: "A", count: 0 },
+          { text: "Sweet Treats 🍪", value: "B", count: 0 },
+          { text: `"Savory Snacks 🍟"`, value: "C", count: 0 },
+          { text: "Anything Available 😅", value: "D", count: 0 },
+        ],
+      },
+      {
+        question: "Where would you rather be?",
+        answers: [
+          { text: "At the Beach 🌴", value: "A", count: 0 },
+          { text: "In a Cozy Cabin 🏡", value: "B", count: 0 },
+          { text: "Exploring the City 🎨", value: "C", count: 0 },
+          { text: "At a BBQ with Friends 🍔", value: "D", count: 0 },
+        ],
+      },
+      {
+        question: "How do you want to feel?",
+        answers: [
+          { text: "Energized & Ready 💪", value: "A", count: 0 },
+          { text: "Relaxed & Laid Back 🌙", value: "B", count: 0 },
+          { text: "Inspired & Creative ✨", value: "C", count: 0 },
+          { text: "Social & Vibing 🥳", value: "D", count: 0 },
+        ],
+      },
+    ];
+
+    let quizData = [
+      {
+        "quiz-count": userResponses.length,
+        data: new Map(defaultQuestions.map((q) => [q.question, q.answers])),
+      },
+    ];
+
+    userResponses.forEach((user) => {
+      if (!user.questions || !Array.isArray(user.questions)) return;
+
+      // ✅ Type assertion to explicitly define the structure of `questions`
+      (user.questions as { question: string; answer: string }[]).forEach(
+        ({ question, answer }) => {
+          let answers = quizData[0].data.get(question) ?? [];
+
+          let answerObj = answers.find((a) => a.text === answer);
+
+          if (!answerObj) {
+            answerObj = { text: answer, value: "N/A", count: 0 };
+            answers.push(answerObj);
+          }
+
+          answerObj.count += 1;
+          quizData[0].data.set(question, answers);
+        }
+      );
+    });
+
+    // ✅ Convert Map back to an array before returning
     const formattedQuizData = {
-      "quiz-count": result.cursor.firstBatch.length,
-      data: result.cursor.firstBatch,
+      "quiz-count": userResponses.length,
+      data: Array.from(quizData[0].data, ([question, answers]) => ({
+        question,
+        answers,
+      })),
     };
 
     return NextResponse.json(formattedQuizData, {

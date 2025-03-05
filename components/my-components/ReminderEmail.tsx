@@ -21,7 +21,7 @@ export const ReminderEmailTemplate = ({ firstName }: Props) => {
   return (
     <Html>
       <Head />
-      <Preview>LITTO Hemp EDU</Preview>
+      <Preview>LITTO Cannabis EDU</Preview>
       <Body style={main}>
         <Container style={container}>
           {/* Header Section */}
@@ -35,13 +35,16 @@ export const ReminderEmailTemplate = ({ firstName }: Props) => {
 
           {/* Greeting Section */}
           <Section style={content}>
-            <Text style={title}>LITTO HEMP Quiz Reminder</Text>
+            <Text style={title}>LITTO Cannabis Quiz Reminder</Text>
             <Text style={paragraph}>
-              Hey {firstName},
+              Hey{" "}
+              {firstName?.charAt(0).toUpperCase() +
+                firstName?.slice(1).toLowerCase()}
+              ,
               <br />
               <br />
-              We noticed you haven’t taken your LITTO HEMP Quiz yet! 🎯 This is
-              your chance to test your knowledge and unlock an exclusive $80
+              We noticed you haven’t taken your LITTO Cannabis Quiz yet! 🎯 This
+              is your chance to test your knowledge and unlock an exclusive $80
               coupon—just for completing the quiz!
             </Text>
 

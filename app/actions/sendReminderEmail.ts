@@ -25,7 +25,7 @@ export async function sendReminderEmail(email: string, staffId: string) {
 
   // Send reminder email
   await resend.emails.send({
-    from: "LITTO HEMP <noreply@hemp.itslitto.com>",
+    from: "LITTO Cannabis <noreply@cedu.itslitto.com>",
     to: email,
     subject: "Reminder: Complete Your LITTO Hemp Quiz",
     react: ReminderEmailTemplate({

@@ -11,7 +11,7 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 
-const quizLink = "https://hemp.itslitto.com";
+const quizLink = "https://cedu.itslitto.com";
 
 type Props = {
   firstName: string;

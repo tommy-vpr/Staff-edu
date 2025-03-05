@@ -4,6 +4,7 @@ import { StaffSchema, StaffFormValues } from "@/lib/schemas";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { getErrorMessage } from "@/lib/utils";
+import { scheduleReminder } from "@/lib/scheduleReminder";
 
 export const registerStaff = async (newStaff: StaffFormValues) => {
   try {
@@ -39,7 +40,8 @@ export const registerStaff = async (newStaff: StaffFormValues) => {
 
     const hashedPassword = await bcrypt.hash(validateInput.data.inviteCode, 10);
 
-    await prisma.staff.create({
+    // Create staff record in DB
+    const newStaffEntry = await prisma.staff.create({
       data: {
         email: validateInput.data.email,
         firstName: validateInput.data.firstName,
@@ -58,6 +60,9 @@ export const registerStaff = async (newStaff: StaffFormValues) => {
         email: validateInput.data.email,
       },
     });
+
+    // ✅ Schedule quiz reminder in 5 days
+    await scheduleReminder(newStaffEntry.email, newStaffEntry.id);
 
     // Step 2: Subscribe the user to Klaviyo
     const klaviyoApiKey = process.env.KLAVIYO_API_KEY;

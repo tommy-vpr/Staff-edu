@@ -68,17 +68,6 @@ export default function StaffSignupForm() {
         return;
       }
 
-      // Send the email
-      const emailRes = await sendEmail(validateInput.data);
-
-      if (emailRes?.error) {
-        setError("root", {
-          type: "manual",
-          message: emailRes.error,
-        });
-        return;
-      }
-
       // Sign in the staff
       const result = await signIn("staff-credentials", {
         redirect: false,

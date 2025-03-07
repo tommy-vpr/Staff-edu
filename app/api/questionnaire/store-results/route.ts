@@ -115,7 +115,19 @@ export async function POST(req: Request) {
       });
     }
 
-    const { email, questions, state } = body;
+    const { email, questions, products, state } = body;
+
+    if (!Array.isArray(products) || products.length === 0) {
+      return new Response(
+        JSON.stringify({
+          error: "Missing required fields or products array is empty",
+        }),
+        {
+          status: 400,
+          headers: getCorsHeaders(origin),
+        }
+      );
+    }
 
     if (!Array.isArray(questions) || questions.length === 0) {
       return new Response(

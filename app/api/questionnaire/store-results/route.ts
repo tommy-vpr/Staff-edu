@@ -163,6 +163,7 @@ export async function POST(req: Request) {
         email: email || null, // ✅ Allow email to be optional
         state,
         questions, // ✅ Store as an array of objects
+        products,
       },
     });
 

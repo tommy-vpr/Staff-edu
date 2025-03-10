@@ -279,11 +279,11 @@ const socialIcons: React.CSSProperties = {
 const couponStyle: React.CSSProperties = {
   fontSize: "28px",
   fontWeight: "bold",
-  color: "#101010",
+  color: "#fff",
   textAlign: "center",
   margin: "10px 0",
-  padding: "15px",
-  background: "#f5f5f5",
+  padding: "30px",
+  background: "#101010",
 };
 
 const shopStyle: React.CSSProperties = {
@@ -311,6 +311,9 @@ const productTitle: React.CSSProperties = {
 
 const productLink: React.CSSProperties = {
   fontSize: "14px",
-  color: "#007bff",
+  color: "#fff",
+  background: "#72BF49",
+  padding: "8px 16px",
   textDecoration: "none",
+  borderRadius: "150px",
 };

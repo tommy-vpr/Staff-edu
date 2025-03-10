@@ -77,6 +77,20 @@ export const QuestionnaireEmailTemplate = ({
             <Section style={shopStyle}>
               <Text style={footerText}>
                 <Link
+                  href="https://itslitto.com"
+                  target="_blank"
+                  style={{
+                    backgroundColor: "#101010",
+                    display: "inline-block",
+                    padding: "10px",
+                    borderRadius: "5px",
+                    margin: "0 5px",
+                    color: "#fff",
+                  }}
+                >
+                  Visit Website
+                </Link>
+                <Link
                   href="https://itslitto.com/pages/store-locator"
                   target="_blank"
                   style={{

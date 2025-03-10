@@ -55,7 +55,7 @@ export const QuestionnaireEmailTemplate = ({
                 <Row key={index} style={productRow}>
                   <Column style={{ width: "30%" }}>
                     <Img
-                      src={`https://${product.image}`}
+                      src={`https:${product.image}`}
                       alt={product.title}
                       width={100}
                       style={productImage}

@@ -55,7 +55,7 @@ export const QuestionnaireEmailTemplate = ({
                 <Row key={index} style={productRow}>
                   <Column style={{ width: "30%" }}>
                     <Img
-                      src={product.image}
+                      src={`https://${product.image}`}
                       alt={product.title}
                       width={100}
                       style={productImage}
@@ -76,20 +76,6 @@ export const QuestionnaireEmailTemplate = ({
 
             <Section style={shopStyle}>
               <Text style={footerText}>
-                <Link
-                  href="https://itslitto.com/collections/merch-litto"
-                  target="_blank"
-                  style={{
-                    backgroundColor: "#101010",
-                    display: "inline-block",
-                    padding: "10px",
-                    borderRadius: "5px",
-                    margin: "0 5px",
-                    color: "#fff",
-                  }}
-                >
-                  Shop Now
-                </Link>
                 <Link
                   href="https://itslitto.com/pages/store-locator"
                   target="_blank"

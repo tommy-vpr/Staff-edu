@@ -17,12 +17,13 @@ import littoLogo from "@/assets/images/litto-logo-blk.webp";
 type QuestionnaireProps = {
   email: string;
   couponCode: string;
-  results: { question: string; answer: string }[]; // Array of question-answer objects
+  // results: { question: string; answer: string }[];
+  products: { url: string; image: string; title: string }[];
 };
 
 export const QuestionnaireEmailTemplate = ({
   couponCode,
-  results,
+  products,
 }: QuestionnaireProps) => {
   return (
     <Html>
@@ -47,14 +48,31 @@ export const QuestionnaireEmailTemplate = ({
             </Text>
             <Text style={couponStyle}>{couponCode}</Text>
 
-            <Text style={listHeader}>Your Answers:</Text>
-            <ul>
-              {results.map((q, index) => (
-                <li key={index} style={list}>
-                  <strong>{q.question}</strong>: {q.answer}
-                </li>
+            {/* Recommended Products Section */}
+            <Text style={listHeader}>Recommended Products for You:</Text>
+            <Section>
+              {products.map((product, index) => (
+                <Row key={index} style={productRow}>
+                  <Column style={{ width: "30%" }}>
+                    <Img
+                      src={product.image}
+                      alt={product.title}
+                      width={100}
+                      style={productImage}
+                    />
+                  </Column>
+                  <Column style={{ width: "70%", paddingLeft: "10px" }}>
+                    <Text style={productTitle}>{product.title}</Text>
+                    <Link
+                      href={`https://itslitto.com/${product.url}`}
+                      style={productLink}
+                    >
+                      Shop This
+                    </Link>
+                  </Column>
+                </Row>
               ))}
-            </ul>
+            </Section>
 
             <Section style={shopStyle}>
               <Text style={footerText}>
@@ -271,4 +289,28 @@ const couponStyle: React.CSSProperties = {
 const shopStyle: React.CSSProperties = {
   marginTop: "20px",
   paddingTop: "20px",
+};
+
+const productRow: React.CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  borderBottom: "1px solid #ddd",
+  padding: "10px 0",
+};
+
+const productImage: React.CSSProperties = {
+  display: "block",
+  borderRadius: "5px",
+};
+
+const productTitle: React.CSSProperties = {
+  fontSize: "16px",
+  fontWeight: "bold",
+  marginBottom: "5px",
+};
+
+const productLink: React.CSSProperties = {
+  fontSize: "14px",
+  color: "#007bff",
+  textDecoration: "none",
 };

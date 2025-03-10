@@ -27,6 +27,7 @@ type QuestionnaireProps = {
   email: string;
   couponCode: string;
   results: { question: string; answer: string }[]; // Array of question-answer objects
+  products: { url: string; image: string; title: string }[];
 };
 
 export const sendEmail = async (staff: StaffFormValues) => {
@@ -142,6 +143,7 @@ export const sendQuestionnaireCoupon = async ({
   email,
   couponCode,
   results,
+  products,
 }: QuestionnaireProps) => {
   if (!process.env.RESEND_API_KEY) {
     console.error("Missing RESEND_API_KEY environment variable.");
@@ -163,7 +165,7 @@ export const sendQuestionnaireCoupon = async ({
       react: QuestionnaireEmailTemplate({
         email,
         couponCode,
-        results,
+        products,
       }),
     });
 

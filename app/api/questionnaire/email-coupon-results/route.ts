@@ -21,6 +21,7 @@ type QuestionnaireProps = {
   email: string;
   couponCode: string;
   results: { question: string; answer: string }[]; // Array of question-answer objects
+  products: { url: string; image: string; title: string }[];
 };
 
 // ✅ Function to set CORS headers dynamically
@@ -100,10 +101,12 @@ export async function POST(req: Request) {
       id,
       email,
       results,
+      products,
     }: {
       id: string;
       email: string;
       results: { question: string; answer: string }[];
+      products: { url: string; image: string; title: string }[];
     } = await req.json();
 
     if (!id || !email || !Array.isArray(results)) {
@@ -137,6 +140,7 @@ export async function POST(req: Request) {
       email,
       couponCode,
       results, // ✅ Now passing quiz results correctly
+      products,
     };
 
     const emailResponse = await sendQuestionnaireCoupon(emailPayload);

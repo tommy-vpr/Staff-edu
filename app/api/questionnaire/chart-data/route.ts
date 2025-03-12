@@ -115,7 +115,7 @@ export async function GET(req: Request) {
         answers: [
           { text: "Fresh Fruit🍎", value: "A", count: 0 },
           { text: "Sweet Treats 🍪", value: "B", count: 0 },
-          { text: `"Savory Snacks 🍟"`, value: "C", count: 0 },
+          { text: "Savory Snacks 🍟", value: "C", count: 0 },
           { text: "Anything Available 😅", value: "D", count: 0 },
         ],
       },

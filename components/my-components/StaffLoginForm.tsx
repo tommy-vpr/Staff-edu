@@ -18,7 +18,7 @@ const StaffLoginForm: React.FC = () => {
   // Check if the user is authenticated and redirect if necessary
   useEffect(() => {
     if (session?.user) {
-      router.push("/login");
+      router.push("/dashboard");
     }
   }, [session, router]);
 

@@ -28,8 +28,6 @@ const Dashboard = () => {
 
   const firstName = session?.user.name?.split(" ")[0];
 
-  console.log(firstName);
-
   // State to handle video modal
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentVideo, setCurrentVideo] = useState<string | null>(null);

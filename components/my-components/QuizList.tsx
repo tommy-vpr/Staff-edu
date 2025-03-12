@@ -15,8 +15,6 @@ const QuizList: React.FC = () => {
     // Add your navigation logic here if needed
   };
 
-  console.log(pathName);
-
   return (
     <div className="flex gap-4 w-full lg:w-1/2 flex-col md:flex-row">
       <QuizItem

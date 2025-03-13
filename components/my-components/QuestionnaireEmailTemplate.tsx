@@ -80,7 +80,7 @@ export const QuestionnaireEmailTemplate = ({
                           <Img
                             src={`https:${product.image}`}
                             alt={product.title}
-                            width={100}
+                            width={180}
                             style={productImage}
                           />
                         </Link>

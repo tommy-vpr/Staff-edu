@@ -306,7 +306,8 @@ const productImage: React.CSSProperties = {
 const productTitle: React.CSSProperties = {
   fontSize: "16px",
   fontWeight: "bold",
-  marginBottom: "5px",
+  marginBottom: "15px",
+  lineHeight: "1",
 };
 
 const productLink: React.CSSProperties = {

@@ -74,7 +74,7 @@ export const QuestionnaireEmailTemplate = ({
                           style={{
                             display: "flex",
                             justifyContent: "center",
-                            textAlign: "center",
+                            alignItems: "center",
                           }}
                         >
                           <Img
@@ -324,6 +324,7 @@ const productRow: React.CSSProperties = {
 const productImage: React.CSSProperties = {
   display: "block",
   borderRadius: "5px",
+  margin: "auto",
 };
 
 const productTitle: React.CSSProperties = {

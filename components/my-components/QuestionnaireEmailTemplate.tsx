@@ -51,37 +51,6 @@ export const QuestionnaireEmailTemplate = ({
             {/* Recommended Products Section */}
             <Text style={listHeader}>Recommended Products for You:</Text>
 
-            <Section
-              style={{
-                display: "flex",
-                width: "100%",
-                justifyContent: "center",
-                margin: "auto",
-              }}
-            >
-              {products.map((product, index) => (
-                <Row key={index} style={productRow}>
-                  <Column>
-                    <Img
-                      src={`https:${product.image}`}
-                      alt={product.title}
-                      width={100}
-                      style={productImage}
-                    />
-                  </Column>
-                  <Column style={{ paddingLeft: "10px" }}>
-                    <Text style={productTitle}>{product.title}</Text>
-                    <Link
-                      href={`https://itslitto.com/${product.url}`}
-                      style={productLink}
-                    >
-                      Shop This
-                    </Link>
-                  </Column>
-                </Row>
-              ))}
-            </Section>
-
             <Section>
               {products
                 .reduce((rows, product, index) => {

@@ -70,8 +70,12 @@ export const QuestionnaireEmailTemplate = ({
                         }}
                       >
                         <Link
-                          href={product.url}
-                          style={{ display: "block", textAlign: "center" }}
+                          href={`https://itslitto.com/${product.url}`}
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            textAlign: "center",
+                          }}
                         >
                           <Img
                             src={`https:${product.image}`}

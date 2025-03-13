@@ -302,11 +302,11 @@ const socialIcons: React.CSSProperties = {
 const couponStyle: React.CSSProperties = {
   fontSize: "28px",
   fontWeight: "bold",
-  color: "#fff",
+  color: "#72bf49",
   textAlign: "center",
   margin: "10px 0",
   padding: "30px",
-  background: "#101010",
+  background: "#e7f8de",
 };
 
 const shopStyle: React.CSSProperties = {

@@ -50,28 +50,44 @@ export const QuestionnaireEmailTemplate = ({
 
             {/* Recommended Products Section */}
             <Text style={listHeader}>Recommended Products for You:</Text>
+
             <Section>
-              {products.map((product, index) => (
-                <Row key={index} style={productRow}>
-                  <Column style={{ width: "30%" }}>
-                    <Img
-                      src={`https:${product.image}`}
-                      alt={product.title}
-                      width={100}
-                      style={productImage}
-                    />
-                  </Column>
-                  <Column style={{ width: "70%", paddingLeft: "10px" }}>
-                    <Text style={productTitle}>{product.title}</Text>
-                    <Link
-                      href={`https://itslitto.com/${product.url}`}
-                      style={productLink}
-                    >
-                      Shop This
-                    </Link>
-                  </Column>
-                </Row>
-              ))}
+              {products
+                .reduce((rows, product, index) => {
+                  if (index % 2 === 0) rows.push([]);
+                  rows[rows.length - 1].push(product);
+                  return rows;
+                }, [] as { url: string; image: string; title: string }[][])
+                .map((row, rowIndex) => (
+                  <Row key={rowIndex} style={{ marginBottom: "20px" }}>
+                    {row.map((product, colIndex) => (
+                      <Column
+                        key={colIndex}
+                        style={{
+                          width: "50%",
+                          textAlign: "center",
+                          padding: "10px",
+                        }}
+                      >
+                        <Link
+                          href={product.url}
+                          style={{ display: "block", textAlign: "center" }}
+                        >
+                          <Img
+                            src={product.image}
+                            alt={product.title}
+                            width={100}
+                            style={productImage}
+                          />
+                        </Link>
+                        <Text style={productTitle}>{product.title}</Text>
+                        <Link href={product.url} style={productLink}>
+                          View Product
+                        </Link>
+                      </Column>
+                    ))}
+                  </Row>
+                ))}
             </Section>
 
             <Section style={shopStyle}>

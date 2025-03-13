@@ -306,7 +306,7 @@ const couponStyle: React.CSSProperties = {
   textAlign: "center",
   margin: "10px 0",
   padding: "30px",
-  background: "#e7f8de",
+  background: "#f5f5f5",
 };
 
 const shopStyle: React.CSSProperties = {

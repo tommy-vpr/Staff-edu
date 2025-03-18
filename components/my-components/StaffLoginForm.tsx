@@ -9,11 +9,14 @@ import SubmitButton from "./SubmitButton";
 import toast from "react-hot-toast";
 import { StaffLoginValues, StaffLoginSchema } from "@/lib/schemas";
 import { User } from "lucide-react";
+import { getErrorMessage } from "@/lib/getErrorMessage";
 
 const StaffLoginForm: React.FC = () => {
   const router = useRouter();
-  const [error, setError] = useState<string | null>(null);
   const { data: session, status } = useSession();
+  const [error, setError] = useState<string | null>(null);
+  const [blocked, setBlocked] = useState(false);
+  const [retryAfter, setRetryAfter] = useState(0);
 
   // Check if the user is authenticated and redirect if necessary
   useEffect(() => {
@@ -21,6 +24,23 @@ const StaffLoginForm: React.FC = () => {
       router.push("/dashboard");
     }
   }, [session, router]);
+
+  useEffect(() => {
+    if (blocked && retryAfter > 0) {
+      const interval = setInterval(() => {
+        setRetryAfter((prev) => {
+          if (prev <= 1) {
+            setBlocked(false); // ✅ Auto-unblock when timer hits 0
+            setError(null); // ✅ Clear error message
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [blocked, retryAfter]);
 
   const {
     register,
@@ -32,18 +52,32 @@ const StaffLoginForm: React.FC = () => {
   });
 
   const onSubmit = async (data: StaffLoginValues) => {
-    const result = await signIn("staff-credentials", {
-      redirect: false,
-      email: data.email,
-      code: data.inviteCode,
-    });
+    try {
+      const result = await signIn("staff-credentials", {
+        redirect: false,
+        email: data.email,
+        code: data.inviteCode,
+      });
 
-    if (result?.error) {
-      setError(result.error);
-    } else {
-      reset();
-      toast.success("Welcome!");
-      router.push("/dashboard"); // Redirect on successful sign-in
+      if (result?.error) {
+        const errorMessage = result.error;
+
+        // ✅ Handle rate limit response
+        if (errorMessage.includes("Too many login attempts")) {
+          const match = errorMessage.match(/\d+/); // Extract retry time in seconds
+          const retryTime = match ? parseInt(match[0], 10) : 60;
+          setBlocked(true);
+          setRetryAfter(retryTime);
+        }
+
+        setError(errorMessage);
+      } else {
+        reset();
+        toast.success("Welcome!");
+        router.push("/dashboard"); // Redirect on successful sign-in
+      }
+    } catch (error) {
+      setError(getErrorMessage(error));
     }
   };
 
@@ -81,9 +115,18 @@ const StaffLoginForm: React.FC = () => {
           )}
         </div>
 
-        {error && <p className="text-red-400">{error}</p>}
+        {blocked && retryAfter > 0 && (
+          <p className="text-red-400 text-center">
+            Too many login attempts. Try again in {retryAfter} seconds.
+          </p>
+        )}
 
-        <SubmitButton isSubmitting={isSubmitting} />
+        {!blocked && error && <p className="text-red-400">{error}</p>}
+
+        <SubmitButton
+          isSubmitting={isSubmitting || blocked}
+          disabled={blocked}
+        />
       </form>
     </div>
   );

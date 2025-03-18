@@ -3,6 +3,7 @@ import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import { checkRateLimit } from "./rateLimiter";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -55,10 +56,22 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "text" },
         code: { label: "Invitation Code", type: "text" },
       },
-      async authorize(credentials): Promise<User | null> {
+      async authorize(credentials, req): Promise<User | null> {
         if (!credentials?.email || !credentials.code) {
           throw new Error("Email and invitation code are required");
         }
+
+        const headers = req?.headers ?? {};
+
+        // ✅ Get client IP from request headers
+        const ip =
+          headers["x-forwarded-for"]?.split(",")[0] ??
+          headers["cf-connecting-ip"] ??
+          headers["x-real-ip"] ??
+          "127.0.0.1"; // Default to localhost
+
+        // ✅ Apply rate limiting before authentication
+        await checkRateLimit(ip, "login");
 
         // Find staff by email
         const staff = await prisma.staff.findUnique({

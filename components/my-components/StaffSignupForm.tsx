@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { signIn, useSession } from "next-auth/react";
+import React, { useEffect, useState } from "react";
+import { signIn } from "next-auth/react";
 import { useForm, useFormState } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { STATES } from "@/lib/staticData";
@@ -9,15 +9,15 @@ import { StaffFormValues, StaffSchema } from "@/lib/schemas";
 import SubmitButton from "./SubmitButton";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useFormStatus } from "react-dom";
 import { registerStaff } from "@/app/actions/staff";
 import toast from "react-hot-toast";
-import { sendEmail } from "@/app/actions/email";
 
 import littoLogo from "@/assets/images/litto-logo-blk.webp";
 import Image from "next/image";
 
 export default function StaffSignupForm() {
+  const [blocked, setBlocked] = useState(false);
+  const [retryAfter, setRetryAfter] = useState(0);
   const router = useRouter();
 
   const {
@@ -25,6 +25,7 @@ export default function StaffSignupForm() {
     handleSubmit,
     control,
     setError,
+    clearErrors,
     formState: { errors },
     reset,
   } = useForm<StaffFormValues>({
@@ -36,10 +37,33 @@ export default function StaffSignupForm() {
     control, // Required to link to the current form's state
   });
 
+  // ✅ Countdown effect for retry timer
+  useEffect(() => {
+    if (blocked && retryAfter > 0) {
+      const interval = setInterval(() => {
+        setRetryAfter((prev) => {
+          if (prev <= 1) {
+            setBlocked(false); // ✅ Auto-unblock
+            clearErrors("root"); // ✅ Properly clear error
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [blocked, retryAfter]);
+
   const onSubmit = async (data: StaffFormValues) => {
     try {
+      // ✅ Fetch external IP
+      const res = await fetch("https://api64.ipify.org?format=json");
+      const ipData = await res.json();
+      const userIp = ipData.ip || "unknown";
+
       // Clear previous errors
-      setError("root", { type: "manual", message: "" });
+      clearErrors("root");
 
       // Zod schema validation
       const validateInput = StaffSchema.safeParse(data);
@@ -58,13 +82,23 @@ export default function StaffSignupForm() {
       }
 
       // Call the registerStaff action
-      const response = await registerStaff(validateInput.data);
+      const response = await registerStaff(validateInput.data, userIp);
 
       if (response?.error) {
-        setError("root", {
-          type: "manual",
-          message: response.error,
-        });
+        const errorMessage = response.error;
+
+        // ✅ Handle rate limit response
+        if (errorMessage.includes("Too many signup attempts")) {
+          const match = errorMessage.match(/\d+/); // Extract retry time
+          const retryTime = match ? parseInt(match[0], 10) : 60;
+          // ✅ Only set blocked state if it's not already set
+          if (!blocked) {
+            setBlocked(true);
+            setRetryAfter(retryTime);
+          }
+        }
+
+        setError("root", { type: "manual", message: errorMessage });
         return;
       }
 
@@ -184,13 +218,23 @@ export default function StaffSignupForm() {
           )}
         </div>
 
-        {errors.root && (
+        {/* ✅ Show only one error: rate limit OR other errors */}
+        {errors.root && !blocked && (
           <p className="text-red-400 text-sm text-center">
             {errors.root.message}
           </p>
         )}
 
-        <SubmitButton isSubmitting={isSubmitting} />
+        {blocked && retryAfter > 0 && (
+          <p className="text-red-400 text-center">
+            Too many signup attempts. Try again in {retryAfter} seconds.
+          </p>
+        )}
+
+        <SubmitButton
+          isSubmitting={isSubmitting || blocked}
+          disabled={blocked}
+        />
       </form>
       <div className="text-center">
         Have an account?{" "}

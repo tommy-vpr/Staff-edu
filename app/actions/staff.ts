@@ -5,9 +5,13 @@ import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { getErrorMessage } from "@/lib/utils";
 import { scheduleReminder } from "@/lib/scheduleReminder";
+import { checkRateLimit } from "@/lib/rateLimiter";
 
-export const registerStaff = async (newStaff: StaffFormValues) => {
+export const registerStaff = async (newStaff: StaffFormValues, ip: string) => {
   try {
+    // ✅ Apply rate limit before validation
+    await checkRateLimit(ip, "signup");
+
     const validateInput = StaffSchema.safeParse(newStaff);
     if (!validateInput.success) {
       const errorMessage = validateInput.error.issues

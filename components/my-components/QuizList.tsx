@@ -1,9 +1,6 @@
 import React from "react";
 import QuizItem from "@/components/my-components/QuizItem"; // Adjust the import path as needed
 
-// import cannabisIcon from "@/assets/images/cannabis-icon.webp";
-// import hempIcon from "@/assets/images/hemp-icon.webp";
-// import strainIcon from "@/assets/images/strain-icon.webp";
 import takeTestImage from "@/assets/images/take-test-hero.webp";
 import { usePathname } from "next/navigation";
 
@@ -16,7 +13,7 @@ const QuizList: React.FC = () => {
   };
 
   return (
-    <div className="flex gap-4 w-full lg:w-1/2 flex-col md:flex-row">
+    <div className="flex gap-4 w-full flex-col md:flex-row">
       <QuizItem
         label="Cannabis Quiz"
         link={`${pathName}/quiz`}

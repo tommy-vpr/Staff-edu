@@ -21,11 +21,14 @@ const QuizItem: React.FC<QuizItemProps> = ({
     <Link
       href={link}
       onClick={onClick}
-      className="dark:bg-[#222] bg-[#ddd] aspect-video p-2 rounded-sm flex flex-col items-center cursor-pointer hover:text-green-500 
+      className="aspect-video p-2 rounded-sm flex flex-col items-center cursor-pointer
       transition-transform duration-150 w-full group"
     >
       {thumbNail && (
-        <div className="w-full aspect-video relative bg-[#ddd] flex justify-center items-center overflow-hidden">
+        <div
+          className="w-full aspect-video relative bg-[#ddd] flex justify-center items-center 
+          rounded-md overflow-hidden"
+        >
           <Image
             src={thumbNail}
             alt={`${label}`}
@@ -35,7 +38,7 @@ const QuizItem: React.FC<QuizItemProps> = ({
           />
         </div>
       )}
-      <span className="bg-[#111] text-white p-2 w-full text-center font-semibold transition-all duration-150 group-hover:text-green-500">
+      <span className="text-white p-2 w-full transition-all duration-150">
         {label}
       </span>
     </Link>

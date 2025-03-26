@@ -7,7 +7,7 @@ import { authOptions } from "@/lib/authOptions";
 import { Check, Play, SquarePen, VideoOff } from "lucide-react";
 import Link from "next/link";
 
-import videoThumb from "@/assets/images/video-thumbnail.webp";
+import videoThumb from "@/assets/images/video-thumbnail-v2.webp";
 import VideoModal from "@/components/my-components/EducationalVideo"; // Adjust path if necessary
 
 import Image from "next/image";
@@ -70,7 +70,7 @@ const Dashboard = () => {
       <h3 className="text-2xl lg:text-3xl font-semibold uppercase mt-4 lg:mb-8 text-green-500">
         LITTO 101
       </h3>
-      <div className="flex lg:flex-row flex-col">
+      <div className="flex lg:flex-row flex-col gap-8">
         <div className="w-full lg:w-1/2 aspect-video">
           {/*autoPlay muted loop*/}
           <video
@@ -86,7 +86,7 @@ const Dashboard = () => {
             />
           </video>
         </div>
-        <div className="w-full lg:w-1/2 flex flex-col gap-4 lg:px-8 mt-6 lg:mt-0">
+        <div className="w-full lg:w-1/2 flex flex-col gap-4 mt-6 lg:mt-0">
           <p>
             You’re about to take your LITTO skills to the next level! Learn what
             makes our products hit different and why we stay ahead of the game.
@@ -94,76 +94,85 @@ const Dashboard = () => {
             <strong className="text-green-500">$80 coupon</strong> just for
             learning!
           </p>
-          <p className="text-green-500 font-semibold">Here’s how it works:</p>
-          <ul className="space-y-2 text-sm mb-8">
-            <li>1. Check out the video - Get the lowdown on LITTO.</li>
-            <li>2. Take the quiz - Test your LITTO knowledge.</li>
-            <li>
-              3. Claim your{" "}
-              <strong className="text-green-500">$80 coupon</strong> - Rep LITTO
-              the right way.
-            </li>
-          </ul>
+          <div className="p-4 rounded-lg bg-gray-800">
+            <p className="text-green-500 font-semibold">Here’s how it works:</p>
+            <ul className="space-y-2 text-sm">
+              <li>1. Check out the video - Get the lowdown on LITTO.</li>
+              <li>2. Take the quiz - Test your LITTO knowledge.</li>
+              <li>
+                3. Claim your{" "}
+                <strong className="text-green-500">$80 coupon</strong> - Rep
+                LITTO the right way.
+              </li>
+            </ul>
+          </div>
           <p>Simple, right? Tap in, and let’s get started!</p>
         </div>
       </div>
       {/* Educational Videos Section */}
-      <div className="mt-12">
-        <h3 className="font-semibold uppercase text-lg mb-2">
-          Educational Videos
-        </h3>
-        <div className="w-full lg:w-1/2 flex flex-col lg:flex-row gap-4">
-          {videos.map((video, index) => (
-            <div key={index} className="w-full">
-              <div
-                className="aspect-video rounded-md overflow-hidden relative group cursor-pointer"
-                onClick={() => openVideoModal(video.src, video.title)}
-              >
+      <div className="flex lg:flex-row flex-col gap-8">
+        <div className="mt-12 w-full">
+          <h3 className="font-semibold uppercase text-lg mb-2">
+            <span className="font-normal text-gray-400">Step 1:</span> Watch
+            Educational Videos
+          </h3>
+          <div className="w-full flex flex-col lg:flex-row gap-4">
+            {videos.map((video, index) => (
+              <div key={index} className="w-full">
                 <div
-                  className="bg-[#101010]/70 h-12 w-12 rounded-full absolute top-1/2 left-1/2 
+                  className="aspect-video rounded-md overflow-hidden relative group cursor-pointer"
+                  onClick={() => openVideoModal(video.src, video.title)}
+                >
+                  <div
+                    className="bg-[#101010]/70 h-12 w-12 rounded-full absolute top-1/2 left-1/2 
                     -translate-x-1/2 -translate-y-1/2 z-10 flex items-center justify-center group-hover:scale-110
                     transition duration-150"
-                >
-                  <Play color="#ddd" />
+                  >
+                    <Play color="#ddd" />
+                  </div>
+                  <Image
+                    src={videoThumb}
+                    alt={video.title}
+                    fill
+                    objectFit="cover"
+                    className="object-top"
+                  />
                 </div>
-                <Image
-                  src={videoThumb}
-                  alt={video.title}
-                  fill
-                  objectFit="cover"
-                />
+                <div className="flex justify-between items-center gap-1 mt-2">
+                  <h3>{video.title}</h3>
+                  <span className="text-gray-500">{video.duration}</span>
+                </div>
               </div>
-              <div className="flex justify-between items-center gap-1 mt-2">
-                <h3>{video.title}</h3>
-                <span className="text-gray-500">{video.duration}</span>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Video Modal */}
-      <VideoModal
-        videoSrc={currentVideo || null} // Pass null if currentVideo is empty
-        videoTitle={currentVideoTitle || null}
-        isOpen={isModalOpen}
-        onClose={closeVideoModal}
-      />
+        {/* Video Modal */}
+        <VideoModal
+          videoSrc={currentVideo || null} // Pass null if currentVideo is empty
+          videoTitle={currentVideoTitle || null}
+          isOpen={isModalOpen}
+          onClose={closeVideoModal}
+        />
 
-      <div className="my-12">
-        <h3 className="font-semibold uppercase text-lg mb-2">Take a quiz</h3>
-        <div className="flex gap-4">
-          <QuizList />
+        <div className="my-12 w-full">
+          <h3 className="font-semibold uppercase text-lg mb-2">
+            <span className="font-normal text-gray-400">Step 2:</span> Take a
+            quiz
+          </h3>
+          <div className="flex gap-4">
+            <QuizList />
+          </div>
         </div>
-      </div>
 
-      <Link
-        href="https://itslitto.com/"
-        className="bg-green-500 text-[#333] font-semibold text-sm py-3 px-4 rounded-sm
+        {/* <Link
+          href="https://itslitto.com/"
+          className="bg-green-500 text-[#333] font-semibold text-sm py-3 px-4 rounded-sm
             transition-all duration-150 hover:bg-green-600"
-      >
-        Check out our website
-      </Link>
+        >
+          Check out our website
+        </Link> */}
+      </div>
     </div>
   );
 };

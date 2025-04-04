@@ -148,9 +148,11 @@ const DashboardHeader = () => {
             {session?.user.name}
           </span>
           {session?.user.role === "admin" && (
-            <DropdownMenuItem className="cursor-pointer">
-              <Link href="/dashboard/account">Setting</Link>
-            </DropdownMenuItem>
+            <Link href="/dashboard/account">
+              <DropdownMenuItem className="cursor-pointer">
+                Setting
+              </DropdownMenuItem>
+            </Link>
           )}
           <DropdownMenuItem
             onClick={() => signOut({ callbackUrl: "/login" })}

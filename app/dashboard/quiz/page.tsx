@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import QuizComponentA from "@/components/my-components/QuizComponent-A";
 import { useCustomSession } from "@/lib/SessionContext";
-import { PartyPopper } from "lucide-react";
+import { PartyPopper, Loader } from "lucide-react";
 import Confetti from "react-confetti";
 
 const Page = () => {
@@ -12,12 +12,14 @@ const Page = () => {
   const [loading, setLoading] = useState(true);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
+  const isAdmin = session?.user?.role === "admin";
+
   const parentRef = useRef<HTMLDivElement>(null); // Create a ref for the parent div
 
   useEffect(() => {
     const updateDimensions = () => {
       if (parentRef.current) {
-        const rect = parentRef.current.getBoundingClientRect(); // Get the dimensions of the parent div
+        const rect = parentRef.current.getBoundingClientRect();
         setDimensions({
           width: rect.width,
           height: rect.height,
@@ -25,16 +27,16 @@ const Page = () => {
       }
     };
 
-    updateDimensions(); // Set initial dimensions
-    window.addEventListener("resize", updateDimensions); // Update on resize
+    updateDimensions(); // Initial
+    window.addEventListener("resize", updateDimensions);
 
-    if (session?.user?.testsTaken) {
+    // ✅ Admin check first
+    if (session?.user?.role === "admin") {
+      setHasTakenQuizA(false); // explicitly set this for clarity
+      setLoading(false);
+    } else if (session?.user?.testsTaken) {
       setHasTakenQuizA(session.user.testsTaken.includes("quiz-a"));
       setLoading(false);
-    } else if (session?.user?.role === "admin") {
-      setLoading(false);
-    } else {
-      setLoading(true);
     }
 
     return () => {
@@ -43,7 +45,11 @@ const Page = () => {
   }, [session]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="w-full h-2/3 flex justify-center items-center">
+        <Loader size={48} className="animate-spin text-gray-400" />
+      </div>
+    );
   }
 
   return (
@@ -51,7 +57,17 @@ const Page = () => {
       ref={parentRef} // Attach the ref to this parent div
       className="flex justify-center items-center relative h-full"
     >
-      {hasTakenQuizA ? (
+      {isAdmin ? (
+        <div className="text-center">
+          <div className="rounded-full bg-green-400 p-4 mb-4 inline-block">
+            <PartyPopper size={36} className="text-gray-800" />
+          </div>
+          <p className="font-medium text-lg">You already know it all!</p>
+          <p className="text-sm text-muted-foreground">
+            No need for this quiz 😎
+          </p>
+        </div>
+      ) : hasTakenQuizA ? (
         <>
           <div className="flex flex-col items-center -translate-y-1/2">
             <div className="rounded-full bg-green-400 p-4 mb-4">

@@ -144,15 +144,18 @@ const DashboardHeader = () => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
+          <span className="capitalize p-[5px] border-b w-full border-b-gray-800 block text-green-400 cursor-pointer">
+            {session?.user.name}
+          </span>
           {session?.user.role === "admin" && (
-            <DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
               <Link href="/dashboard/account">Setting</Link>
             </DropdownMenuItem>
           )}
-          <span className="capitalize p-[5px] border-b w-full border-b-gray-800 block text-green-400">
-            {session?.user.name}
-          </span>
-          <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/login" })}>
+          <DropdownMenuItem
+            onClick={() => signOut({ callbackUrl: "/login" })}
+            className="cursor-pointer"
+          >
             Logout
           </DropdownMenuItem>
         </DropdownMenuContent>

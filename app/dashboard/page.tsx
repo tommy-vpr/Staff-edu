@@ -67,7 +67,7 @@ const Dashboard = () => {
 
   return (
     <div className="max-w-[1200px] m-auto p-4 md:p-6 lg:p-8">
-      <h3 className="text-2xl lg:text-3xl font-semibold uppercase mt-4 lg:mb-8 text-green-500">
+      <h3 className="text-2xl lg:text-4xl font-semibold uppercase mt-4 lg:mb-8 text-green-500">
         LITTO 101
       </h3>
       <div className="flex lg:flex-row flex-col gap-8">
@@ -114,7 +114,7 @@ const Dashboard = () => {
         <div className="mt-12 w-full">
           <h3 className="font-semibold uppercase text-lg mb-2">
             <span className="font-normal text-gray-400">Step 1:</span> Watch
-            Educational Videos
+            Educational Video
           </h3>
           <div className="w-full flex flex-col lg:flex-row gap-4">
             {videos.map((video, index) => (

@@ -55,10 +55,10 @@ function generatePDF(coupons: CouponData[]): void {
   const doc = new PDFDocument();
 
   // Pipe the PDF to a writable stream (saving to file)
-  doc.pipe(fs.createWriteStream("coupons.pdf"));
+  doc.pipe(fs.createWriteStream("cannabis-edu-codes.pdf"));
 
   // Add some content to the PDF
-  doc.fontSize(20).text("Generated Coupon Codes", { align: "center" });
+  doc.fontSize(20).text("Codes", { align: "center" });
   doc.moveDown();
 
   // Add each coupon to the PDF
@@ -75,4 +75,4 @@ function generatePDF(coupons: CouponData[]): void {
 }
 
 // Execute the function to generate and insert coupons
-generateAndInsertCoupons(50, 8);
+generateAndInsertCoupons(5000, 8);

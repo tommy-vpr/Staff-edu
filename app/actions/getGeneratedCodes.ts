@@ -6,10 +6,11 @@ export async function getGeneratedCodes(
   page: number,
   size: number,
   status?: boolean | null,
-  emailFilter?: string
+  emailFilter?: string,
+  codeFilter?: string
 ) {
   const where: any = {
-    isActive: true, // ✅ this ensures only active codes are returned
+    isActive: true, // ✅ only active codes
   };
 
   if (typeof status === "boolean") {
@@ -19,6 +20,13 @@ export async function getGeneratedCodes(
   if (emailFilter) {
     where.email = {
       contains: emailFilter,
+      mode: "insensitive",
+    };
+  }
+
+  if (codeFilter) {
+    where.code = {
+      contains: codeFilter,
       mode: "insensitive",
     };
   }

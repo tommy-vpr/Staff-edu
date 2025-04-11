@@ -16,6 +16,7 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -32,6 +33,12 @@ import { ConfirmDialog } from "./ConfirmDialog";
 import { GeneratedCodes } from "@prisma/client";
 import { getGeneratedCodes } from "@/app/actions/getGeneratedCodes";
 import { Skeleton } from "@/components/ui/skeleton";
+
+import { useDeferredValue } from "react";
+import {
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+} from "@radix-ui/react-dropdown-menu";
 
 export const columns: ColumnDef<GeneratedCodes>[] = [
   {
@@ -112,10 +119,23 @@ export const columns: ColumnDef<GeneratedCodes>[] = [
   },
 ];
 
+function useDebounce<T>(value: T, delay = 300): T {
+  const [debounced, setDebounced] = React.useState(value);
+
+  React.useEffect(() => {
+    const handler = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+
+  return debounced;
+}
+
 export function DataTable() {
   const [data, setData] = React.useState<GeneratedCodes[]>([]);
   const [totalCount, setTotalCount] = React.useState(0);
   const [emailFilter, setEmailFilter] = React.useState("");
+  const [codeFilter, setCodeFilter] = React.useState("");
+
   const [loading, setLoading] = React.useState(false);
   const [statusFilter, setStatusFilter] = React.useState<
     "all" | "used" | "unused"
@@ -133,12 +153,15 @@ export function DataTable() {
     pageSize: 10,
   });
 
+  const debouncedEmailFilter = useDebounce(emailFilter, 600);
+  const debouncedCodeFilter = useDebounce(codeFilter, 600);
+
   React.useEffect(() => {
     setPagination((prev) => ({
       ...prev,
       pageIndex: 0,
     }));
-  }, [statusFilter, emailFilter]);
+  }, [statusFilter, emailFilter, codeFilter]);
 
   const fetchPage = React.useCallback(async () => {
     setLoading(true);
@@ -154,14 +177,21 @@ export function DataTable() {
         pagination.pageIndex,
         pagination.pageSize,
         status,
-        emailFilter
+        debouncedEmailFilter,
+        debouncedCodeFilter
       );
       setData(res.data);
       setTotalCount(res.total);
     } finally {
       setLoading(false);
     }
-  }, [pagination.pageIndex, pagination.pageSize, statusFilter, emailFilter]);
+  }, [
+    pagination.pageIndex,
+    pagination.pageSize,
+    statusFilter,
+    debouncedEmailFilter,
+    debouncedCodeFilter,
+  ]);
 
   React.useEffect(() => {
     fetchPage();
@@ -189,47 +219,101 @@ export function DataTable() {
 
   return (
     <div className="w-full p-2 md:p-4">
-      <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter emails..."
-          value={emailFilter}
-          onChange={(e) => setEmailFilter(e.target.value)}
-          className="max-w-sm"
-        />
-        <select
-          className="ml-4 px-3 py-2 text-sm border rounded"
-          value={statusFilter}
-          onChange={(e) =>
-            setStatusFilter(e.target.value as "all" | "used" | "unused")
-          }
-        >
-          <option value="all">Status</option>
-          <option value="used">Used</option>
-          <option value="unused">Unused</option>
-        </select>
+      <div className="flex flex-col md:flex-row items-center py-4 gap-2">
+        <div className="relative w-full md:max-w-sm">
+          <Input
+            placeholder="Filter emails..."
+            value={emailFilter}
+            onChange={(e) => setEmailFilter(e.target.value)}
+            className="pr-8"
+          />
+          {emailFilter && (
+            <button
+              type="button"
+              onClick={() => setEmailFilter("")}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+            >
+              &times;
+            </button>
+          )}
+        </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => (
-                <DropdownMenuCheckboxItem
-                  key={column.id}
-                  className="capitalize"
-                  checked={column.getIsVisible()}
-                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
+        <div className="relative w-full md:max-w-sm">
+          <Input
+            placeholder="Filter code..."
+            value={codeFilter}
+            onChange={(e) => setCodeFilter(e.target.value)}
+            className="pr-8"
+          />
+          {codeFilter && (
+            <button
+              type="button"
+              onClick={() => setCodeFilter("")}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+            >
+              &times;
+            </button>
+          )}
+        </div>
+
+        <div className="w-full">
+          <div className="flex justify-end gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="px-3 py-2 text-sm">
+                  {statusFilter === "all"
+                    ? "Status"
+                    : statusFilter === "used"
+                    ? "Used"
+                    : "Unused"}
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Filter Status</DropdownMenuLabel>
+                <DropdownMenuRadioGroup
+                  value={statusFilter}
+                  onValueChange={(val) =>
+                    setStatusFilter(val as "all" | "used" | "unused")
+                  }
                 >
-                  {column.id}
-                </DropdownMenuCheckboxItem>
-              ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+                  <DropdownMenuRadioItem value="all">All</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="used">
+                    Used
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="unused">
+                    Unused
+                  </DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">
+                  Columns <ChevronDown className="ml-2 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .map((column) => (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
       </div>
 
       <div className="rounded-md border">

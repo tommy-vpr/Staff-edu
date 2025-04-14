@@ -6,7 +6,6 @@ import Image from "next/image";
 import heroImage from "@/assets/images/hemp-hero-banner.webp";
 import stripes from "@/assets/images/litto-logo-sec.png";
 import { redirect } from "next/navigation";
-import StaffSignupForm from "@/components/my-components/StaffSignupForm";
 import UserSignupForm from "@/components/my-components/UserSignupForm";
 
 export default async function Dashboard() {

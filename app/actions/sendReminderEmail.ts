@@ -8,7 +8,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendReminderEmail(email: string, staffId: string) {
   // Check if the staff has already completed the quiz
-  const staff = await prisma.staff.findUnique({
+  const staff = await prisma.user.findUnique({
     where: { id: staffId },
   });
 

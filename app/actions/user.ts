@@ -66,12 +66,12 @@ export const registerUser = async (newUser: UserFormValues, ip: string) => {
     });
 
     // ✅ Don't block user — run in background
-    scheduleReminder(email, newUser.email).catch((err) =>
+    scheduleReminder(email, newUserEntry.id).catch((err) =>
       console.error("Reminder error:", getErrorMessage(err))
     );
 
     // ✅ Subscribe to Klaviyo (non-blocking)
-    subscribeToKlaviyo(newUser.email).catch((err) =>
+    subscribeToKlaviyo(newUserEntry.email).catch((err) =>
       console.error("Klaviyo error:", getErrorMessage(err))
     );
 

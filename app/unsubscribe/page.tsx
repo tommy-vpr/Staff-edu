@@ -11,9 +11,9 @@ export default function UnsubscribePage() {
     }
 
     try {
-      await prisma.staff.update({
+      await prisma.user.update({
         where: { email },
-        data: { subscribed: false },
+        data: { role: "unsubscribe" },
       });
 
       // Optionally, trigger a revalidation of a path or data cache

@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/lib/prisma";
+import prisma, { FlatInviteCode, InviteCodeWithUser } from "@/lib/prisma";
 
 export async function getInviteCodes(
   page: number,
@@ -8,7 +8,7 @@ export async function getInviteCodes(
   status?: boolean,
   emailFilter?: string,
   codeFilter?: string
-) {
+): Promise<{ data: FlatInviteCode[]; total: number }> {
   const where: any = {};
 
   if (typeof status === "boolean") {
@@ -45,9 +45,9 @@ export async function getInviteCodes(
   ]);
 
   // flatten usedBy.email into the main object for easy access in the table
-  const flatData = data.map((code) => ({
+  const flatData: FlatInviteCode[] = data.map((code: InviteCodeWithUser) => ({
     ...code,
-    email: code.usedBy?.email || "",
+    email: code.usedBy?.email ?? "",
   }));
 
   return { data: flatData, total };

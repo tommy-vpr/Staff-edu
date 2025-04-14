@@ -93,11 +93,6 @@ const QuizComponentA: React.FC = () => {
           </div>
         ) : (
           <>
-            {/* Question Tracker */}
-            {/* <div className="text-gray-500 text-sm mb-3">
-              Question {currentQuestionIndex + 1} of {questions.length}
-            </div> */}
-
             <h2 className="text-xl mb-4">{currentQuestion.question}</h2>
 
             <div className="space-y-4">

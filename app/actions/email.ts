@@ -3,7 +3,7 @@
 import CouponEmailTemplate from "@/components/my-components/CouponEmail";
 import WelcomeEmailTemplate from "@/components/my-components/WelcomeEmail";
 import { getErrorMessage } from "@/lib/getErrorMessage";
-import { ContactSchema, StaffFormValues } from "@/lib/schemas";
+import { UserSchema, UserFormValues } from "@/lib/schemas";
 import { Resend } from "resend";
 import { generateDiscountCode } from "./shopify";
 import ContactEmailTemplate from "@/components/my-components/ContactEmail";
@@ -23,7 +23,7 @@ type Props = {
   couponCode: string;
 };
 
-export const sendEmail = async (staff: StaffFormValues) => {
+export const sendEmail = async (staff: UserFormValues) => {
   if (!process.env.RESEND_API_KEY) {
     console.error("Missing RESEND_API_KEY environment variable.");
     return { error: "Email service is not configured." };
@@ -108,7 +108,7 @@ export const sendContactEmail = async ({
       };
     }
 
-    ContactSchema.parse({ name, email, subject, message });
+    UserSchema.parse({ name, email, subject, message });
 
     // Send the email using Resend
     const data = await resend.emails.send({

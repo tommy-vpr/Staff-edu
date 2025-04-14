@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  email        String      @unique
+  firstName    String  
+  lastName     String 
+  password     String
+  state        String?      
+  role         String      @default("user")
+  testTaken    Boolean?
+  inviteCode   InviteCode? @relation(fields: [inviteCodeId], references: [id])
+  inviteCodeId String?     @unique @db.ObjectId
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model InviteCode {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  code      String   @unique
+  used      Boolean  @default(false)
+  usedBy    User?    @relation()
+  usedById  String?  @db.ObjectId
+  createdAt DateTime @default(now())
+}
+
+
+
+
+
+

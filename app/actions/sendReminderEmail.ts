@@ -6,19 +6,19 @@ import ReminderEmailTemplate from "@/components/my-components/ReminderEmail";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function sendReminderEmail(email: string, staffId: string) {
+export async function sendReminderEmail(email: string, userId: string) {
   // Check if the staff has already completed the quiz
-  const staff = await prisma.user.findUnique({
-    where: { id: staffId },
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
   });
 
-  if (!staff) {
-    console.error("❌ Staff not found");
+  if (!user) {
+    console.error("❌ user not found");
     return;
   }
 
   // If quiz is already completed, do not send email
-  if (staff.takenTest) {
+  if (user.testTaken) {
     console.log("✅ Quiz already completed. No reminder needed.");
     return;
   }
@@ -29,7 +29,7 @@ export async function sendReminderEmail(email: string, staffId: string) {
     to: email,
     subject: "Reminder: Complete Your LITTO Hemp Quiz",
     react: ReminderEmailTemplate({
-      firstName: staff.firstName,
+      firstName: user.firstName,
     }),
   });
 }

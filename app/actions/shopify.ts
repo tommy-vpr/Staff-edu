@@ -158,23 +158,20 @@ export const generateDiscountCode =
   };
 
 // ✅ Update Staff Record After Quiz Completion
-export const updateStaffTestsTaken = async (email: string, test: string) => {
+export const updateUserTestTaken = async (email: string) => {
   try {
-    console.log(`📌 Updating Staff Record for: ${email}`);
+    console.log(`📌 Updating User Record for: ${email}`);
 
-    const updatedStaff = await prisma.staff.update({
+    const updatedUser = await prisma.user.update({
       where: { email },
       data: {
-        takenTest: true,
-        testsTaken: {
-          push: test, // Append test name to the `testsTaken` array
-        },
+        testTaken: true,
         updatedAt: new Date(), // Update `updatedAt` field
       },
     });
 
-    console.log("✅ Staff record updated successfully!");
-    return { success: true, staff: updatedStaff };
+    console.log("✅ User record updated successfully!");
+    return { success: true, User: updatedUser };
   } catch (error) {
     console.error("❌ Error updating Staff model:", error);
     return { success: false, error: "Failed to update Staff model." };

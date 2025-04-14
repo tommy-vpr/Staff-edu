@@ -1,10 +1,7 @@
 "use client";
 
 import { sendCoupon } from "@/app/actions/email";
-import {
-  generateDiscountCode,
-  updateStaffTestsTaken,
-} from "@/app/actions/shopify";
+import { generateDiscountCode } from "@/app/actions/shopify";
 import { useCustomSession } from "@/lib/SessionContext";
 import { getSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";

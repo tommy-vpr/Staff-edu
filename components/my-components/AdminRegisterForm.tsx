@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef, useState } from "react";
 import { registerUser } from "@/app/actions/admin";
 import SubmitButton from "./SubmitButton";

@@ -5,7 +5,7 @@ import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { checkRateLimit } from "./rateLimit";
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     // Admin login
     CredentialsProvider({
@@ -119,7 +119,7 @@ export const authOptions = {
       user,
     }: {
       token: JWT;
-      user?: User & { testTaken?: boolean };
+      user?: User & { testTaken?: boolean | null };
     }): Promise<JWT> {
       if (user) {
         token.id = user.id;

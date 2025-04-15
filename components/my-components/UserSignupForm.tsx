@@ -149,9 +149,7 @@ export default function UserSignupForm() {
 
   return (
     <div className="w-full max-w-[500px] p-4 sm:p-8 space-y-6 rounded-lg mx-auto">
-      <h1 className="text-3xl font-bold text-center uppercase">
-        LITTO Hemp Edu
-      </h1>
+      <h1 className="text-3xl font-bold text-center uppercase">LITTO 101</h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>

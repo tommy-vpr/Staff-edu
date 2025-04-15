@@ -114,7 +114,7 @@ export const generateDiscountCode =
       const priceRuleId = await createPriceRule(); // ✅ Get or create the price rule
       if (!priceRuleId) throw new Error("❌ No valid price rule ID found");
 
-      const randomCode = `HEDU-${Math.random()
+      const randomCode = `CEDU-${Math.random()
         .toString(36)
         .slice(2, 8)
         .toUpperCase()}`;

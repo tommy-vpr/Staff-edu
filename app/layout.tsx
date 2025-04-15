@@ -27,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   useEffect(() => {
-    document.title = "Hemp Edu";
+    document.title = "LITTO 101";
   }, []);
 
   return (

@@ -18,11 +18,11 @@ const QuizList: React.FC = () => {
   return (
     <div className="flex gap-4 w-full flex-col md:flex-row">
       <QuizItem
-        label="Hemp Quiz"
+        label="Cannabis Quiz"
         link={`${pathName}/quiz`}
         // iconLink={cannabisIcon}
         thumbNail={takeTestImage}
-        onClick={() => handleQuizClick("Hemp Quiz")}
+        onClick={() => handleQuizClick("Cannabis Quiz")}
       />
     </div>
   );

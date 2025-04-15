@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import type { NextAuthOptions } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import Image from "next/image";
-import heroImage from "@/assets/images/hemp-hero-banner.webp";
+import heroImage from "@/assets/images/hero-banner-can.webp";
 import stripes from "@/assets/images/litto-logo-sec.png";
 import { redirect } from "next/navigation";
 import UserSignupForm from "@/components/my-components/UserSignupForm";

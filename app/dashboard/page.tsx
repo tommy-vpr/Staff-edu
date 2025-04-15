@@ -50,19 +50,19 @@ const Dashboard = () => {
 
   const videos: Video[] = [
     {
-      title: "LITTO Hemp",
-      duration: "2:50",
-      src: "https://cdn.shopify.com/videos/c/o/v/ae9f16f6d43a41bd88d8301274e159cb.mp4",
+      title: "LITTO Cannibis",
+      duration: "1:51",
+      src: "https://cdn.shopify.com/videos/c/o/v/eeb10cb216c14ed9b24e65a2bc340083.mp4",
     },
   ];
 
   return (
     <div className="max-w-[1200px] m-auto p-4 md:p-6 lg:p-8">
-      <h3 className="text-2xl lg:text-3xl font-semibold uppercase mt-4 lg:mb-8 text-green-500">
-        Welcome to LITTO Hemp 101!
+      <h3 className="text-2xl lg:text-4xl font-semibold uppercase mt-4 lg:mb-8 text-green-500">
+        LITTO 101
       </h3>
-      <div className="flex flex-col lg:flex-row gap-8">
-        <div className="w-full aspect-video">
+      <div className="flex lg:flex-row flex-col gap-8">
+        <div className="w-full lg:w-1/2 aspect-video">
           {/*autoPlay muted loop*/}
           <video
             autoPlay={!isMobile}
@@ -72,12 +72,12 @@ const Dashboard = () => {
             className="w-full h-auto"
           >
             <source
-              src="https://cdn.shopify.com/videos/c/o/v/d03aae27699a4d9ba3f34b23e269f697.mp4"
+              src="https://cdn.shopify.com/videos/c/o/v/d8a05164335a4c9d8ec5a5ac6bd5fe0b.mp4"
               type="video/mp4"
             />
           </video>
         </div>
-        <div className="w-full flex flex-col gap-4 mt-6">
+        <div className="w-full lg:w-1/2 flex flex-col gap-4 mt-6 lg:mt-0">
           <p>
             You’re about to take your LITTO skills to the next level! Learn what
             makes our products hit different and why we stay ahead of the game.
@@ -85,7 +85,7 @@ const Dashboard = () => {
             <strong className="text-green-500">$80 coupon</strong> just for
             learning!
           </p>
-          <div className="p-4 rounded-lg bg-gray-200 dark:bg-gray-800">
+          <div className="p-4 rounded-lg bg-gray-800">
             <p className="text-green-500 font-semibold">Here’s how it works:</p>
             <ul className="space-y-2 text-sm">
               <li>1. Check out the video - Get the lowdown on LITTO.</li>
@@ -101,10 +101,10 @@ const Dashboard = () => {
         </div>
       </div>
       {/* Educational Videos Section */}
-      <div className="flex lg:flex-row flex-col gap-8 mt-12">
-        <div className="w-full">
+      <div className="flex lg:flex-row flex-col gap-8">
+        <div className="mt-12 w-full">
           <h3 className="font-semibold uppercase text-lg mb-2">
-            <span className="text-gray-500 font-normal">Step 1:</span> Watch
+            <span className="font-normal text-gray-400">Step 1:</span> Watch
             Educational Video
           </h3>
           <div className="w-full flex flex-col lg:flex-row gap-4">
@@ -126,6 +126,7 @@ const Dashboard = () => {
                     alt={video.title}
                     fill
                     objectFit="cover"
+                    className="object-top"
                   />
                 </div>
                 <div className="flex justify-between items-center gap-1 mt-2">
@@ -145,24 +146,24 @@ const Dashboard = () => {
           onClose={closeVideoModal}
         />
 
-        <div className="w-full ">
+        <div className="my-12 w-full">
           <h3 className="font-semibold uppercase text-lg mb-2">
-            <span className="text-gray-500 font-normal">Step 2:</span> Take a
+            <span className="font-normal text-gray-400">Step 2:</span> Take a
             quiz
           </h3>
           <div className="flex gap-4">
             <QuizList />
           </div>
         </div>
-      </div>
 
-      {/* <Link
-        href="https://itslitto.com/"
-        className="bg-green-500 text-[#333] font-semibold text-sm py-3 px-4 rounded-sm
+        {/* <Link
+          href="https://itslitto.com/"
+          className="bg-green-500 text-[#333] font-semibold text-sm py-3 px-4 rounded-sm
             transition-all duration-150 hover:bg-green-600"
-      >
-        Visit our website
-      </Link> */}
+        >
+          Check out our website
+        </Link> */}
+      </div>
     </div>
   );
 };

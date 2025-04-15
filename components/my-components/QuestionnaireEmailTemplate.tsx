@@ -14,16 +14,21 @@ import {
 import * as React from "react";
 import littoLogo from "@/assets/images/litto-logo-blk.webp";
 
-type Props = {
-  firstName: string;
+type QuestionnaireProps = {
+  email: string;
   couponCode: string;
+  // results: { question: string; answer: string }[];
+  products: { url: string; image: string; title: string }[];
 };
 
-export const CouponEmailTemplate = ({ firstName, couponCode }: Props) => {
+export const QuestionnaireEmailTemplate = ({
+  couponCode,
+  products,
+}: QuestionnaireProps) => {
   return (
     <Html>
       <Head />
-      <Preview>LITTO EDU 🌟</Preview>
+      <Preview>LITTO Questionnaire 🌟</Preview>
       <Body style={main}>
         <Container style={container}>
           {/* Header Section */}
@@ -37,25 +42,93 @@ export const CouponEmailTemplate = ({ firstName, couponCode }: Props) => {
 
           {/* Greeting Section */}
           <Section style={content}>
-            <Text style={title}>
-              Congratulations on completing the quiz! 🎉
-            </Text>
+            <Text style={title}>Thank you for taking the quiz! 🎉</Text>
             <Text style={paragraph}>
-              To celebrate, here’s your exclusive $80 coupon code:
+              Here’s your exclusive 20% off coupon code:
             </Text>
             <Text style={couponStyle}>{couponCode}</Text>
-            <Text style={paragraph}>
-              <strong>How to redeem:</strong>
-              <br />
-              1. Add your favorite items to your cart.
-              <br />
-              2. Enter the coupon code in the "Discount Code" field at checkout.
-              <br />
-              3. Complete your purchase and enjoy!
-              <br />
-              4. This $80 coupon is valid for one-time use only. Any unused
-              balance will not be carried over.
-            </Text>
+
+            {/* Recommended Products Section */}
+            <Text style={listHeader}>Recommended Products for You:</Text>
+
+            <Section>
+              {products
+                .reduce((rows, product, index) => {
+                  if (index % 2 === 0) rows.push([]);
+                  rows[rows.length - 1].push(product);
+                  return rows;
+                }, [] as { url: string; image: string; title: string }[][])
+                .map((row, rowIndex) => (
+                  <Row key={rowIndex} style={{ marginBottom: "20px" }}>
+                    {row.map((product, colIndex) => (
+                      <Column
+                        key={colIndex}
+                        style={{
+                          width: "50%",
+                          textAlign: "center",
+                          padding: "10px",
+                        }}
+                      >
+                        <Link
+                          href={`https://itslitto.com/${product.url}`}
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Img
+                            src={`https:${product.image}`}
+                            alt={product.title}
+                            width={240}
+                            style={productImage}
+                          />
+                        </Link>
+                        <Text style={productTitle}>{product.title}</Text>
+                        <Link
+                          href={`https://itslitto.com/${product.url}`}
+                          style={productLink}
+                        >
+                          View Product
+                        </Link>
+                      </Column>
+                    ))}
+                  </Row>
+                ))}
+            </Section>
+
+            <Section style={shopStyle}>
+              <Text style={footerText}>
+                <Link
+                  href="https://itslitto.com"
+                  target="_blank"
+                  style={{
+                    backgroundColor: "#101010",
+                    display: "inline-block",
+                    padding: "10px",
+                    borderRadius: "5px",
+                    margin: "0 5px",
+                    color: "#fff",
+                  }}
+                >
+                  Visit Website
+                </Link>
+                <Link
+                  href="https://itslitto.com/pages/store-locator"
+                  target="_blank"
+                  style={{
+                    backgroundColor: "#101010",
+                    display: "inline-block",
+                    padding: "10px",
+                    borderRadius: "5px",
+                    margin: "0 5px",
+                    color: "#fff",
+                  }}
+                >
+                  Find a Store
+                </Link>
+              </Text>
+            </Section>
           </Section>
 
           {/* Footer Section */}
@@ -120,7 +193,7 @@ export const CouponEmailTemplate = ({ firstName, couponCode }: Props) => {
             </Text>
 
             <Text style={footerText}>
-              © {new Date().getFullYear()} Litto, All Rights Reserved
+              © {new Date().getFullYear()} LITTO, All Rights Reserved
               <br />
               Los Angeles CA
             </Text>
@@ -131,7 +204,7 @@ export const CouponEmailTemplate = ({ firstName, couponCode }: Props) => {
   );
 };
 
-export default CouponEmailTemplate;
+export default QuestionnaireEmailTemplate;
 
 const header: React.CSSProperties = {
   textAlign: "center",
@@ -229,7 +302,43 @@ const socialIcons: React.CSSProperties = {
 const couponStyle: React.CSSProperties = {
   fontSize: "28px",
   fontWeight: "bold",
-  color: "#18ab4f",
+  color: "#72bf49",
   textAlign: "center",
   margin: "10px 0",
+  padding: "30px",
+  background: "#f5f5f5",
+};
+
+const shopStyle: React.CSSProperties = {
+  marginTop: "20px",
+  paddingTop: "20px",
+};
+
+const productRow: React.CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  borderBottom: "1px solid #ddd",
+  padding: "10px 0",
+};
+
+const productImage: React.CSSProperties = {
+  display: "block",
+  borderRadius: "5px",
+  margin: "auto",
+};
+
+const productTitle: React.CSSProperties = {
+  fontSize: "16px",
+  fontWeight: "bold",
+  marginBottom: "15px",
+  lineHeight: "1",
+};
+
+const productLink: React.CSSProperties = {
+  fontSize: "14px",
+  color: "#fff",
+  background: "#72BF49",
+  padding: "8px 16px",
+  textDecoration: "none",
+  borderRadius: "150px",
 };

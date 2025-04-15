@@ -23,14 +23,14 @@ export default async function Page() {
         <div className="text-center flex justify-center mt-4 gap-4">
           <Link
             href="/"
-            className="text-gray-400 hover:text-white transition duration-200 flex items-center gap-2"
+            className="text-gray-400 hover:text-gray-500 dark:hover:text-white transition duration-200 flex items-center gap-2"
           >
             <HomeIcon size={16} /> Home
           </Link>
           <span className="text-gray-400">|</span>
           <Link
             href="/admin-login"
-            className="text-gray-400 hover:text-white transition duration-200"
+            className="text-gray-400 hover:text-gray-500 dark:hover:text-white transition duration-200"
           >
             Admin
           </Link>

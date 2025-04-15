@@ -74,7 +74,7 @@ const GenerateCodeSendEmail = ({ quiz }: Props) => {
 
   return (
     <div className="flex flex-col justify-center">
-      <div className="w-full max-w-md rounded-lg shadow-md">
+      <div className="w-full max-w-md rounded-lg">
         <h1 className="text-2xl font-bold mb-4">
           Send coupon code to my email.
         </h1>

@@ -72,6 +72,9 @@ export const sendCoupon = async ({ email, firstName, couponCode }: Props) => {
     return { error: "Email service is not configured." };
   }
 
+  const capitalize = (str: string) =>
+    str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+
   try {
     if (!email || !firstName) {
       return {
@@ -82,7 +85,7 @@ export const sendCoupon = async ({ email, firstName, couponCode }: Props) => {
     const data = await resend.emails.send({
       from: "LITTO <noreply@cedu.itslitto.com>",
       to: email,
-      subject: `Thank you for taking the quiz, ${firstName}!`,
+      subject: `Thank you for taking the quiz, ${capitalize(firstName)}!`,
       replyTo: "support@cedu.itslitto.com",
       react: CouponEmailTemplate({
         firstName,

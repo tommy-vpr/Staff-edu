@@ -7,6 +7,7 @@ import { UserSchema, UserFormValues } from "@/lib/schemas";
 import { Resend } from "resend";
 import { generateDiscountCode } from "./shopify";
 import ContactEmailTemplate from "@/components/my-components/ContactEmail";
+import QuestionnaireEmailTemplate from "@/components/my-components/QuestionnaireEmailTemplate";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -21,6 +22,13 @@ type Props = {
   firstName: string;
   email: string;
   couponCode: string;
+};
+
+type QuestionnaireProps = {
+  email: string;
+  couponCode: string;
+  results: { question: string; answer: string }[]; // Array of question-answer objects
+  products: { url: string; image: string; title: string }[];
 };
 
 export const sendEmail = async (staff: UserFormValues) => {
@@ -120,6 +128,45 @@ export const sendContactEmail = async ({
         name,
         subject,
         message,
+      }),
+    });
+
+    return { success: true, data };
+  } catch (error: unknown) {
+    const errorMessage = getErrorMessage(error);
+    console.error("Error sending email:", error);
+    return { error: errorMessage };
+  }
+};
+
+// Send questionnaire email
+export const sendQuestionnaireCoupon = async ({
+  email,
+  couponCode,
+  results,
+  products,
+}: QuestionnaireProps) => {
+  if (!process.env.RESEND_API_KEY) {
+    console.error("Missing RESEND_API_KEY environment variable.");
+    return { error: "Email service is not configured." };
+  }
+
+  try {
+    if (!email || !couponCode) {
+      return {
+        error: "Missing required fields: email or first name.",
+      };
+    }
+
+    const data = await resend.emails.send({
+      from: "LITTO <noreply@cedu.itslitto.com>",
+      to: email,
+      subject: `Thank you for taking the quiz!`,
+      replyTo: "support@cedu.itslitto.com",
+      react: QuestionnaireEmailTemplate({
+        email,
+        couponCode,
+        products,
       }),
     });
 

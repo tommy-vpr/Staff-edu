@@ -9,7 +9,7 @@ export async function scheduleReminder(email: string, staffId: string) {
   await qstash.publishJSON({
     url: `${process.env.APP_URL}/api/reminder`, // This will call the action
     body: { email, staffId },
-    delay: 2 * 60,
+    delay: 5 * 24 * 60 * 60,
   });
 
   console.log(`📩 Reminder scheduled for ${email} in 5 days.`);

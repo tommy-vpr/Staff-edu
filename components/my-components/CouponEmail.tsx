@@ -56,6 +56,17 @@ export const CouponEmailTemplate = ({ firstName, couponCode }: Props) => {
               4. This $80 coupon is valid for one-time use only. Any unused
               balance will not be carried over.
             </Text>
+
+            <Text style={{ marginTop: "20px", fontSize: "14px" }}>
+              👉 Visit our store:{" "}
+              <a
+                href="https://itslitto.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                itslitto.com
+              </a>
+            </Text>
           </Section>
 
           {/* Footer Section */}

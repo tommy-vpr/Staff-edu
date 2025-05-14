@@ -14,7 +14,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // ✅ Token-based access for /admin-signup
+  // ✅ Token-based access for /admin-signup **init git change
   if (pathname === "/admin-signup") {
     const token = req.nextUrl.searchParams.get("token");
     const valid = process.env.NEXT_PUBLIC_ADMIN_FORM_ACCESS_TOKEN;

@@ -10,7 +10,7 @@ import { HomeIcon } from "lucide-react";
 export default async function Page() {
   const session = await getServerSession(authOptions as NextAuthOptions);
 
-  if (session) {
+  if (session?.user?.email) {
     redirect("/dashboard");
   }
 

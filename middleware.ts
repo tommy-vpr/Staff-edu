@@ -5,7 +5,9 @@ import { getToken } from "next-auth/jwt";
 const PUBLIC_ROUTES = ["/", "/login", "/admin-login"];
 
 export async function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
+  // const { pathname } = req.nextUrl;
+  const pathname = req.nextUrl.pathname.replace(/\/+$/, "") || "/";
+  console.log("🔐 Middleware path:", pathname);
 
   // ✅ Allow public routes
   if (PUBLIC_ROUTES.includes(pathname)) {

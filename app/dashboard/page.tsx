@@ -50,7 +50,7 @@ const Dashboard = () => {
 
   const videos: Video[] = [
     {
-      title: "LITTO Cannibis",
+      title: "LITTO Cannabis",
       duration: "1:51",
       src: "https://cdn.shopify.com/videos/c/o/v/eeb10cb216c14ed9b24e65a2bc340083.mp4",
     },

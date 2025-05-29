@@ -85,7 +85,7 @@ const Dashboard = () => {
             <strong className="text-green-500">$80 coupon</strong> just for
             learning!
           </p>
-          <div className="p-4 rounded-lg bg-gray-800">
+          <div className="p-4 rounded-lg bg-gray-100 dark:bg-gray-800">
             <p className="text-green-500 font-semibold">Here’s how it works:</p>
             <ul className="space-y-2 text-sm">
               <li>1. Check out the video - Get the lowdown on LITTO.</li>

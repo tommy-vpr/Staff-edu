@@ -4,6 +4,62 @@ import { Redis } from "@upstash/redis";
 import prisma from "@/lib/prisma";
 import crypto from "crypto";
 
+const normalizationMap: Record<string, string> = {
+  "Binge-watching 🎮": "Binge-watching 🎮",
+  "Atracción de series 📺": "Binge-watching 🎮",
+  "Binge-watching 📺": "Binge-watching 🎮",
+  "Relajándome con amigos 🍻": "Chilling with friends 🍻",
+  "Trabajo creativo 🎨": "Creative work 🎨",
+  "Creative work 🎨": "Creative work 🎨",
+  "Chilling with friends 🍻": "Chilling with friends 🍻",
+  "Staying active 🌞": "Staying active 🌞",
+  "Mantenerse activo 🌞": "Staying active 🌞",
+
+  "Energizado y en movimiento 🚀": "Energized & Moving 🚀",
+  "Energized & Moving 🚀": "Energized & Moving 🚀",
+  "Relaxación total 🛋️": "Full Chill & Relaxed 🛋️",
+  "Full Chill & Relaxed 🛋️": "Full Chill & Relaxed 🛋️",
+  "Creativo y centrado 💡": "Creative & Focused 💡",
+  "Creativo y enfocado 💡": "Creative & Focused 💡",
+  "Creative & Focused 💡": "Creative & Focused 💡",
+  "Social & Uplifting 🥳": "Social & Uplifting 🥳",
+
+  "Fresh Fruit🍎": "Fresh Fruit🍎",
+  "Sweet Treats 🍪": "Sweet Treats 🍪",
+  "Savory Snacks 🍟": "Savory Snacks 🍟",
+  "Anything Available 😅": "Anything Available 😅",
+  "Anything and everything 😅": "Anything Available 😅",
+  "Cualquier cosa y todo 😅": "Anything Available 😅",
+  "Snacks Salados 🍟": "Savory Snacks 🍟",
+  "Dulces delicias 🍪": "Sweet Treats 🍪",
+
+  "At the Beach 🌴": "At the Beach 🌴",
+  "En la playa 🌴": "At the Beach 🌴",
+  "In a Cozy Cabin 🏕️": "In a Cozy Cabin 🏕️",
+  "En una cabaña acogedora 🏕️": "In a Cozy Cabin 🏕️",
+  "En una acogedora cabaña 🏕️": "In a Cozy Cabin 🏕️",
+  "Exploring the City 🌸": "Exploring the City 🌸",
+  "Explorando la ciudad 🌃": "Exploring the City 🌸",
+  "Exploring the City 🌃": "Exploring the City 🌸",
+  "At a BBQ with Friends 🍔": "At a BBQ with Friends 🍔",
+
+  "Energized & Ready 💪": "Energized & Ready 💪",
+  "Energizado y listo 💪": "Energized & Ready 💪",
+  "Relaxed & Laid Back 🌙": "Relaxed & Laid Back 🌙",
+  "Relajado y tranquilo 🌙": "Relaxed & Laid Back 🌙",
+  "Inspired & Creative ✨": "Inspired & Creative ✨",
+  "Inspirado y creativo ✨": "Inspired & Creative ✨",
+  "Social & Vibing 🥳": "Social & Vibing 🥳",
+  "Social y vibrante 🥳": "Social & Vibing 🥳",
+
+  // Add these missing variants
+  "Atracón de series 📺": "Binge-watching 🎮",
+  "Relajación total 🛋️": "Full Chill & Relaxed 🛋️",
+  "Exploring the City 🎨": "Exploring the City 🌸", // normalize to the default one
+  "En una cabaña acogedora 🏡": "In a Cozy Cabin 🏡",
+  "En una acogedora cabaña 🏡": "In a Cozy Cabin 🏡",
+};
+
 // ✅ Ensure JWT Secret Exists
 if (!process.env.SHOPIFY_API_SECRET) {
   throw new Error("SHOPIFY_API_SECRET is missing in environment variables.");
@@ -142,7 +198,15 @@ export async function GET(req: Request) {
     let quizData = [
       {
         "quiz-count": userResponses.length,
-        data: new Map(defaultQuestions.map((q) => [q.question, q.answers])),
+        data: new Map(
+          defaultQuestions.map((q) => {
+            const normalizedAnswers = q.answers.map((a) => {
+              const normalizedText = normalizationMap[a.text] || a.text;
+              return { ...a, text: normalizedText };
+            });
+            return [q.question, normalizedAnswers];
+          })
+        ),
       },
     ];
 
@@ -152,12 +216,29 @@ export async function GET(req: Request) {
       // ✅ Type assertion to explicitly define the structure of `questions`
       (user.questions as { question: string; answer: string }[]).forEach(
         ({ question, answer }) => {
-          let answers = quizData[0].data.get(question) ?? [];
+          const answers = quizData[0].data.get(question) ?? [];
 
-          let answerObj = answers.find((a) => a.text === answer);
+          const normalized = normalizationMap[answer] || answer;
+
+          // Try to find an existing answer by normalized text
+          let answerObj = answers.find((a) => a.text === normalized);
 
           if (!answerObj) {
-            answerObj = { text: answer, value: "N/A", count: 0 };
+            // Try to preserve original value (A-D) if found from default
+            const defaultValue =
+              defaultQuestions
+                .find((q) => q.question === question)
+                ?.answers.find(
+                  (a) =>
+                    normalizationMap[a.text] === normalized ||
+                    a.text === normalized
+                )?.value || "D";
+
+            answerObj = {
+              text: normalized,
+              value: defaultValue,
+              count: 0,
+            };
             answers.push(answerObj);
           }
 
